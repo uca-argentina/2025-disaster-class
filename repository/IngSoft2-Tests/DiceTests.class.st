@@ -35,8 +35,8 @@ DiceTests >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThe
 DiceTests >> testIfNumberOfSidesInvalidThenInvalid [
 
 	self
-		should: [ Dice with: 1 ]
-		raise: ErrorWasInUIProcessTest
+		should: [ Dice numberOfSidesIsHigherThanOne: 1 ]
+		raise: Error
 		withMessageText:
 		'The die number of sides should at least be higher than 1.'
 ]

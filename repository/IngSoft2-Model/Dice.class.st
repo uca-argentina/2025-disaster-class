@@ -14,8 +14,8 @@ Class {
 { #category : 'instance creation' }
 Dice class >> numberOfSidesIsHigherThanOne: aNumberOfSides [
 
-	aNumberOfSides < 1 ifTrue: [
-		'The die number of sides should at least be higher than 1.' ]
+	aNumberOfSides < 2 ifTrue: [
+		Error signal: 'The die number of sides should at least be higher than 1.' ]
 ]
 
 { #category : 'instance creation' }
