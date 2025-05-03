@@ -1,3 +1,6 @@
+"
+Represents a cell which has the capacity to hold a ship.
+"
 Class {
 	#name : 'Cell',
 	#superclass : 'Object',
