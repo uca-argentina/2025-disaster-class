@@ -12,7 +12,15 @@ Class {
 }
 
 { #category : 'instance creation' }
+Dice class >> numberOfSidesIsHigherThanOne: aNumberOfSides [
+
+	aNumberOfSides < 1 ifTrue: [
+		'The die number of sides should at least be higher than 1.' ]
+]
+
+{ #category : 'instance creation' }
 Dice class >> with: aNumberOfSides [ 
+	self numberOfSidesIsHigherThanOne: aNumberOfSides.
 	^self new initializeWith: aNumberOfSides.
 ]
 
