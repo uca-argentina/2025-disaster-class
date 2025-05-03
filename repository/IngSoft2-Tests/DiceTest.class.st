@@ -1,12 +1,12 @@
 Class {
-	#name : 'DiceTests',
+	#name : 'DiceTest',
 	#superclass : 'TestCase',
 	#category : 'IngSoft2-Tests',
 	#package : 'IngSoft2-Tests'
 }
 
 { #category : 'tests' }
-DiceTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
+DiceTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
     self
         should: anErrorBlock
@@ -17,12 +17,7 @@ DiceTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 ]
 
 { #category : 'tests' }
-DiceTests >> testA [
-
-]
-
-{ #category : 'tests' }
-DiceTests >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThenIsValid [
+DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThenIsValid [
 
 	| aNumberOfSides aDice |
 	aNumberOfSides := 5.
@@ -32,7 +27,7 @@ DiceTests >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThe
 ]
 
 { #category : 'tests' }
-DiceTests >> testIfNumberOfSidesInvalidThenInvalid [
+DiceTest >> testIfNumberOfSidesInvalidThenInvalid [
 
 	self
 		should: [ Dice numberOfSidesIsHigherThanOne: 1 ]
