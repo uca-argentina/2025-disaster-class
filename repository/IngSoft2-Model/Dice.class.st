@@ -31,9 +31,9 @@ Dice >> initializeWith: numberOfSides [
 ]
 
 { #category : 'accessing' }
-Dice >> result [
+Dice >> rollDice [
 
-	^ 1
+	^(1 to: aNumberOfSides ) atRandom.
 ]
 
 { #category : 'as yet unclassified' }
