@@ -23,6 +23,10 @@ BoardTest >> testFirstElementIsACell [
 ]
 
 { #category : 'as yet unclassified' }
+BoardTest >> testIfCellHasCollectionOfShipsThenIsValid [
+]
+
+{ #category : 'as yet unclassified' }
 BoardTest >> testIfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
 	| aNumberOfCells aBoard |

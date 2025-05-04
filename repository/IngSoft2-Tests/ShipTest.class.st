@@ -14,3 +14,8 @@ ShipTest >> testIfAShipIsCreatedWithTheGivenNameThenIsValid [
 
 	self assert: aShip getName equals: aShipName
 ]
+
+{ #category : 'tests' }
+ShipTest >> testIfCellHasCollectionOfShipsThenIsValid [
+
+]
