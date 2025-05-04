@@ -21,5 +21,5 @@ Board >> getMap [
 { #category : 'initialization' }
 Board >> initializeWith: aNumberOfCells [
 	 map := OrderedCollection new: aNumberOfCells.
-	1 to: aNumberOfCells do: [ :i | map add: Cell new. ].
+	1 to: aNumberOfCells do: [ :i | map add: RegularCell new. ].
 ]
