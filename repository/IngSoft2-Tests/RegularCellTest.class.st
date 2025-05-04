@@ -70,3 +70,42 @@ RegularCellTest >> test005IfAShipIsAddedCorrectlyAfterInitializationThenIsValid 
 	self assert:
 		(aRegularCell getShips allSatisfy: [ :ship | ship isKindOf: Ship ])
 ]
+
+{ #category : 'tests' }
+RegularCellTest >> test006IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsEmpty [
+
+| aRegularCell aShip aShipContainer |
+	aShipContainer := OrderedCollection new.
+	aRegularCell := RegularCell with: aShipContainer.
+	aShip := Ship withName: 'Franco'.
+	
+	aRegularCell enters: aShip.
+	aRegularCell leaves: aShip.
+
+	self assert:
+		(aRegularCell getShips isEmpty)
+
+
+
+]
+
+{ #category : 'tests' }
+RegularCellTest >> test007IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNotEmpty [
+
+| aRegularCell aShip aShipContainer aSecondShip |
+	aShipContainer := OrderedCollection new.
+	aRegularCell := RegularCell with: aShipContainer.
+	aShip := Ship withName: 'Once'.
+	aSecondShip := Ship withName: 'Caldos'.
+	
+	aRegularCell enters: aShip.
+	aRegularCell enters: aSecondShip.
+	
+	aRegularCell leaves: aShip.
+  
+	self assert:
+		(aRegularCell getShips isNotEmpty)
+
+
+
+]

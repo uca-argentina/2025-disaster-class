@@ -31,3 +31,8 @@ RegularCell >> getShips [
 RegularCell >> initializeWith: aShipContainer [ 
 	shipContainer := aShipContainer.
 ]
+
+{ #category : 'accessing' }
+RegularCell >> leaves: aShip [ 
+	shipContainer remove: aShip
+]
