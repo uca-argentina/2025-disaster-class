@@ -30,3 +30,18 @@ BoardTest >> test003AllElementsAreCellsThenIsValid [
 	self assert:
 		(aBoard getMap allSatisfy: [ :element | element isKindOf: RegularCell ])
 ]
+
+{ #category : 'as yet unclassified' }
+BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [ 
+	| aMap aBoard aShip aCell |
+	aBoard := Board with: 5.
+	aShip := Ship withName: 'Tomick'.
+	aMap := aBoard getMap.
+	aCell := (aMap at:1).
+	aCell enters: aShip.
+	self assert: ((aCell getShips at: 1) isKindOf: Ship).
+]
+
+{ #category : 'as yet unclassified' }
+BoardTest >> testGaga [
+]

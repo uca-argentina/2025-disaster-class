@@ -109,3 +109,47 @@ RegularCellTest >> test007IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNot
 
 
 ]
+
+{ #category : 'tests' }
+RegularCellTest >> test008TwoShipsEnterAndLeaveThenCellIsEmptyAfter [
+
+| aRegularCell aShip aShipContainer aSecondShip |
+	aShipContainer := OrderedCollection new.
+	aRegularCell := RegularCell with: aShipContainer.
+	aShip := Ship withName: 'Once'.
+	aSecondShip := Ship withName: 'Caldos'.
+	
+	aRegularCell enters: aShip.
+	aRegularCell enters: aSecondShip.
+	
+	aRegularCell leaves: aShip.
+	aRegularCell leaves: aSecondShip .
+  
+	self deny:
+		(aRegularCell getShips anySatisfy: [:ship | ship isKindOf: Ship])
+
+
+
+]
+
+{ #category : 'tests' }
+RegularCellTest >> testRandom [
+
+| aRegularCell aShip aShipContainer aSecondShip |
+	aShipContainer := OrderedCollection new.
+	aRegularCell := RegularCell with: aShipContainer.
+	aShip := Ship withName: 'Once'.
+	aSecondShip := Ship withName: 'Caldos'.
+	
+	aRegularCell enters: aShip.
+	aRegularCell enters: aSecondShip.
+	
+	aRegularCell leaves: aShip.
+	aRegularCell leaves: aSecondShip .
+  
+	self deny:
+		(aRegularCell getShips anySatisfy: [:ship | ship isKindOf: Ship])
+
+
+
+]
