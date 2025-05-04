@@ -17,6 +17,13 @@ DiceTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessa
 ]
 
 { #category : 'tests' }
+DiceTest >> testIfDiceResultIsIntegerThenIsValid [
+	| aDice |
+	aDice := Dice with: 6.
+	self assert: aDice result isInteger. 
+]
+
+{ #category : 'tests' }
 DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThenIsValid [
 
 	| aNumberOfSides aDice |
