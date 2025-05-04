@@ -6,7 +6,32 @@ Class {
 }
 
 { #category : 'tests' }
-RegularCellTest >> testIfACellContainsAShipThenIsValid [
+RegularCellTest >> test001IfACellIsEmptyThenIsValid [
+
+"si la cell no contiene ships es valido"
+
+	| aShipContainer aCell |
+	aShipContainer := OrderedCollection new.
+	aCell := RegularCell with: aShipContainer.
+
+	self assert:
+		(aCell getShips isEmpty)
+
+
+]
+
+{ #category : 'tests' }
+RegularCellTest >> test002IfCellHasCollectionOfShipsThenIsValid [
+
+	| aCollection aCell |
+	aCollection := OrderedCollection new.
+	aCell := RegularCell with: aCollection.
+
+	self assert: aCell getShips = aCollection
+]
+
+{ #category : 'tests' }
+RegularCellTest >> test003IfACellContainsAShipThenIsValid [
 	"si la cell contiene ships"
 
 	| aShip aShipContainer aCell |
@@ -19,7 +44,7 @@ RegularCellTest >> testIfACellContainsAShipThenIsValid [
 ]
 
 { #category : 'tests' }
-RegularCellTest >> testIfACellContainsOnlyShipsThenIsValid [
+RegularCellTest >> test004IfACellContainsOnlyShipsThenIsValid [
 	"si la cell solo contiene ships entonces es valido"
 
 	| aShip aShipContainer aCell aSecondShip |
@@ -33,7 +58,7 @@ RegularCellTest >> testIfACellContainsOnlyShipsThenIsValid [
 ]
 
 { #category : 'tests' }
-RegularCellTest >> testIfAShipIsAddedCorrectlyAfterInitializationThenIsValid [
+RegularCellTest >> test005IfAShipIsAddedCorrectlyAfterInitializationThenIsValid [
 	"test if a ship can be added after initialization of the cell"
 
 	| aRegularCell aShip aShipContainer |
@@ -44,14 +69,4 @@ RegularCellTest >> testIfAShipIsAddedCorrectlyAfterInitializationThenIsValid [
 
 	self assert:
 		(aRegularCell getShips allSatisfy: [ :ship | ship isKindOf: Ship ])
-]
-
-{ #category : 'tests' }
-RegularCellTest >> testIfCellHasCollectionOfShipsThenIsValid [
-
-	| aCollection aCell |
-	aCollection := OrderedCollection new.
-	aCell := RegularCell with: aCollection.
-
-	self assert: aCell getShips = aCollection
 ]

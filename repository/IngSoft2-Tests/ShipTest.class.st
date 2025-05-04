@@ -6,16 +6,11 @@ Class {
 }
 
 { #category : 'tests' }
-ShipTest >> testIfAShipIsCreatedWithTheGivenNameThenIsValid [
+ShipTest >> test001IfAShipIsCreatedWithTheGivenNameThenIsValid [
 
 	| aShipName aShip |
 	aShipName := 'Frankito'.
 	aShip := Ship withName: aShipName.
 
 	self assert: aShip getName equals: aShipName
-]
-
-{ #category : 'tests' }
-ShipTest >> testIfCellHasCollectionOfShipsThenIsValid [
-
 ]

@@ -6,16 +6,16 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-BoardTest >> testAllElementsAreCellsThenIsValid [
+BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
-	| aBoard |
-	aBoard := Board with: 20.
-	self assert:
-		(aBoard getMap allSatisfy: [ :element | element isKindOf: RegularCell ])
+	| aNumberOfCells aBoard |
+	aNumberOfCells := 20.
+	aBoard := Board with: aNumberOfCells.
+	self assert: aBoard getMap size equals: aNumberOfCells
 ]
 
 { #category : 'as yet unclassified' }
-BoardTest >> testFirstElementIsACell [
+BoardTest >> test002FirstElementIsACell [
 
 	| aBoard |
 	aBoard := Board with: 1.
@@ -23,14 +23,10 @@ BoardTest >> testFirstElementIsACell [
 ]
 
 { #category : 'as yet unclassified' }
-BoardTest >> testIfCellHasCollectionOfShipsThenIsValid [
-]
+BoardTest >> test003AllElementsAreCellsThenIsValid [
 
-{ #category : 'as yet unclassified' }
-BoardTest >> testIfCreatedMapIsSizeOfAllocatedValueThenIsValid [
-
-	| aNumberOfCells aBoard |
-	aNumberOfCells := 20.
-	aBoard := Board with: aNumberOfCells.
-	self assert: aBoard getMap size equals: aNumberOfCells
+	| aBoard |
+	aBoard := Board with: 20.
+	self assert:
+		(aBoard getMap allSatisfy: [ :element | element isKindOf: RegularCell ])
 ]
