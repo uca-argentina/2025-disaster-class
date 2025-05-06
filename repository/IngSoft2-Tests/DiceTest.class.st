@@ -19,7 +19,7 @@ DiceTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessa
 { #category : 'tests' }
 DiceTest >> testIfDiceResultIsIntegerThenIsValid [
 	| aDice |
-	aDice := Dice with: 6.
+	aDice := Die with: 6.
 	self assert: aDice rollDice isInteger. 
 ]
 
@@ -28,7 +28,7 @@ DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThen
 
 	| aNumberOfSides aDice |
 	aNumberOfSides := 5.
-	aDice := Dice with: aNumberOfSides.
+	aDice := Die with: aNumberOfSides.
 	
 	self assert: aDice sides = aNumberOfSides
 ]
@@ -37,7 +37,7 @@ DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThen
 DiceTest >> testIfNumberOfSidesInvalidThenInvalid [
 
 	self
-		should: [ Dice numberOfSidesIsHigherThanOne: 1 ]
+		should: [ Die numberOfSidesIsHigherThanOne: 1 ]
 		raise: Error
 		withMessageText:
 		'The die number of sides should at least be higher than 1.'
@@ -47,7 +47,7 @@ DiceTest >> testIfNumberOfSidesInvalidThenInvalid [
 DiceTest >> testIfRollIsBetweenTwoNumbersThenIsValid [
 
 	| aDice roll |
-	aDice := Dice with: 20.
+	aDice := Die with: 20.
 	roll := aDice rollDice.
 	self assert: (roll >= 1 and: [ roll <= 20 ])
 ]
@@ -57,7 +57,7 @@ DiceTest >> testThatIfRollIsBetween1AndNumberOfSidesThenIsValid [
 
 	| aDice roll numberOfSides|
 	numberOfSides := 6.
-	aDice := Dice with: numberOfSides .
+	aDice := Die with: numberOfSides .
 	roll := aDice rollDice.
 	self assert: (roll >= 1 and: [ roll <= numberOfSides ])
 ]

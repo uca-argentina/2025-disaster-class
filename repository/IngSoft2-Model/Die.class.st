@@ -2,7 +2,7 @@
 Represents a dice that returns a numeric value
 "
 Class {
-	#name : 'Dice',
+	#name : 'Die',
 	#superclass : 'Object',
 	#instVars : [
 		'aNumberOfSides'
@@ -12,31 +12,31 @@ Class {
 }
 
 { #category : 'instance creation' }
-Dice class >> numberOfSidesIsHigherThanOne: aNumberOfSides [
+Die class >> numberOfSidesIsHigherThanOne: aNumberOfSides [
 
 	aNumberOfSides < 2 ifTrue: [
 		Error signal: 'The die number of sides should at least be higher than 1.' ]
 ]
 
 { #category : 'instance creation' }
-Dice class >> with: aNumberOfSides [ 
+Die class >> with: aNumberOfSides [ 
 	self numberOfSidesIsHigherThanOne: aNumberOfSides.
 	^self new initializeWith: aNumberOfSides.
 ]
 
 { #category : 'initialization' }
-Dice >> initializeWith: numberOfSides [
+Die >> initializeWith: numberOfSides [
 
 	aNumberOfSides := numberOfSides
 ]
 
 { #category : 'accessing' }
-Dice >> rollDice [
+Die >> rollDice [
 
 	^(1 to: aNumberOfSides ) atRandom.
 ]
 
 { #category : 'as yet unclassified' }
-Dice >> sides [
+Die >> sides [
 	^aNumberOfSides.
 ]
