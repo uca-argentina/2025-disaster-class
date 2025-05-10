@@ -35,7 +35,7 @@ RegularCellTest >> test003IfACellContainsAShipThenIsValid [
 	"si la cell contiene ships"
 
 	| aShip aShipContainer aCell |
-	aShip := Ship withName: 'Franco'.
+	aShip := Ship new.
 	aShipContainer := OrderedCollection with: aShip.
 	aCell := RegularCell with: aShipContainer.
 
@@ -48,8 +48,8 @@ RegularCellTest >> test004IfACellContainsOnlyShipsThenIsValid [
 	"si la cell solo contiene ships entonces es valido"
 
 	| aShip aShipContainer aCell aSecondShip |
-	aShip := Ship withName: 'Franco'.
-	aSecondShip := Ship withName: 'Maxi'.
+	aShip := Ship new.
+	aSecondShip := Ship new.
 	aShipContainer := OrderedCollection with: aShip with: aSecondShip .
 	aCell := RegularCell with: aShipContainer.
 
@@ -64,7 +64,7 @@ RegularCellTest >> test005IfAShipIsAddedCorrectlyAfterInitializationThenIsValid 
 	| aRegularCell aShip aShipContainer |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell with: aShipContainer.
-	aShip := Ship withName: 'Franco'.
+	aShip := Ship new.
 	aRegularCell enters: aShip.
 
 	self assert:
@@ -77,7 +77,7 @@ RegularCellTest >> test006IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsE
 | aRegularCell aShip aShipContainer |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell with: aShipContainer.
-	aShip := Ship withName: 'Franco'.
+	aShip := Ship new.
 	
 	aRegularCell enters: aShip.
 	aRegularCell leaves: aShip.
@@ -92,22 +92,18 @@ RegularCellTest >> test006IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsE
 { #category : 'tests' }
 RegularCellTest >> test007IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNotEmpty [
 
-| aRegularCell aShip aShipContainer aSecondShip |
+	| aRegularCell aShip aShipContainer aSecondShip |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell with: aShipContainer.
-	aShip := Ship withName: 'Once'.
-	aSecondShip := Ship withName: 'Caldos'.
-	
+	aShip := Ship new.
+	aSecondShip := Ship new.
+
 	aRegularCell enters: aShip.
 	aRegularCell enters: aSecondShip.
-	
+
 	aRegularCell leaves: aShip.
-  
-	self assert:
-		(aRegularCell getShips isNotEmpty)
 
-
-
+	self assert: aRegularCell getShips isNotEmpty
 ]
 
 { #category : 'tests' }
@@ -116,30 +112,8 @@ RegularCellTest >> test008TwoShipsEnterAndLeaveThenCellIsEmptyAfter [
 | aRegularCell aShip aShipContainer aSecondShip |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell with: aShipContainer.
-	aShip := Ship withName: 'Once'.
-	aSecondShip := Ship withName: 'Caldos'.
-	
-	aRegularCell enters: aShip.
-	aRegularCell enters: aSecondShip.
-	
-	aRegularCell leaves: aShip.
-	aRegularCell leaves: aSecondShip .
-  
-	self deny:
-		(aRegularCell getShips anySatisfy: [:ship | ship isKindOf: Ship])
-
-
-
-]
-
-{ #category : 'tests' }
-RegularCellTest >> testRandom [
-
-| aRegularCell aShip aShipContainer aSecondShip |
-	aShipContainer := OrderedCollection new.
-	aRegularCell := RegularCell with: aShipContainer.
-	aShip := Ship withName: 'Once'.
-	aSecondShip := Ship withName: 'Caldos'.
+	aShip := Ship new.
+	aSecondShip := Ship new.
 	
 	aRegularCell enters: aShip.
 	aRegularCell enters: aSecondShip.

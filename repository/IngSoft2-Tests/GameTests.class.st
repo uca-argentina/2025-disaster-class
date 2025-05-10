@@ -14,7 +14,7 @@ GameTests class >> playedIn: aBoard [
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame aBoard aShip |
-	aShip := Ship withName: 'Tom'.
+	aShip := Ship new.
 	aDie := Die with: 2.
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aShip.
@@ -26,7 +26,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
 	| aDie aGame aBoard aShip |
-	aShip := Ship withName: 'Tom'.
+	aShip := Ship new.
 	aDie := Die with: 2.
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aShip.
@@ -38,10 +38,39 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	| aDie aGame aBoard aShip |
-	aShip := Ship withName: 'Tom'.
+	aShip := Ship new.
 	aDie := Die with: 2.
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aShip.
 
 	self assert: (aGame ship) isNotNil
+]
+
+{ #category : 'tests' }
+GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
+
+
+	| aDie aGame aBoard aShip anotherShip aGroupOfShips |
+	aShip := Ship new.
+	anotherShip := Ship new.
+	aGroupOfShips := OrderedCollection with: aShip with: anotherShip.
+	aDie := Die with: 2. 
+	aBoard := Board with: 20.
+	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
+
+	self assert: (aGame ship) equals: aGroupOfShips.
+]
+
+{ #category : 'tests' }
+GameTests >> test005IfAGameIsCreatedThenAllShipsAreAtCell1 [
+
+	| aDie aGame aBoard aShip anotherShip aGroupOfShips |
+	aShip := Ship new.
+	anotherShip := Ship new.
+	aGroupOfShips := OrderedCollection with: aShip with: anotherShip.
+	aDie := Die with: 2.
+	aBoard := Board with: 20.
+	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
+
+	self assert: ((aGame board getMap) at: 1) getShips = aGroupOfShips
 ]

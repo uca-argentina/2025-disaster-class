@@ -11,9 +11,9 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Game class >> playedIn: aBoard with: aDie and: aShip [
+Game class >> playedIn: aBoard with: aDie and: someShips [
 
-	^ self new initializeWith: aBoard and: aDie and: aShip
+	^ self new initializeWith: aBoard and: aDie and: someShips
 ]
 
 { #category : 'accessing' }
@@ -27,11 +27,13 @@ Game >> die [
 ]
 
 { #category : 'initialization' }
-Game >> initializeWith: aBoard and: aDie and: aShip [
+Game >> initializeWith: aBoard and: aDie and: someShips [
 
+	| aShip |
 	board := aBoard.
+	( ( board getMap ) at: 1 )enters: someShips.
 	die := aDie.
-	ship := aShip
+	ship := aShip.
 ]
 
 { #category : 'accessing' }
