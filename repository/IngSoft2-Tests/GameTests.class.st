@@ -79,19 +79,20 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 	| aShip aDie aGame aBoard aGroupOfShips firstCell secondCell |
 	aShip := Ship new.
 	aGroupOfShips := OrderedCollection with: aShip with: Ship new.
-	aDie := Die with: 2.
+	aDie := TestDie withForcedRoll: 1. 
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aGame board getMap first.
+
+	firstCell := aGame board getMap at: 1.
 	secondCell := aGame board getMap at: 2.
 
 	self assert: ((firstCell includesAll: aGroupOfShips) and:
-			 secondCell getShips isEmpty).
+				 secondCell getShips isEmpty).
 
-	aGame playTurn.
+	aGame playTurn.  
 
 	self assert:
-		((firstCell includes: aShip) not and: (secondCell includes: aShip))
+		((firstCell includes: aShip) not and: (secondCell includes: aShip)).
 ]
 
 { #category : #tests }
