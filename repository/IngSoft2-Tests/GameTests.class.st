@@ -98,29 +98,27 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 { #category : #tests }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
-	| ship1 ship2 ships die board game firstCell secondCell thirdCell |
+	| ship1 ship2 ships die board game firstCell thirdCell |
 	ship1 := Ship new.
 	ship2 := Ship new.
 	ships := OrderedCollection with: ship1 with: ship2.
-	die := Die with: 20. 
+	die := TestDie withForcedRoll: 2.  
 	board := Board with: 5.
 	game := Game playedIn: board with: die and: ships.
 
 	firstCell := board getMap at: 1.
-	secondCell := board getMap at: 2.
 	thirdCell := board getMap at: 3.
 
-	"Before any turns"
 	self assert: (firstCell includes: ship1).
 	self assert: (firstCell includes: ship2).
 
-	game playTurn. "ship1 moves to cell 2"
-	game playTurn. "ship2 moves to cell 2"
+	game playTurn. 
+	game playTurn. 
 
-	self assert: (secondCell includes: ship1).
-	self assert: (secondCell includes: ship2).
+	self assert: (thirdCell includes: ship1).
+	self assert: (thirdCell includes: ship2).
 	self deny: (firstCell includes: ship1).
-	self deny: (firstCell includes: ship2)
+	self deny: (firstCell includes: ship2).
 ]
 
 { #category : #tests }
@@ -128,7 +126,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 
 	| aShip aDie aBoard aGame resultCell pair |
 	aShip := Ship new.
-	aDie := Die with: 2.
+	aDie := TestDie withForcedRoll: 1.
 	aBoard := Board new.
 	aBoard initializeWith: 5.
 
