@@ -14,6 +14,14 @@ Board class >> with: aNumberOfCells [
 ]
 
 { #category : 'as yet unclassified' }
+Board >> applyEffectTo: aShip [
+
+	| cell |
+	cell := self getMap detect: [ :each | each includes: aShip ].
+	cell applyEffectTo: aShip in: self
+]
+
+{ #category : 'as yet unclassified' }
 Board >> getMap [ 
 	^map.
 ]

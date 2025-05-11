@@ -126,7 +126,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 { #category : 'tests' }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
-	| aShip aDie aBoard aGame resultCell pair firstCell |
+	| aShip aDie aBoard aGame resultCell pair |
 	aShip := Ship new.
 	aDie := Die with: 2.
 	aBoard := Board new.
@@ -140,9 +140,6 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 		         playedIn: aBoard
 		         with: aDie
 		         and: (OrderedCollection with: aShip).
-	firstCell := aGame board getMap at: 1.
-	
-	self assert: (firstCell includes: aShip).
 	
 	aGame playTurn.
 

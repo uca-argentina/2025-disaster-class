@@ -47,5 +47,7 @@ Game >> playTurn [
 	newCell := board getMap at: ((board getMap indexOf: oldCell) + 1).
 	newCell enters: shipToPlay.
 
+	board applyEffectTo: shipToPlay.
+
 	shipTurnIndex := (shipTurnIndex \\ ships size) + 1.
 ]
