@@ -1,16 +1,15 @@
 Class {
-	#name : 'GameTests',
-	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#name : #GameTests,
+	#superclass : #TestCase,
+	#category : #'IngSoft2-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GameTests class >> playedIn: aBoard [ 
 	self shouldBeImplemented.
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame aBoard someShips |
@@ -22,7 +21,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 	self assert: aGame board equals: aBoard
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
 	| aDie aGame aBoard someShips |
@@ -34,7 +33,7 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	self assert: aGame die equals: aDie
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	| aShip aDie aGame aBoard someShips firstCell |
@@ -48,7 +47,7 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 	self assert: (firstCell includes: aShip)
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
 	| aDie aGame aBoard aGroupOfShips firstCell |
@@ -61,7 +60,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 	self assert: (firstCell includesAll: aGroupOfShips)
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
 	| aGroupOfShips aDie aBoard aGame firstCell |
@@ -74,7 +73,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	self assert: (firstCell includesAll: aGroupOfShips)
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	| aShip aDie aGame aBoard aGroupOfShips firstCell secondCell |
@@ -95,7 +94,7 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 		((firstCell includes: aShip) not and: (secondCell includes: aShip))
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	| ship1 ship2 ships die board game firstCell secondCell thirdCell |
@@ -123,7 +122,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self deny: (firstCell includes: ship2)
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
 	| aShip aDie aBoard aGame resultCell pair |
@@ -146,4 +145,27 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	resultCell := aBoard getMap at: 4.
 
 	self assert: (resultCell includes: aShip)
+]
+
+{ #category : #tests }
+GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
+
+	| aShip aDie aBoard aGame startCell targetCell |
+	aShip := Ship new.
+	aDie := TestDie withForcedRoll: 3. "Dado fijo"
+	aBoard := Board with: 10.
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         and: (OrderedCollection with: aShip).
+
+	startCell := aBoard getMap at: 1.
+	targetCell := aBoard getMap at: 4. 
+
+	self assert: (startCell includes: aShip).
+
+	aGame playTurn.
+
+	self assert: (targetCell includes: aShip).
+	self deny: (startCell includes: aShip)
 ]

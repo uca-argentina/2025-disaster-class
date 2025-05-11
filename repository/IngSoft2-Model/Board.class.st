@@ -1,19 +1,18 @@
 Class {
-	#name : 'Board',
-	#superclass : 'Object',
+	#name : #Board,
+	#superclass : #Object,
 	#instVars : [
 		'map'
 	],
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 Board class >> with: aNumberOfCells [ 
 	^self new initializeWith: aNumberOfCells. 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> applyEffectTo: aShip [
 
 	| cell |
@@ -21,12 +20,12 @@ Board >> applyEffectTo: aShip [
 	cell applyEffectTo: aShip in: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> getMap [ 
 	^map.
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 Board >> initializeWith: aNumberOfCells [
 
 	map := OrderedCollection new: aNumberOfCells.
@@ -34,7 +33,7 @@ Board >> initializeWith: aNumberOfCells [
 	map add: (RegularCell with: OrderedCollection new) ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
