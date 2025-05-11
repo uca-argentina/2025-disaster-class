@@ -35,10 +35,6 @@ Board >> initializeWith: aNumberOfCells [
 ]
 
 { #category : 'as yet unclassified' }
-Board >> moveShip [
-]
-
-{ #category : 'as yet unclassified' }
 Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
