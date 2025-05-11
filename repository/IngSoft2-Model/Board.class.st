@@ -20,10 +20,18 @@ Board >> getMap [
 
 { #category : 'initialization' }
 Board >> initializeWith: aNumberOfCells [
-	 map := OrderedCollection new: aNumberOfCells.
-	1 to: aNumberOfCells do: [ :i | map add: (RegularCell with: (OrderedCollection new))  ].
+
+	map := OrderedCollection new: aNumberOfCells.
+	1 to: aNumberOfCells do: [ :i |
+	map add: (RegularCell with: OrderedCollection new) ]
 ]
 
 { #category : 'as yet unclassified' }
 Board >> moveShip [
+]
+
+{ #category : 'as yet unclassified' }
+Board >> placeAllShipsAtStart: someShips [
+
+	(map at: 1) entersAll: someShips
 ]

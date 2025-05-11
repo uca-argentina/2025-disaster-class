@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'board',
 		'die',
-		'ship'
+		'ships',
+		'shipTurnIndex'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -28,15 +29,23 @@ Game >> die [
 
 { #category : 'initialization' }
 Game >> initializeWith: aBoard and: aDie and: someShips [
-
-	| aShip |
 	board := aBoard.
-	( ( board getMap ) at: 1 )enters: someShips.
 	die := aDie.
-	ship := aShip.
+	ships := someShips.
+	shipTurnIndex := 1.
+	board placeAllShipsAtStart: someShips.
 ]
 
-{ #category : 'accessing' }
-Game >> ship [
-	^ ship
+{ #category : 'as yet unclassified' }
+Game >> playTurn [
+	| shipToPlay oldCell newCell |
+	shipToPlay := ships at: shipTurnIndex.
+ 
+	oldCell := board getMap detect: [ :cell | cell includes: shipToPlay ].
+	oldCell leaves: shipToPlay.
+
+	newCell := board getMap at: ((board getMap indexOf: oldCell) + 1).
+	newCell enters: shipToPlay.
+
+	shipTurnIndex := (shipTurnIndex \\ ships size) + 1.
 ]

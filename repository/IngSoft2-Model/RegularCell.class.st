@@ -4,9 +4,6 @@ Represents a cell which has the capacity to hold a ship.
 Class {
 	#name : 'RegularCell',
 	#superclass : 'Cell',
-	#instVars : [
-		'shipContainer'
-	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
@@ -23,16 +20,6 @@ RegularCell >> enters: aShip [
 ]
 
 { #category : 'as yet unclassified' }
-RegularCell >> getShips [
-	^shipContainer.
-]
-
-{ #category : 'initialization' }
-RegularCell >> initializeWith: aShipContainer [ 
-	shipContainer := aShipContainer.
-]
-
-{ #category : 'accessing' }
-RegularCell >> leaves: aShip [ 
-	shipContainer remove: aShip
+RegularCell >> entersAll: someShips [
+	someShips do: [:each | self enters: each ].
 ]
