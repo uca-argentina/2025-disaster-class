@@ -41,7 +41,7 @@ Game >> playTurn [
 	| shipToPlay oldCell newCell |
 	shipToPlay := ships at: shipTurnIndex.
  
-	oldCell := board getMap detect: [ :cell | cell includes: shipToPlay ].
+	oldCell := board getMap detect: [:cell | cell includes: shipToPlay ].
 	oldCell leaves: shipToPlay.
 
 	newCell := board getMap at: ((board getMap indexOf: oldCell) + 1).

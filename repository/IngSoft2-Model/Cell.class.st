@@ -8,19 +8,33 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
+{ #category : 'instance creation' }
+Cell class >> with: aShipContainer [
+	^self new initializeWith: aShipContainer.
+]
+
 { #category : 'as yet unclassified' }
 Cell >> enters: aShip [
-	self subclassResponsibility
+
+	shipContainer add: aShip
+]
+
+{ #category : 'as yet unclassified' }
+Cell >> entersAll: someShips [
+
+	someShips do: [ :each | self enters: each ]
 ]
 
 { #category : 'as yet unclassified' }
 Cell >> getShips [
-	^shipContainer.
+
+	^ shipContainer
 ]
 
 { #category : 'testing' }
-Cell >> includes: aShip [ 
-	^shipContainer includes: aShip .
+Cell >> includes: aShip [
+
+	^ shipContainer includes: aShip
 ]
 
 { #category : 'testing' }
@@ -31,11 +45,13 @@ Cell >> includesAll: aCollectionOfShips [
 ]
 
 { #category : 'initialization' }
-Cell >> initializeWith: aShipContainer [ 
-	shipContainer := aShipContainer.
+Cell >> initializeWith: aShipContainer [
+
+	shipContainer := aShipContainer
 ]
 
 { #category : 'accessing' }
-Cell >> leaves: aShip [ 
+Cell >> leaves: aShip [
+
 	shipContainer remove: aShip
 ]

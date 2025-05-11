@@ -122,3 +122,31 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self deny: (firstCell includes: ship1).
 	self deny: (firstCell includes: ship2)
 ]
+
+{ #category : 'tests' }
+GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
+
+	| aShip aDie aBoard aGame resultCell pair firstCell |
+	aShip := Ship new.
+	aDie := Die with: 2.
+	aBoard := Board new.
+	aBoard initializeWith: 5.
+
+	pair := WormholeCell createPair.
+	aBoard getMap at: 2 put: (pair at: 1).
+	aBoard getMap at: 4 put: (pair at: 2).
+
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         and: (OrderedCollection with: aShip).
+	firstCell := aGame board getMap at: 1.
+	
+	self assert: (firstCell includes: aShip).
+	
+	aGame playTurn.
+
+	resultCell := aBoard getMap at: 4.
+
+	self assert: (resultCell includes: aShip)
+]
