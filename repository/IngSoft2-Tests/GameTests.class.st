@@ -199,3 +199,64 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 	
 	self deny: game isOver.
 ]
+
+{ #category : #tests }
+GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
+
+	| ship die board game |
+	ship := Ship new.
+	die := TestDie withForcedRoll: 4. 
+	board := Board with: 5.
+	game := Game
+		        playedIn: board
+		        with: die
+		        and: (OrderedCollection with: ship).
+
+	self assert: game winner isNil.
+
+	game playTurn.
+
+	self assert: game winner = ship
+]
+
+{ #category : #tests }
+GameTests >> test013GameIsOverWhenThereIsAWinner [
+
+	| ship die board game |
+	ship := Ship new.
+	die:= TestDie withForcedRoll: 4.
+	board := Board with: 5.
+	game := Game playedIn: board with: die and: (OrderedCollection with: ship).
+	
+	self deny: game isOver.
+	self assert: game winner isNil.
+	
+	game playTurn.
+	
+	self assert: game isOver.
+	self assert: game winner = ship.
+]
+
+{ #category : #tests }
+GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsValid [
+
+	| ship die board game lastCell |
+	ship := Ship new.
+	die := TestDie withForcedRoll: 4.
+	board := Board with: 5.
+	game := Game
+		        playedIn: board
+		        with: die
+		        and: (OrderedCollection with: ship).
+
+	game playTurn.
+	lastCell := board getMap last.
+
+	self assert: game isOver.
+	self assert: (lastCell includes: ship).
+	
+	game playTurn.
+	
+	self assert: (lastCell includes: ship).
+	self assert: game isOver.
+]

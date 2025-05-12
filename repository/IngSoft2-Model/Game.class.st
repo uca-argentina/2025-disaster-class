@@ -37,31 +37,43 @@ Game >> initializeWith: aBoard and: aDie and: someShips [
 
 { #category : #testing }
 Game >> isOver [
-
+	"| shipCell |
 	^ ships anySatisfy: [ :ship |
-		  | shipCell |
 		  shipCell := board getMap detect: [ :cell | cell includes: ship ].
-		  shipCell = board getMap last ]
+		  shipCell = board getMap last ]"
+
+	^ self winner notNil
 ]
 
 { #category : #'as yet unclassified' }
 Game >> playTurn [
-	| shipToPlay oldCell roll targetIndex newCell  |
 	
-shipToPlay := ships at: shipTurnIndex.
-oldCell := board getMap detect: [:cell | cell includes: shipToPlay].
-oldCell leaves: shipToPlay.
+	
+	| shipToPlay oldCell roll targetIndex newCell |
+	self isOver ifTrue: [ ^self ].
+	shipToPlay := ships at: shipTurnIndex.
+	oldCell := board getMap detect: [ :cell | cell includes: shipToPlay ].
+	oldCell leaves: shipToPlay.
 
-roll:= die rollDice.
-targetIndex := (board getMap indexOf: oldCell) + roll.
-targetIndex := targetIndex min: board getMap size. "evita que se pase al final"
+	roll := die rollDice.
+	targetIndex := (board getMap indexOf: oldCell) + roll.
+	targetIndex := targetIndex min: board getMap size. "evita que se pase al final"
 
-newCell := board getMap at: targetIndex.
-newCell enters: shipToPlay.
+	newCell := board getMap at: targetIndex.
+	newCell enters: shipToPlay.
 
-board applyEffectTo: shipToPlay.
+	board applyEffectTo: shipToPlay.
 
-shipTurnIndex := (shipTurnIndex \\ ships size ) + 1.
+	shipTurnIndex := shipTurnIndex \\ ships size + 1
+]
 
+{ #category : #testing }
+Game >> winner [
 
+	^ ships
+		  detect: [ :ship |
+			  | shipCell |
+			  shipCell := board getMap detect: [ :cell | cell includes: ship ].
+			  shipCell = board getMap last ]
+		  ifNone: [ nil ]
 ]
