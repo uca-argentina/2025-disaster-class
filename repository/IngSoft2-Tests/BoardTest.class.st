@@ -1,10 +1,11 @@
 Class {
-	#name : #BoardTest,
-	#superclass : #TestCase,
-	#category : 'IngSoft2-Tests'
+	#name : 'BoardTest',
+	#superclass : 'TestCase',
+	#category : 'IngSoft2-Tests',
+	#package : 'IngSoft2-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
 	| aNumberOfCells aBoard |
@@ -13,7 +14,7 @@ BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 	self assert: aBoard getMap size equals: aNumberOfCells
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test002FirstElementIsACell [
 
 	| aBoard |
@@ -21,7 +22,7 @@ BoardTest >> test002FirstElementIsACell [
 	self assert: (aBoard getMap first isKindOf: RegularCell)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test003AllElementsAreCellsThenIsValid [
 
 	| aBoard |
@@ -30,7 +31,7 @@ BoardTest >> test003AllElementsAreCellsThenIsValid [
 		(aBoard getMap allSatisfy: [ :element | element isKindOf: RegularCell ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [ 
 	| aMap aBoard aShip aCell |
 	aBoard := Board with: 5.

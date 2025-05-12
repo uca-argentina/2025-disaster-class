@@ -1,73 +1,82 @@
 Class {
-	#name : #Game,
-	#superclass : #Object,
+	#name : 'Game',
+	#superclass : 'Object',
 	#instVars : [
 		'board',
-		'die',
+		'dice',
 		'ships',
 		'shipTurnIndex'
 	],
-	#category : #'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game class >> playedIn: aBoard with: aDie and: someShips [
 
 	^ self new initializeWith: aBoard and: aDie and: someShips
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> board [
+
 	^ board
 ]
 
-{ #category : #accessing }
-Game >> die [
-	^ die
+{ #category : 'accessing' }
+Game >> dice [
+
+	^ dice
 ]
 
-{ #category : #initialization }
-Game >> initializeWith: aBoard and: aDie and: someShips [
+{ #category : 'as yet unclassified' }
+Game >> finalPositions [
+
+	^ Dictionary newFrom: (ships collect: [ :ship |
+			   ship -> (board getMap indexOf:
+				    (board getMap detect: [ :cell | cell includes: ship ])) ])
+]
+
+{ #category : 'initialization' }
+Game >> initializeWith: aBoard and: someDice and: someShips [
+
 	board := aBoard.
-	die := aDie.
+	dice := someDice.
 	ships := someShips.
 	shipTurnIndex := 1.
-	board placeAllShipsAtStart: someShips.
+	board placeAllShipsAtStart: someShips
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> isOver [
-	"| shipCell |
-	^ ships anySatisfy: [ :ship |
-		  shipCell := board getMap detect: [ :cell | cell includes: ship ].
-		  shipCell = board getMap last ]"
 
 	^ self winner notNil
 ]
 
-{ #category : #'as yet unclassified' }
-Game >> playTurn [
-	
-	
-	| shipToPlay oldCell roll targetIndex newCell |
+{ #category : 'as yet unclassified' }
+Game >> playTurn [ 
+	| shipToPlay oldCell totalRoll targetIndex newCell |
 	self isOver ifTrue: [ ^self ].
+
 	shipToPlay := ships at: shipTurnIndex.
 	oldCell := board getMap detect: [ :cell | cell includes: shipToPlay ].
 	oldCell leaves: shipToPlay.
 
-	roll := die rollDice.
-	targetIndex := (board getMap indexOf: oldCell) + roll.
-	targetIndex := targetIndex min: board getMap size. "evita que se pase al final"
+	totalRoll := dice sum: [ :eachDie | eachDie rollDice ].
+
+	targetIndex := (board getMap indexOf: oldCell) + totalRoll.
+	targetIndex := targetIndex min: board getMap size. "evita pasarse"
 
 	newCell := board getMap at: targetIndex.
 	newCell enters: shipToPlay.
 
 	board applyEffectTo: shipToPlay.
 
-	shipTurnIndex := shipTurnIndex \\ ships size + 1
+	shipTurnIndex := shipTurnIndex \\ ships size + 1.
+
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> winner [
 
 	^ ships
