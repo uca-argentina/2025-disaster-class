@@ -168,3 +168,34 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 	self assert: (targetCell includes: aShip).
 	self deny: (startCell includes: aShip)
 ]
+
+{ #category : #tests }
+GameTests >> test010GameIsOverWhenShipReachesLastCell [
+
+	| aShip aDie aBoard aGame |
+	aShip := Ship new.
+	aDie := TestDie withForcedRoll: 4.
+	aBoard := Board with: 5.
+	aGame := Game playedIn: aBoard with: aDie and: (OrderedCollection with: aShip).
+	
+	self deny: aGame isOver.
+	
+	aGame playTurn.
+	
+	self assert: aGame isOver. 
+]
+
+{ #category : #tests }
+GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
+	| ship die board game |
+	ship := Ship new.
+	die := TestDie withForcedRoll: 1.
+	board := Board with: 5.
+	game := Game playedIn: board with: die and: (OrderedCollection with: ship).
+	
+	self deny: game isOver.
+	
+	game playTurn.
+	
+	self deny: game isOver.
+]

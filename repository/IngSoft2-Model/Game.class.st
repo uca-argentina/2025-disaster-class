@@ -35,6 +35,15 @@ Game >> initializeWith: aBoard and: aDie and: someShips [
 	board placeAllShipsAtStart: someShips.
 ]
 
+{ #category : #testing }
+Game >> isOver [
+
+	^ ships anySatisfy: [ :ship |
+		  | shipCell |
+		  shipCell := board getMap detect: [ :cell | cell includes: ship ].
+		  shipCell = board getMap last ]
+]
+
 { #category : #'as yet unclassified' }
 Game >> playTurn [
 	| shipToPlay oldCell roll targetIndex newCell  |
