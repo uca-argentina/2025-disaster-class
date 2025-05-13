@@ -19,7 +19,8 @@ Game class >> playedIn: aBoard with: aDie and: someShips [
 
 { #category : 'as yet unclassified' }
 Game >> advanceToNextPlayer [
-    shipTurnIndex := shipTurnIndex \\ ships size + 1
+
+	shipTurnIndex := shipTurnIndex \\ ships size + 1
 ]
 
 { #category : 'accessing' }
@@ -29,13 +30,27 @@ Game >> board [
 ]
 
 { #category : 'as yet unclassified' }
+Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
+
+	| currentIndex maxIndex targetIndex |
+	
+	currentIndex := board getMap indexOf: (self currentCellOf: aShip).
+	maxIndex := board getMap size.
+	targetIndex := currentIndex + totalRoll min: maxIndex.
+	
+	^ board getMap at: targetIndex
+]
+
+{ #category : 'as yet unclassified' }
 Game >> currentCellOf: aShip [
-    ^ board getMap detect: [ :cell | cell includes: aShip ].
+
+	^ board getMap detect: [ :cell | cell includes: aShip ]
 ]
 
 { #category : 'as yet unclassified' }
 Game >> currentShip [
-    ^ships at: shipTurnIndex
+
+	^ ships at: shipTurnIndex
 ]
 
 { #category : 'accessing' }
@@ -70,33 +85,35 @@ Game >> isOver [
 
 { #category : 'as yet unclassified' }
 Game >> moveShip: aShip from: oldCell to: newCell [
-    oldCell leaves: aShip.
-    newCell enters: aShip.
 
+	oldCell leaves: aShip.
+	newCell enters: aShip
 ]
 
 { #category : 'as yet unclassified' }
-Game >> playTurn [ 
-	| shipToPlay oldCell totalRoll targetIndex newCell |
-	
-	self isOver ifTrue: [ ^self ].
+Game >> playTurn [
+
+	| shipToPlay oldCell newCell |
+	self isOver ifTrue: [ ^ self ].
 
 	shipToPlay := self currentShip.
-	oldCell := self currentCellOf: shipToPlay .
+	oldCell := self currentCellOf: shipToPlay.
 
-	totalRoll := dice sum: [ :eachDie | eachDie rollDice ].
+	newCell := self
+		           calculateNewPositionFor: shipToPlay
+		           afterRolling: self rollAllDice.
 
-	targetIndex := (board getMap indexOf: oldCell) + totalRoll.
-	targetIndex := targetIndex min: board getMap size. "evita pasarse"
-
-	newCell := board getMap at: targetIndex.
-	
 	self moveShip: shipToPlay from: oldCell to: newCell.
 
 	board applyEffectTo: shipToPlay.
 
 	self advanceToNextPlayer
+]
 
+{ #category : 'as yet unclassified' }
+Game >> rollAllDice [
+
+	^ dice sum: [ :eachDie | eachDie rollDice ]
 ]
 
 { #category : 'testing' }
