@@ -34,7 +34,7 @@ Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 
 	| currentIndex maxIndex targetIndex |
 	
-	currentIndex := board getMap indexOf: (self currentCellOf: aShip).
+	currentIndex := self positionOfShip: aShip.
 	maxIndex := board getMap size.
 	targetIndex := currentIndex + totalRoll min: maxIndex.
 	
@@ -62,9 +62,8 @@ Game >> dice [
 { #category : 'as yet unclassified' }
 Game >> finalPositions [
 
-	^ Dictionary newFrom: (ships collect: [ :ship |
-			   ship -> (board getMap indexOf:
-				    (board getMap detect: [ :cell | cell includes: ship ])) ])
+	^ Dictionary newFrom:
+		  (ships collect: [ :ship | ship -> (self positionOfShip: ship) ])
 ]
 
 { #category : 'testing' }
@@ -120,6 +119,12 @@ Game >> playTurn [
 	board applyEffectTo: shipToPlay.
 
 	self advanceToNextPlayer
+]
+
+{ #category : 'as yet unclassified' }
+Game >> positionOfShip: aShip [
+
+	^ board getMap indexOf: (self currentCellOf: aShip)
 ]
 
 { #category : 'as yet unclassified' }
