@@ -17,6 +17,11 @@ Game class >> playedIn: aBoard with: aDie and: someShips [
 	^ self new initializeWith: aBoard and: aDie and: someShips
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> advanceToNextPlayer [
+    shipTurnIndex := shipTurnIndex \\ ships size + 1
+]
+
 { #category : 'accessing' }
 Game >> board [
 
@@ -90,7 +95,7 @@ Game >> playTurn [
 
 	board applyEffectTo: shipToPlay.
 
-	shipTurnIndex := shipTurnIndex \\ ships size + 1.
+	self advanceToNextPlayer
 
 ]
 
