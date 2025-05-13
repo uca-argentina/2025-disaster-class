@@ -28,6 +28,11 @@ Game >> currentCellOf: aShip [
     ^ board getMap detect: [ :cell | cell includes: aShip ].
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> currentShip [
+    ^ships at: shipTurnIndex
+]
+
 { #category : 'accessing' }
 Game >> dice [
 
@@ -71,7 +76,7 @@ Game >> playTurn [
 	
 	self isOver ifTrue: [ ^self ].
 
-	shipToPlay := ships at: shipTurnIndex.
+	shipToPlay := self currentShip.
 	oldCell := self currentCellOf: shipToPlay .
 
 	totalRoll := dice sum: [ :eachDie | eachDie rollDice ].
