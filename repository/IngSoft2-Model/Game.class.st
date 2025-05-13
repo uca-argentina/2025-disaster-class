@@ -23,6 +23,11 @@ Game >> board [
 	^ board
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> currentCellOf: aShip [
+    ^ board getMap detect: [ :cell | cell includes: aShip ].
+]
+
 { #category : 'accessing' }
 Game >> dice [
 
@@ -54,13 +59,20 @@ Game >> isOver [
 ]
 
 { #category : 'as yet unclassified' }
+Game >> moveShip: aShip from: oldCell to: newCell [
+    oldCell leaves: aShip.
+    newCell enters: aShip.
+
+]
+
+{ #category : 'as yet unclassified' }
 Game >> playTurn [ 
 	| shipToPlay oldCell totalRoll targetIndex newCell |
+	
 	self isOver ifTrue: [ ^self ].
 
 	shipToPlay := ships at: shipTurnIndex.
-	oldCell := board getMap detect: [ :cell | cell includes: shipToPlay ].
-	oldCell leaves: shipToPlay.
+	oldCell := self currentCellOf: shipToPlay .
 
 	totalRoll := dice sum: [ :eachDie | eachDie rollDice ].
 
@@ -68,7 +80,8 @@ Game >> playTurn [
 	targetIndex := targetIndex min: board getMap size. "evita pasarse"
 
 	newCell := board getMap at: targetIndex.
-	newCell enters: shipToPlay.
+	
+	self moveShip: shipToPlay from: oldCell to: newCell.
 
 	board applyEffectTo: shipToPlay.
 
