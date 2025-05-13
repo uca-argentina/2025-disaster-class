@@ -67,6 +67,12 @@ Game >> finalPositions [
 				    (board getMap detect: [ :cell | cell includes: ship ])) ])
 ]
 
+{ #category : 'testing' }
+Game >> finishLineCell [
+
+	^ board getMap last
+]
+
 { #category : 'initialization' }
 Game >> initializeWith: aBoard and: someDice and: someShips [
 
@@ -81,6 +87,12 @@ Game >> initializeWith: aBoard and: someDice and: someShips [
 Game >> isOver [
 
 	^ self winner notNil
+]
+
+{ #category : 'testing' }
+Game >> isShipAtFinishLine: aShip [
+
+	^ (self currentCellOf: aShip) = self finishLineCell
 ]
 
 { #category : 'as yet unclassified' }
@@ -120,9 +132,6 @@ Game >> rollAllDice [
 Game >> winner [
 
 	^ ships
-		  detect: [ :ship |
-			  | shipCell |
-			  shipCell := board getMap detect: [ :cell | cell includes: ship ].
-			  shipCell = board getMap last ]
+		  detect: [ :ship | self isShipAtFinishLine: ship ]
 		  ifNone: [ nil ]
 ]
