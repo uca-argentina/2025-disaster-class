@@ -1,6 +1,5 @@
 Class {
-	#name : 'Ship',
-	#superclass : 'Object',
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#name : #Ship,
+	#superclass : #Object,
+	#category : 'IngSoft2-Model'
 }

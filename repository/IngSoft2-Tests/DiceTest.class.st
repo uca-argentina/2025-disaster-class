@@ -1,11 +1,10 @@
 Class {
-	#name : 'DiceTest',
-	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#name : #DiceTest,
+	#superclass : #TestCase,
+	#category : #'IngSoft2-Tests'
 }
 
-{ #category : 'tests' }
+{ #category : #tests }
 DiceTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
     self
@@ -16,14 +15,14 @@ DiceTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessa
                 errorMessage ]
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DiceTest >> testIfDiceResultIsIntegerThenIsValid [
 	| aDice |
 	aDice := Die with: 6.
 	self assert: aDice rollDice isInteger. 
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThenIsValid [
 
 	| aNumberOfSides aDice |
@@ -33,7 +32,7 @@ DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThen
 	self assert: aDice sides = aNumberOfSides
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DiceTest >> testIfNumberOfSidesInvalidThenInvalid [
 
 	self
@@ -43,7 +42,7 @@ DiceTest >> testIfNumberOfSidesInvalidThenInvalid [
 		'The die number of sides should at least be higher than 1.'
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DiceTest >> testIfRollIsBetweenTwoNumbersThenIsValid [
 
 	| aDice roll |
@@ -52,7 +51,7 @@ DiceTest >> testIfRollIsBetweenTwoNumbersThenIsValid [
 	self assert: (roll >= 1 and: [ roll <= 20 ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DiceTest >> testThatIfRollIsBetween1AndNumberOfSidesThenIsValid [
 
 	| aDice roll numberOfSides|
@@ -60,4 +59,17 @@ DiceTest >> testThatIfRollIsBetween1AndNumberOfSidesThenIsValid [
 	aDice := Die with: numberOfSides .
 	roll := aDice rollDice.
 	self assert: (roll >= 1 and: [ roll <= numberOfSides ])
+]
+
+{ #category : #tests }
+DiceTest >> testYouCanForceRollSequenceOfDieResults [
+	| die rolls |
+	
+	rolls := #(3 5 2).
+	die := TestDie withRolls: rolls.
+
+	self assert: die rollDice equals: 3.
+	self assert: die rollDice equals: 5.
+	self assert: die rollDice equals: 2.
+
 ]
