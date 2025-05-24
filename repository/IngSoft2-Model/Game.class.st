@@ -7,7 +7,7 @@ Class {
 		'ships',
 		'shipTurnIndex'
 	],
-	#category : 'IngSoft2-Model'
+	#category : #'IngSoft2-Model'
 }
 
 { #category : #'as yet unclassified' }
@@ -32,18 +32,16 @@ Game >> board [
 Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 
 	| currentIndex maxIndex targetIndex |
-	
 	currentIndex := self positionOfShip: aShip.
-	maxIndex := board getMap size.
+	maxIndex := board size.
 	targetIndex := currentIndex + totalRoll min: maxIndex.
-	
-	^ board getMap at: targetIndex
+	^ board cellAt: targetIndex
 ]
 
 { #category : #'as yet unclassified' }
 Game >> currentCellOf: aShip [
 
-	^ board getMap detect: [ :cell | cell includes: aShip ]
+	^ board cellContaining: aShip
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,7 +66,7 @@ Game >> finalPositions [
 { #category : #testing }
 Game >> finishLineCell [
 
-	^ board getMap last
+	^ board lastCell
 ]
 
 { #category : #initialization }
@@ -90,7 +88,7 @@ Game >> isOver [
 { #category : #testing }
 Game >> isShipAtFinishLine: aShip [
 
-	^ (self currentCellOf: aShip) = self finishLineCell
+	^ (self currentCellOf: aShip) = board lastCell
 ]
 
 { #category : #'as yet unclassified' }
@@ -123,7 +121,7 @@ Game >> playTurn [
 { #category : #'as yet unclassified' }
 Game >> positionOfShip: aShip [
 
-	^ board getMap indexOf: (self currentCellOf: aShip)
+	^ board indexOfCellContaining: aShip
 ]
 
 { #category : #'as yet unclassified' }

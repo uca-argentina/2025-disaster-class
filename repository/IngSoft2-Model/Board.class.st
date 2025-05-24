@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'map'
 	],
-	#category : 'IngSoft2-Model'
+	#category : #'IngSoft2-Model'
 }
 
 { #category : #'instance creation' }
@@ -21,14 +21,24 @@ Board >> applyEffectTo: aShip [
 ]
 
 { #category : #'as yet unclassified' }
-Board >> cellContaining: aShip [
-
-	^ self getMap detect: [ :each | each includes: aShip ]
+Board >> cellAt: aPosition [
+	^ map at: aPosition.
 ]
 
 { #category : #'as yet unclassified' }
-Board >> getMap [ 
-	^map.
+Board >> cellContaining: aShip [
+
+	^ map detect: [ :each | each includes: aShip ]
+]
+
+{ #category : #'as yet unclassified' }
+Board >> firstCell [
+	^ map first
+]
+
+{ #category : #'as yet unclassified' }
+Board >> indexOfCellContaining: aShip [
+	^ map indexOf: (self cellContaining: aShip).
 ]
 
 { #category : #initialization }
@@ -40,7 +50,17 @@ Board >> initializeWith: aNumberOfCells [
 ]
 
 { #category : #'as yet unclassified' }
+Board >> lastCell [
+	^ map last.
+]
+
+{ #category : #'as yet unclassified' }
 Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
+]
+
+{ #category : #'as yet unclassified' }
+Board >> size [
+	^ map size.
 ]

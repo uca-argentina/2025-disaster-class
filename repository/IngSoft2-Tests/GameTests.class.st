@@ -42,7 +42,8 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 	aDie := Die with: 2.
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: someShips.
-	firstCell := aGame board getMap first.
+	firstCell := aGame board firstCell.
+
 
 	self assert: (firstCell includes: aShip)
 ]
@@ -55,7 +56,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 	aDie := Die with: 2.
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aGame board getMap first.
+	firstCell := aGame board firstCell.
 
 	self assert: (firstCell includesAll: aGroupOfShips)
 ]
@@ -68,7 +69,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	aDie := Die with: 2.
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aBoard getMap first.
+	firstCell := aBoard firstCell .
 
 	self assert: (firstCell includesAll: aGroupOfShips)
 ]
@@ -79,12 +80,13 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 	| aShip aDie aGame aBoard aGroupOfShips firstCell secondCell |
 	aShip := Ship new.
 	aGroupOfShips := OrderedCollection with: aShip with: Ship new.
-	aDie := TestDie withForcedRoll: 1.
+	aDie := OrderedCollection with: (TestDie withForcedRoll: 1).
+
 	aBoard := Board with: 20.
 	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
 
-	firstCell := aGame board getMap at: 1.
-	secondCell := aGame board getMap at: 2.
+	firstCell := aGame board cellAt: 1.
+	secondCell := aGame board cellAt: 2.
 
 	self assert: ((firstCell includesAll: aGroupOfShips) and:
 			 secondCell getShips isEmpty).
@@ -106,8 +108,8 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	board := Board with: 5.
 	game := Game playedIn: board with: die and: ships.
 
-	firstCell := board getMap at: 1.
-	thirdCell := board getMap at: 3.
+	firstCell := board cellAt: 1.
+	thirdCell := board cellAt: 3.
 
 	self assert: (firstCell includes: ship1).
 	self assert: (firstCell includes: ship2).
@@ -131,8 +133,8 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	aBoard initializeWith: 5.
 
 	pair := WormholeCell createPair.
-	aBoard getMap at: 2 put: (pair at: 1).
-	aBoard getMap at: 4 put: (pair at: 2).
+	(aBoard cellAt: 2) put: (pair at: 1).
+	(aBoard cellAt: 4) put: (pair at: 2).
 
 	aGame := Game
 		         playedIn: aBoard
@@ -141,7 +143,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 
 	aGame playTurn.
 
-	resultCell := aBoard getMap at: 4.
+	resultCell := aBoard cellAt: 4.
 
 	self assert: (resultCell includes: aShip)
 ]
@@ -158,8 +160,8 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 		         with: aDie
 		         and: (OrderedCollection with: aShip).
 
-	startCell := aBoard getMap at: 1.
-	targetCell := aBoard getMap at: 4.
+	startCell := aBoard cellAt: 1.
+	targetCell := aBoard cellAt: 4.
 
 	self assert: (startCell includes: aShip).
 
@@ -250,7 +252,7 @@ GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsVal
 		        and: (OrderedCollection with: ship).
 
 	game playTurn.
-	lastCell := board getMap last.
+	lastCell := board lastCell.
 
 	self assert: game isOver.
 	self assert: (lastCell includes: ship).
@@ -274,7 +276,7 @@ GameTests >> test015IfYouCanPlayWithMultipleDieThenIsValid [
 		        playedIn: board
 		        with: someDice
 		        and: (OrderedCollection with: aShip).
-	lastCell := board getMap last.
+	lastCell := board lastCell.
 
 	game playTurn.
 	self assert: (lastCell includes: aShip)

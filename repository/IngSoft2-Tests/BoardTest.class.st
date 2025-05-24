@@ -1,7 +1,7 @@
 Class {
 	#name : #BoardTest,
 	#superclass : #TestCase,
-	#category : 'IngSoft2-Tests'
+	#category : #'IngSoft2-Tests'
 }
 
 { #category : #'as yet unclassified' }
@@ -10,7 +10,8 @@ BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 	| aNumberOfCells aBoard |
 	aNumberOfCells := 20.
 	aBoard := Board with: aNumberOfCells.
-	self assert: aBoard getMap size equals: aNumberOfCells
+	self assert: aBoard size equals: aNumberOfCells
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -18,7 +19,8 @@ BoardTest >> test002FirstElementIsACell [
 
 	| aBoard |
 	aBoard := Board with: 1.
-	self assert: (aBoard getMap first isKindOf: RegularCell)
+	self assert: ((aBoard cellAt: 1) isKindOf: RegularCell)
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -26,17 +28,19 @@ BoardTest >> test003AllElementsAreCellsThenIsValid [
 
 	| aBoard |
 	aBoard := Board with: 20.
-	self assert:
-		(aBoard getMap allSatisfy: [ :element | element isKindOf: RegularCell ])
+	self assert: ((1 to: aBoard size) allSatisfy: [ :i | (aBoard cellAt: i) isKindOf: RegularCell ]).
+
+
+
 ]
 
 { #category : #'as yet unclassified' }
-BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [ 
-	| aMap aBoard aShip aCell |
+BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [
+
+	| aBoard aShip aCell |
 	aBoard := Board with: 5.
 	aShip := Ship new.
-	aMap := aBoard getMap.
-	aCell := (aMap at:1).
+	aCell := aBoard cellAt: 1.
 	aCell enters: aShip.
-	self assert: ((aCell getShips at: 1) isKindOf: Ship ).
+	self assert: ((aCell getShips at: 1) isKindOf: Ship)
 ]
