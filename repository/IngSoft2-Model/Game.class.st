@@ -93,45 +93,30 @@ Game >> isShipAtFinishLine: aShip [
 ]
 
 { #category : 'as yet unclassified' }
-Game >> moveShip: aShip from: oldCell to: newCell [
+Game >> performTurnWith: aShip [
 
-	oldCell leaves: aShip.
-	newCell enters: aShip
-]
+	| steps |
+	steps := self rollAllDice.
 
-{ #category : 'as yet unclassified' }
-Game >> performTurnWith: aShip [ 
+	board moveShip: aShip steps: steps.
 
-	| oldCell newCell |
-
-	oldCell := self currentCellOf: aShip.
-
-	newCell := self
-		calculateNewPositionFor: aShip
-		afterRolling: self rollAllDice.
-
-	self moveShip: aShip from: oldCell to: newCell.
-
-	board applyEffectTo: aShip.
-
-
+	board applyEffectTo: aShip
 ]
 
 { #category : 'as yet unclassified' }
 Game >> playTurn [
 
-	self isOver ifTrue: [ ^nil ].
+	self isOver ifTrue: [ ^ nil ].
 
 	self performTurnWith: self currentShip.
 
-	self advanceToNextPlayer.
-
+	self advanceToNextPlayer
 ]
 
 { #category : 'as yet unclassified' }
 Game >> positionOfShip: aShip [
 
-	^ board indexOfCellContaining: aShip
+	^ board cellContaining: aShip
 ]
 
 { #category : 'as yet unclassified' }

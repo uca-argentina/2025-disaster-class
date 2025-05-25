@@ -33,13 +33,11 @@ Board >> cellAt: aPosition [
 { #category : 'as yet unclassified' }
 Board >> cellContaining: aShip [
 
-	^ map detect: [ :each | each includes: aShip ]
+	^ map indexOf: (map detect: [ :cell | cell includes: aShip ])
 ]
 
 { #category : 'accessing' }
 Board >> createMapOf: aNumberOfCells withWormholesAt: someFirstPosition and: someSecondPosition using: wormholePair [
-
-	| map |
 	map := OrderedCollection new: aNumberOfCells.
 
 	1 to: aNumberOfCells do: [ :i |
@@ -56,17 +54,6 @@ Board >> createMapOf: aNumberOfCells withWormholesAt: someFirstPosition and: som
 { #category : 'as yet unclassified' }
 Board >> firstCell [
 	^ map first
-]
-
-{ #category : 'as yet unclassified' }
-Board >> getMap [
-
-	^ map
-]
-
-{ #category : 'as yet unclassified' }
-Board >> indexOfCellContaining: aShip [
-	^ map indexOf: (self cellContaining: aShip).
 ]
 
 { #category : 'initialization' }
@@ -89,6 +76,17 @@ Board >> initializeWith: aNumberOfCells withWormholesAt: someFirstPosition and: 
 { #category : 'as yet unclassified' }
 Board >> lastCell [
 	^ map last.
+]
+
+{ #category : 'as yet unclassified' }
+Board >> moveShip: aShip steps: aStepCount [
+
+	| currentIndex newIndex oldCell newCell |
+	currentIndex := self cellContaining: aShip.
+	newIndex := currentIndex + aStepCount.
+
+	(oldCell := map at: currentIndex) leaves: aShip.
+	(newCell := map at: newIndex) enters: aShip
 ]
 
 { #category : 'as yet unclassified' }
