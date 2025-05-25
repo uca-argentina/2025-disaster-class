@@ -11,6 +11,16 @@ GameTests class >> playedIn: aBoard [
 ]
 
 { #category : 'tests' }
+GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
+
+	self
+		should: anErrorBlock
+		raise: anErrorClass
+		withExceptionDo: [ :error |
+		self assert: error messageText equals: errorMessage ]
+]
+
+{ #category : 'tests' }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame aBoard someShips |
@@ -300,4 +310,26 @@ GameTests >> test016IFWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 
 	self assert: (finalPositions at: ship1) equals: 20.
 	self assert: (finalPositions at: ship2) equals: 1
+]
+
+{ #category : 'tests' }
+GameTests >> testWhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
+
+	self
+		should: [ Board with: 20 withWormholesAt: 45 And: 10 ]
+		raise: Error
+		withMessageText:
+		'Posiciones de agujeros de gusano fuera de rango: #(45 10)'
+
+]
+
+{ #category : 'tests' }
+GameTests >> testWhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails [
+
+	self
+		should: [ Board with: 20 withWormholesAt: 10 And: 45 ]
+		raise: Error
+		withMessageText:
+		'Posiciones de agujeros de gusano fuera de rango: #(10 45)'
+
 ]
