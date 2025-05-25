@@ -289,7 +289,7 @@ GameTests >> test015IfYouCanPlayWithMultipleDieThenIsValid [
 ]
 
 { #category : 'tests' }
-GameTests >> test016IFWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
+GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
 	| ship1 ship2 board game die finalPositions |
 	ship1 := Ship new.
@@ -313,7 +313,7 @@ GameTests >> test016IFWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 ]
 
 { #category : 'tests' }
-GameTests >> testWhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
+GameTests >> test017WhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 	self
 		should: [ Board with: 20 withWormholesAt: 45 And: 10 ]
@@ -324,7 +324,7 @@ GameTests >> testWhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
 ]
 
 { #category : 'tests' }
-GameTests >> testWhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails [
+GameTests >> test018WhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 	self
 		should: [ Board with: 20 withWormholesAt: 10 And: 45 ]
@@ -332,4 +332,30 @@ GameTests >> testWhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails [
 		withMessageText:
 		'Posiciones de agujeros de gusano fuera de rango: #(10 45)'
 
+]
+
+{ #category : 'tests' }
+GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
+
+	| ship1 ship2 board game die finalPositions |
+	ship1 := Ship new.
+	ship2 := Ship new.
+	die := TestDie withForcedRoll: 20.
+	board := Board with: 20 withWormholesAt: 10 And: 18.
+	game := Game
+		        playedIn: board
+		        with: (OrderedCollection with: die)
+		        and: (OrderedCollection with: ship1 with: ship2).
+
+	game playTurn.
+
+	self assert: game isOver.
+	finalPositions := game finalPositions.
+	self assert: (finalPositions at: ship1) equals: 20.
+	self assert: (finalPositions at: ship2) equals: 1.
+	
+	game playTurn.
+	finalPositions := game finalPositions.
+	self assert: (finalPositions at: ship1) equals: 20.
+	self assert: (finalPositions at: ship2) equals: 1
 ]

@@ -83,7 +83,7 @@ Game >> initializeWith: aBoard and: someDice and: someShips [
 { #category : 'testing' }
 Game >> isOver [
 
-	^ self winner notNil
+	^ ships anySatisfy: [ :ship | self isShipAtFinishLine: ship ]
 ]
 
 { #category : 'testing' }
@@ -100,23 +100,32 @@ Game >> moveShip: aShip from: oldCell to: newCell [
 ]
 
 { #category : 'as yet unclassified' }
-Game >> playTurn [
+Game >> performTurnWith: aShip [ 
 
-	| shipToPlay oldCell newCell |
-	self isOver ifTrue: [ ^ self ].
+	| oldCell newCell |
 
-	shipToPlay := self currentShip.
-	oldCell := self currentCellOf: shipToPlay.
+	oldCell := self currentCellOf: aShip.
 
 	newCell := self
-		           calculateNewPositionFor: shipToPlay
-		           afterRolling: self rollAllDice.
+		calculateNewPositionFor: aShip
+		afterRolling: self rollAllDice.
 
-	self moveShip: shipToPlay from: oldCell to: newCell.
+	self moveShip: aShip from: oldCell to: newCell.
 
-	board applyEffectTo: shipToPlay.
+	board applyEffectTo: aShip.
 
-	self advanceToNextPlayer
+
+]
+
+{ #category : 'as yet unclassified' }
+Game >> playTurn [
+
+	self isOver ifTrue: [ ^nil ].
+
+	self performTurnWith: self currentShip.
+
+	self advanceToNextPlayer.
+
 ]
 
 { #category : 'as yet unclassified' }
