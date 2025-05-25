@@ -1,56 +1,55 @@
 Class {
-	#name : 'Cell',
-	#superclass : 'Object',
+	#name : #Cell,
+	#superclass : #Object,
 	#instVars : [
 		'shipContainer'
 	],
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 Cell class >> with: aShipContainer [
 	^self new initializeWith: aShipContainer.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Cell >> enters: aShip [
 
 	shipContainer add: aShip
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Cell >> entersAll: someShips [
 
 	someShips do: [ :each | self enters: each ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Cell >> getShips [
 
 	^ shipContainer
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 Cell >> includes: aShip [
 
 	^ shipContainer includes: aShip
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 Cell >> includesAll: aCollectionOfShips [
 
 	^ aCollectionOfShips allSatisfy: [ :ship |
 		  shipContainer includes: ship ]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 Cell >> initializeWith: aShipContainer [
 
 	shipContainer := aShipContainer
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 Cell >> leaves: aShip [
 
 	shipContainer remove: aShip

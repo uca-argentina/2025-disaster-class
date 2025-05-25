@@ -1,14 +1,13 @@
 Class {
-	#name : 'Board',
-	#superclass : 'Object',
+	#name : #Board,
+	#superclass : #Object,
 	#instVars : [
 		'map'
 	],
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#category : #'IngSoft2-Model'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 Board class >> with: aNumberOfCells withWormholesAt: someFirstPosition And: someSecondPosition [
 
 	^ self new
@@ -17,7 +16,7 @@ Board class >> with: aNumberOfCells withWormholesAt: someFirstPosition And: some
 		  and: someSecondPosition
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> applyEffectTo: aShip [
 
 	| cell |
@@ -25,18 +24,18 @@ Board >> applyEffectTo: aShip [
 	cell applyEffectTo: aShip in: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> cellAt: aPosition [
 	^ map at: aPosition.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> cellContaining: aShip [
 
-	^ map indexOf: (map detect: [ :cell | cell includes: aShip ])
+	^ map detect: [ :each | each includes: aShip ]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 Board >> createMapOf: aNumberOfCells withWormholesAt: someFirstPosition and: someSecondPosition using: wormholePair [
 	map := OrderedCollection new: aNumberOfCells.
 
@@ -51,12 +50,17 @@ Board >> createMapOf: aNumberOfCells withWormholesAt: someFirstPosition and: som
 	^ map
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> firstCell [
 	^ map first
 ]
 
-{ #category : 'initialization' }
+{ #category : #'as yet unclassified' }
+Board >> indexOfCellContaining: aShip [
+	^ map indexOf: (self cellContaining: aShip).
+]
+
+{ #category : #initialization }
 Board >> initializeWith: aNumberOfCells withWormholesAt: someFirstPosition and: someSecondPosition [
 
 	| wormholePair |
@@ -73,34 +77,34 @@ Board >> initializeWith: aNumberOfCells withWormholesAt: someFirstPosition and: 
 		using: wormholePair.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> lastCell [
 	^ map last.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> moveShip: aShip steps: aStepCount [
 
 	| currentIndex newIndex oldCell newCell |
-	currentIndex := self cellContaining: aShip.
-	newIndex := currentIndex + aStepCount.
+	currentIndex := self indexOfCellContaining: aShip.
+	newIndex := (currentIndex + aStepCount) min: self size.
 
 	(oldCell := map at: currentIndex) leaves: aShip.
 	(newCell := map at: newIndex) enters: aShip
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> size [
 	^ map size.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 Board >> validateIf: someFirstPosition and: someSecondPosition areBetweenOneAnd: aBoardLength [
 
 	((someFirstPosition between: 1 and: aBoardLength) and:
