@@ -1,10 +1,11 @@
 Class {
-	#name : #GameTests,
-	#superclass : #TestCase,
-	#category : #'IngSoft2-Tests'
+	#name : 'GameTests',
+	#superclass : 'TestCase',
+	#category : 'IngSoft2-Tests',
+	#package : 'IngSoft2-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
 	self
@@ -14,7 +15,7 @@ GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 		self assert: error messageText equals: errorMessage ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame aBoard |
@@ -28,7 +29,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 	self assert: aGame board equals: aBoard
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
 	| aDie aGame aBoard someShips |
@@ -40,7 +41,7 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	self assert: aGame dice equals: aDie
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	| aDie aGame aBoard |
@@ -55,7 +56,7 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
 	| aDie aGame aBoard |
@@ -72,7 +73,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
 	| aDie aBoard aGame positions |
@@ -87,7 +88,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	| aDie aGame aBoard positionsBefore positionsAfter |
@@ -111,7 +112,7 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 	self assert: (positionsAfter at: 'Orion') equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	| aDie aBoard game positionsAfterTurn2 |
@@ -134,7 +135,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
 	| aDie aBoard aGame positionsAfter |
@@ -152,7 +153,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
 	| aDie aBoard aGame positionsBefore positionsAfter |
@@ -174,7 +175,7 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 
 	| aDie aBoard aGame |
@@ -193,7 +194,7 @@ GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 	self assert: aGame isOver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 
 	| die board game |
@@ -208,7 +209,7 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 	self deny: game isOver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 	| die board game |
@@ -227,7 +228,7 @@ GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test013GameIsOverWhenThereIsAWinner [
 
 	| die board game |
@@ -244,7 +245,7 @@ GameTests >> test013GameIsOverWhenThereIsAWinner [
 	self assert: (game winner name) equals: 'Apollo'.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 	| aDie aBoard aGame somePositions |
@@ -274,7 +275,7 @@ GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 	self assert: aGame isOver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 	| die1 die2 dice board game positions |
 
@@ -304,7 +305,7 @@ GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
 	| aDie aBoard aGame somePositions |
@@ -325,7 +326,7 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test017WhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 	self
@@ -336,7 +337,7 @@ GameTests >> test017WhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test018WhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 	self
@@ -347,7 +348,7 @@ GameTests >> test018WhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails 
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
 	| aDie aBoard aGame somePositions |
@@ -373,7 +374,7 @@ GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test020ShipStartsWithFuelAndConsumesItPerStepMoved [
 
 	| aDie aBoard aGame initialFuel fuelAfterTurn |
@@ -391,4 +392,46 @@ GameTests >> test020ShipStartsWithFuelAndConsumesItPerStepMoved [
 
 	fuelAfterTurn := aGame fuelOf: 'Apollo'.
 	self assert: fuelAfterTurn equals: 3.
+]
+
+{ #category : 'tests' }
+GameTests >> test021IfShipRunsOutOfFuelThenReturnsToFirstCell [
+
+	| die board game ship |
+	die := TestDie withForcedRoll: 6.
+	board := Board with: 10 withWormholesAt: 3 And: 7.
+	game := Game
+		        playedIn: board
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
+	ship := game ships first.
+	ship consumeFuel: 12. "Simula que no tiene suficiente fuel"
+
+	game playTurn.
+
+	self assert: (board indexOfCellContaining: ship) equals: 1
+]
+
+{ #category : 'tests' }
+GameTests >> test022IfShipRunsOutOfFuelThenLosesTwoTurns [
+
+	| die board game ship |
+	die := TestDie withForcedRoll: 6.
+	board := Board with: 10 withWormholesAt: 3 And: 7.
+	game := Game
+		        playedIn: board
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
+	ship := game ships first.
+	ship consumeFuel: 12. "Sin combustible"
+
+	game playTurn. "Aplica penalidad (2 turnos perdidos)"
+
+	self deny: ship canPlay. "turno 1"
+	game playTurn.
+	self deny: ship canPlay. "turno 2"
+	game playTurn.
+	self assert: ship canPlay "turno 3"
 ]

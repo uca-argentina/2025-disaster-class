@@ -1,10 +1,11 @@
 Class {
-	#name : #BoardTest,
-	#superclass : #TestCase,
-	#category : 'IngSoft2-Tests'
+	#name : 'BoardTest',
+	#superclass : 'TestCase',
+	#category : 'IngSoft2-Tests',
+	#package : 'IngSoft2-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
 	| aNumberOfCells aBoard |
@@ -14,7 +15,7 @@ BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test002FirstElementIsACell [
 
 	| aBoard |
@@ -23,7 +24,7 @@ BoardTest >> test002FirstElementIsACell [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test003AllElementsAreCellsThenIsValid [
 
 	| aBoard |
@@ -35,7 +36,7 @@ BoardTest >> test003AllElementsAreCellsThenIsValid [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [
 
 	| aBoard aShip aCell |

@@ -1,10 +1,11 @@
 Class {
-	#name : #RegularCellTest,
-	#superclass : #TestCase,
-	#category : 'IngSoft2-Tests'
+	#name : 'RegularCellTest',
+	#superclass : 'TestCase',
+	#category : 'IngSoft2-Tests',
+	#package : 'IngSoft2-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test001IfACellIsEmptyThenIsValid [
 
 "si la cell no contiene ships es valido"
@@ -19,7 +20,7 @@ RegularCellTest >> test001IfACellIsEmptyThenIsValid [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test002IfCellHasCollectionOfShipsThenIsValid [
 
 	| aCollection aCell |
@@ -29,7 +30,7 @@ RegularCellTest >> test002IfCellHasCollectionOfShipsThenIsValid [
 	self assert: aCell getShips = aCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test003IfACellContainsAShipThenIsValid [
 	"si la cell contiene ships"
 
@@ -42,7 +43,7 @@ RegularCellTest >> test003IfACellContainsAShipThenIsValid [
 		(aCell getShips anySatisfy: [ :ship | ship isKindOf: Ship ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test004IfACellContainsOnlyShipsThenIsValid [
 	"si la cell solo contiene ships entonces es valido"
 
@@ -56,7 +57,7 @@ RegularCellTest >> test004IfACellContainsOnlyShipsThenIsValid [
 		(aCell getShips allSatisfy: [ :ship | ship isKindOf: Ship ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test005IfAShipIsAddedCorrectlyAfterInitializationThenIsValid [
 	"test if a ship can be added after initialization of the cell"
 
@@ -70,7 +71,7 @@ RegularCellTest >> test005IfAShipIsAddedCorrectlyAfterInitializationThenIsValid 
 		(aRegularCell getShips allSatisfy: [ :ship | ship isKindOf: Ship ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test006IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsEmpty [
 
 | aRegularCell aShip aShipContainer |
@@ -88,7 +89,7 @@ RegularCellTest >> test006IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsE
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test007IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNotEmpty [
 
 	| aRegularCell aShip aShipContainer aSecondShip |
@@ -105,7 +106,7 @@ RegularCellTest >> test007IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNot
 	self assert: aRegularCell getShips isNotEmpty
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RegularCellTest >> test008TwoShipsEnterAndLeaveThenCellIsEmptyAfter [
 
 | aRegularCell aShip aShipContainer aSecondShip |
