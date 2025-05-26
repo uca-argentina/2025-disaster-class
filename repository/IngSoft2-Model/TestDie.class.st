@@ -1,40 +1,41 @@
 Class {
-	#name : #TestDie,
-	#superclass : #Object,
+	#name : 'TestDie',
+	#superclass : 'Object',
 	#instVars : [
 		'forcedRoll',
 		'forcedRolls',
 		'index'
 	],
-	#category : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 TestDie class >> withForcedRoll: aNumber [
 
 	^ self new initializeWithForcedRoll: aNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 TestDie class >> withRolls: aCollection [
 
 	^ self new initializeWithRolls: aCollection
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TestDie >> initializeWithForcedRoll: aNumber [
 	forcedRoll := aNumber.
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TestDie >> initializeWithRolls: aCollection [
     forcedRolls := aCollection.
     index := 1.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TestDie >> rollDice [
 
 	| roll |

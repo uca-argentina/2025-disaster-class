@@ -1,34 +1,38 @@
 Class {
-	#name : #Game,
-	#superclass : #Object,
+	#name : 'Game',
+	#superclass : 'Object',
 	#instVars : [
 		'board',
 		'dice',
 		'ships',
 		'shipTurnIndex'
 	],
-	#category : #'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
-Game class >> playedIn: aBoard with: aDie and: someShips [
+{ #category : 'as yet unclassified' }
+Game class >> playedIn: aBoard with: someDice andShipsNamed: someShipNames [
 
-	^ self new initializeWith: aBoard and: aDie and: someShips
+	^ self new
+		  initializeWith: aBoard
+		  and: someDice
+		  andShipNames: someShipNames
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> advanceToNextPlayer [
 
 	shipTurnIndex := shipTurnIndex \\ ships size + 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> board [
 
 	^ board
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 
 	| currentIndex maxIndex targetIndex |
@@ -38,60 +42,54 @@ Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 	^ board cellAt: targetIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> currentCellOf: aShip [
 
 	^ board cellContaining: aShip
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> currentShip [
 
 	^ ships at: shipTurnIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> dice [
 
 	^ dice
 ]
 
-{ #category : #'as yet unclassified' }
-Game >> finalPositions [
-
-	^ Dictionary newFrom:
-		  (ships collect: [ :ship | ship -> (self positionOfShip: ship) ])
-]
-
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> finishLineCell [
 
 	^ board lastCell
 ]
 
-{ #category : #initialization }
-Game >> initializeWith: aBoard and: someDice and: someShips [
+{ #category : 'initialization' }
+Game >> initializeWith: aBoard and: someDice andShipNames: someShipNames [
 
 	board := aBoard.
 	dice := someDice.
-	ships := someShips.
+	ships := someShipNames collect: [ :eachName |
+		         Ship withName: eachName ].
 	shipTurnIndex := 1.
-	board placeAllShipsAtStart: someShips
+	board placeAllShipsAtStart: ships
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> isOver [
 
 	^ ships anySatisfy: [ :ship | self isShipAtFinishLine: ship ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> isShipAtFinishLine: aShip [
 
 	^ (self currentCellOf: aShip) = board lastCell
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> performTurnWith: aShip [
 
 	| steps |
@@ -102,7 +100,7 @@ Game >> performTurnWith: aShip [
 	board applyEffectTo: aShip
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> playTurn [
 
 	self isOver ifTrue: [ ^ nil ].
@@ -112,22 +110,38 @@ Game >> playTurn [
 	self advanceToNextPlayer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> positionOfShip: aShip [
 
 	^ board indexOfCellContaining: aShip
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
+Game >> positions [
+
+	^ Dictionary newFrom:
+		  (ships collect: [ :ship |
+			   ship name -> (self positionOfShip: ship) ])
+]
+
+{ #category : 'as yet unclassified' }
 Game >> rollAllDice [
 
 	^ dice sum: [ :eachDie | eachDie rollDice ]
 ]
 
-{ #category : #testing }
-Game >> winner [
+{ #category : 'accessing' }
+Game >> ships [
 
 	^ ships
-		  detect: [ :ship | self isShipAtFinishLine: ship ]
-		  ifNone: [ nil ]
+]
+
+{ #category : 'testing' }
+Game >> winner [
+
+	| shipsAtEnd |
+	shipsAtEnd := board lastCell getShips.
+	^ shipsAtEnd isEmpty
+		  ifTrue: [ nil ]
+		  ifFalse: [ shipsAtEnd first ]
 ]

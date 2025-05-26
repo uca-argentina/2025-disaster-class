@@ -5,11 +5,6 @@ Class {
 	#package : 'IngSoft2-Tests'
 }
 
-{ #category : 'as yet unclassified' }
-GameTests class >> playedIn: aBoard [ 
-	self shouldBeImplemented.
-]
-
 { #category : 'tests' }
 GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
@@ -23,11 +18,13 @@ GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 { #category : 'tests' }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
-	| aDie aGame aBoard someShips |
-	someShips := OrderedCollection with: Ship new.
+	| aDie aGame aBoard |
 	aDie := Die with: 2.
 	aBoard := Board with: 20 withWormholesAt: 2 And: 4.
-	aGame := Game playedIn: aBoard with: aDie and: someShips.
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         andShipsNamed: #( 'Apollo' ).
 
 	self assert: aGame board equals: aBoard
 ]
@@ -38,8 +35,8 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	| aDie aGame aBoard someShips |
 	someShips := OrderedCollection with: Ship new.
 	aDie := Die with: 2.
-	aBoard := aBoard := Board with: 20 withWormholesAt: 2 And: 4..
-	aGame := Game playedIn: aBoard with: aDie and: someShips.
+	aBoard := aBoard := Board with: 20 withWormholesAt: 2 And: 4.
+	aGame := Game playedIn: aBoard with: aDie andShipsNamed: someShips.
 
 	self assert: aGame dice equals: aDie
 ]
@@ -47,269 +44,268 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 { #category : 'tests' }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
-	| aShip aDie aGame aBoard someShips firstCell |
-	aShip := Ship new.
-	someShips := OrderedCollection with: aShip.
+	| aDie aGame aBoard |
 	aDie := Die with: 2.
-	aBoard := aBoard := Board with: 20 withWormholesAt: 2 And: 4..
-	aGame := Game playedIn: aBoard with: aDie and: someShips.
-	firstCell := aGame board firstCell.
+	aBoard := Board with: 20 withWormholesAt: 2 And: 4.
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         andShipsNamed: #( 'Apollo' ).
 
-
-	self assert: (firstCell includes: aShip)
+	self assert:
+		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
 ]
 
 { #category : 'tests' }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
-	| aDie aGame aBoard aGroupOfShips firstCell |
-	aGroupOfShips := OrderedCollection with: Ship new with: Ship new.
+	| aDie aGame aBoard |
 	aDie := Die with: 2.
-	aBoard := aBoard := Board with: 20 withWormholesAt: 2 And: 4.
-	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aGame board firstCell.
+	aBoard := Board with: 20 withWormholesAt: 2 And: 4.
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	self assert: (firstCell includesAll: aGroupOfShips)
+	self assert:
+		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ]).
+	self assert:
+		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
 ]
 
 { #category : 'tests' }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
-	| aGroupOfShips aDie aBoard aGame firstCell |
-	aGroupOfShips := OrderedCollection with: Ship new with: Ship new.
+	| aDie aBoard aGame positions |
 	aDie := Die with: 2.
-	aBoard := aBoard := Board with: 20 withWormholesAt: 2 And: 4.
-	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aBoard firstCell .
+	aBoard := Board with: 20 withWormholesAt: 2 And: 4.
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
+	positions := aGame positions.
 
-	self assert: (firstCell includesAll: aGroupOfShips)
+	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
 ]
 
 { #category : 'tests' }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
-	| aShip aDie aGame aBoard aGroupOfShips firstCell secondCell |
-	aShip := Ship new.
-	aGroupOfShips := OrderedCollection with: aShip with: Ship new.
+	| aDie aGame aBoard positionsBefore positionsAfter |
 	aDie := OrderedCollection with: (TestDie withForcedRoll: 1).
+	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	aBoard := aBoard := Board with: 20 withWormholesAt: 10 And: 18.
-	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
+	positionsBefore := aGame positions.
 
-	firstCell := aGame board cellAt: 1.
-	secondCell := aGame board cellAt: 2.
-
-	self assert: ((firstCell includesAll: aGroupOfShips) and:
-			 secondCell getShips isEmpty).
+	self assert: (positionsBefore at: 'Apollo') equals: 1.
+	self assert: (positionsBefore at: 'Orion') equals: 1.
 
 	aGame playTurn.
 
-	self assert:
-		((firstCell includes: aShip) not and: (secondCell includes: aShip))
+	positionsAfter := aGame positions.
+
+	self assert: (positionsAfter at: 'Apollo') equals: 2.
+	self assert: (positionsAfter at: 'Orion') equals: 1
 ]
 
 { #category : 'tests' }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
-	| ship1 ship2 ships die game firstCell thirdCell aBoard |
-	ship1 := Ship new.
-	ship2 := Ship new.
-	ships := OrderedCollection with: ship1 with: ship2.
-	die := OrderedCollection with: (TestDie withForcedRoll: 2).
+	| aDie aBoard game positionsAfterTurn2 |
+	aDie := OrderedCollection with: (TestDie withForcedRoll: 2).
 	aBoard := Board with: 20 withWormholesAt: 2 And: 4.
-	game := Game playedIn: aBoard with: die and: ships.
+	game := Game
+		        playedIn: aBoard
+		        with: aDie
+		        andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	firstCell := aBoard cellAt: 1.
-	thirdCell := aBoard cellAt: 3.
-
-	self assert: (firstCell includes: ship1).
-	self assert: (firstCell includes: ship2).
+	self assert: (game positions at: 'Apollo') equals: 1.
+	self assert: (game positions at: 'Orion') equals: 1.
 
 	game playTurn.
 	game playTurn.
 
-	self assert: (thirdCell includes: ship1).
-	self assert: (thirdCell includes: ship2).
-	self deny: (firstCell includes: ship1).
-	self deny: (firstCell includes: ship2)
+	positionsAfterTurn2 := game positions.
+
+	self assert: (positionsAfterTurn2 at: 'Apollo') equals: 3.
+	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
 ]
 
 { #category : 'tests' }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
-	| aShip aDie aBoard aGame resultCell |
-	aShip := Ship new.
+	| aDie aBoard aGame positionsAfter |
 	aDie := OrderedCollection with: (TestDie withForcedRoll: 1).
 	aBoard := Board with: 20 withWormholesAt: 2 And: 4.
-
 	aGame := Game
 		         playedIn: aBoard
 		         with: aDie
-		         and: (OrderedCollection with: aShip).
+		         andShipsNamed: #( 'Apollo' ).
 
 	aGame playTurn.
 
-	resultCell := aBoard cellAt: 4.
+	positionsAfter := aGame positions.
 
-	self assert: (resultCell includes: aShip)
+	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
 { #category : 'tests' }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
-	| aShip aDie aBoard aGame startCell targetCell |
-	aShip := Ship new.
+	| aDie aBoard aGame positionsBefore positionsAfter |
 	aDie := OrderedCollection with: (TestDie withForcedRoll: 3).
 	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
 	aGame := Game
 		         playedIn: aBoard
 		         with: aDie
-		         and: (OrderedCollection with: aShip).
+		         andShipsNamed: #( 'Apollo' ).
 
-	startCell := aBoard cellAt: 1.
-	targetCell := aBoard cellAt: 4.
+	positionsBefore := aGame positions.
 
-	self assert: (startCell includes: aShip).
+	self assert: (positionsBefore at: 'Apollo') equals: 1.
 
 	aGame playTurn.
 
-	self assert: (targetCell includes: aShip).
-	self deny: (startCell includes: aShip)
+	positionsAfter := aGame positions.
+
+	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
 { #category : 'tests' }
 GameTests >> test010GameIsOverWhenShipReachesLastCell [
 
-	| aShip aDie aBoard aGame |
-	aShip := Ship new.
+	| aDie aBoard aGame |
 	aDie := OrderedCollection with: (TestDie withForcedRoll: 20).
 	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
-	aGame := Game playedIn: aBoard with: aDie and: (OrderedCollection with: aShip).
-	
+	aGame := Game
+		         playedIn: aBoard
+		         with: aDie
+		         andShipsNamed: #( 'Apollo' ).
+
 	self deny: aGame isOver.
-	
+
 	aGame playTurn.
-	
-	self assert: aGame isOver. 
+
+	self assert: aGame isOver
 ]
 
 { #category : 'tests' }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
-	| ship die board game |
-	ship := Ship new.
+
+	| die board game |
 	die := OrderedCollection with: (TestDie withForcedRoll: 1).
 	board := Board with: 20 withWormholesAt: 2 And: 4.
-	game := Game playedIn: board with: die and: (OrderedCollection with: ship).
-	
+	game := Game playedIn: board with: die andShipsNamed: #( 'Apollo' ).
+
 	self deny: game isOver.
-	
+
 	game playTurn.
-	
-	self deny: game isOver.
+
+	self deny: game isOver
 ]
 
 { #category : 'tests' }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
-	| ship die board game |
-	ship := Ship new.
-	die := OrderedCollection with: (TestDie withForcedRoll: 20). 
-	board := Board with: 20 withWormholesAt: 10 And: 18.
-	game := Game
-		        playedIn: board
-		        with: die
-		        and: (OrderedCollection with: ship).
-
-	self assert: game winner isNil.
-
-	game playTurn.
-
-	self assert: game winner equals: ship
-]
-
-{ #category : 'tests' }
-GameTests >> test013GameIsOverWhenThereIsAWinner [
-
-	| ship die board game |
-	ship := Ship new.
-	die:= OrderedCollection with: (TestDie withForcedRoll: 20).
-	board := Board with: 20 withWormholesAt: 10 And: 18.
-	game := Game playedIn: board with: die and: (OrderedCollection with: ship).
-	
-	self deny: game isOver.
-	self assert: game winner isNil.
-	
-	game playTurn.
-	
-	self assert: game isOver.
-	self assert: game winner equals: ship.
-]
-
-{ #category : 'tests' }
-GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsValid [
-
-	| ship die board game lastCell |
-	ship := Ship new.
+	| die board game |
 	die := OrderedCollection with: (TestDie withForcedRoll: 20).
 	board := Board with: 20 withWormholesAt: 10 And: 18.
 	game := Game
 		        playedIn: board
 		        with: die
-		        and: (OrderedCollection with: ship).
+		        andShipsNamed: #('Apollo').
+
+	self assert: game winner isNil.
 
 	game playTurn.
-	lastCell := board lastCell.
+
+	self assert: game winner name equals: 'Apollo'.
+
+]
+
+{ #category : 'tests' }
+GameTests >> test013GameIsOverWhenThereIsAWinner [
+
+	| die board game |
+	die := OrderedCollection with: (TestDie withForcedRoll: 20).
+	board := Board with: 20 withWormholesAt: 10 And: 18.
+	game := Game playedIn: board with: die andShipsNamed: #('Apollo').
+
+	self deny: game isOver.
+	self assert: game winner isNil.
+
+	game playTurn.
 
 	self assert: game isOver.
-	self assert: (lastCell includes: ship).
-	
-	game playTurn.
-	
-	self assert: (lastCell includes: ship).
-	self assert: game isOver.
+	self assert: (game winner name) equals: 'Apollo'.
+]
+
+{ #category : 'tests' }
+GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsValid [
+
+	| aDie aBoard aGame somePositions |
+	aDie := TestDie withForcedRoll: 20.
+	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	aGame := Game
+		         playedIn: aBoard
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' ).
+
+	aGame playTurn.
+	self assert: aGame isOver.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 20.
+
+	aGame playTurn.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: aGame isOver
 ]
 
 { #category : 'tests' }
 GameTests >> test015IfYouCanPlayWithMultipleDieThenIsValid [
 
-	| aShip aDie board game aSecondDie someDice lastCell |
-	aShip := Ship new.
+	| aDie aSecondDie someDice aBoard aGame somePositions |
 	aDie := TestDie withForcedRoll: 10.
 	aSecondDie := TestDie withForcedRoll: 10.
 	someDice := OrderedCollection with: aDie with: aSecondDie.
-	board := Board with: 20 withWormholesAt: 10 And: 18.
-	game := Game
-		        playedIn: board
-		        with: someDice
-		        and: (OrderedCollection with: aShip).
-	lastCell := board lastCell.
+	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	aGame := Game
+		         playedIn: aBoard
+		         with: someDice
+		         andShipsNamed: #( 'Apollo' ).
 
-	game playTurn.
-	self assert: (lastCell includes: aShip)
+	aGame playTurn.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 20
 ]
 
 { #category : 'tests' }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
-	| ship1 ship2 board game die finalPositions |
-	ship1 := Ship new.
-	ship2 := Ship new.
-	die := TestDie withForcedRoll: 20.
-	board := Board with: 20 withWormholesAt: 10 And: 18.
-	game := Game
-		        playedIn: board
-		        with: (OrderedCollection with: die)
-		        and: (OrderedCollection with: ship1 with: ship2).
+	| aDie aBoard aGame somePositions |
+	aDie := TestDie withForcedRoll: 20.
+	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	aGame := Game
+		         playedIn: aBoard
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	game playTurn.
+	aGame playTurn.
 
-	self assert: game isOver.
-	self assert: game winner equals: ship1.
+	self assert: aGame isOver.
+	self assert: aGame winner name equals: 'Apollo'.
 
-	finalPositions := game finalPositions.
-
-	self assert: (finalPositions at: ship1) equals: 20.
-	self assert: (finalPositions at: ship2) equals: 1
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
 { #category : 'tests' }
@@ -337,25 +333,25 @@ GameTests >> test018WhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails 
 { #category : 'tests' }
 GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
-	| ship1 ship2 board game die finalPositions |
-	ship1 := Ship new.
-	ship2 := Ship new.
-	die := TestDie withForcedRoll: 20.
-	board := Board with: 20 withWormholesAt: 10 And: 18.
-	game := Game
-		        playedIn: board
-		        with: (OrderedCollection with: die)
-		        and: (OrderedCollection with: ship1 with: ship2).
+	| aDie aBoard aGame somePositions |
+	aDie := TestDie withForcedRoll: 20.
+	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	aGame := Game
+		         playedIn: aBoard
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	game playTurn.
+	aGame playTurn.
 
-	self assert: game isOver.
-	finalPositions := game finalPositions.
-	self assert: (finalPositions at: ship1) equals: 20.
-	self assert: (finalPositions at: ship2) equals: 1.
-	
-	game playTurn.
-	finalPositions := game finalPositions.
-	self assert: (finalPositions at: ship1) equals: 20.
-	self assert: (finalPositions at: ship2) equals: 1
+	self assert: aGame isOver.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Orion') equals: 1.
+
+	aGame playTurn.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Orion') equals: 1
 ]
