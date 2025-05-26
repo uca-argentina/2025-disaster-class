@@ -52,3 +52,9 @@ TestDie >> rollDice [
 	Error signal:
 		'TestDie requires either a forced roll or a list of rolls.'
 ]
+
+{ #category : 'accessing' }
+TestDie >> sides [
+
+	^ forcedRoll
+]

@@ -355,3 +355,23 @@ GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 	self assert: (somePositions at: 'Apollo') equals: 20.
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
+
+{ #category : 'tests' }
+GameTests >> test020ShipStartsWithFuelAndConsumesItPerStepMoved [
+
+	| aDie aBoard aGame initialFuel fuelAfterTurn |
+	aDie := TestDie withForcedRoll: 3.
+	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	aGame := Game
+		playedIn: aBoard
+		with: (OrderedCollection with: aDie)
+		andShipsNamed: #('Apollo').
+
+	initialFuel := aGame fuelOf: 'Apollo'.
+	self assert: initialFuel equals: 6.
+
+	aGame playTurn.
+
+	fuelAfterTurn := aGame fuelOf: 'Apollo'.
+	self assert: fuelAfterTurn equals: 3.
+]

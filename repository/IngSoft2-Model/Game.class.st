@@ -66,13 +66,21 @@ Game >> finishLineCell [
 	^ board lastCell
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> fuelOf: aName [
+
+	[ ^ (ships detect: [ :s | s name = aName ]) fuel ]
+]
+
 { #category : 'initialization' }
 Game >> initializeWith: aBoard and: someDice andShipNames: someShipNames [
 
+	| ship |
 	board := aBoard.
 	dice := someDice.
 	ships := someShipNames collect: [ :eachName |
-		         Ship withName: eachName ].
+		         ship := Ship withName: eachName and: 2 * self maxDiceRoll.
+		         ship ].
 	shipTurnIndex := 1.
 	board placeAllShipsAtStart: ships
 ]
@@ -87,6 +95,14 @@ Game >> isOver [
 Game >> isShipAtFinishLine: aShip [
 
 	^ (self currentCellOf: aShip) = board lastCell
+]
+
+{ #category : 'accessing' }
+Game >> maxDiceRoll [
+	^ (dice isCollection
+		ifTrue: [ dice ]
+		ifFalse: [ Array with: dice ])
+		sum: [ :d | d sides ]
 ]
 
 { #category : 'as yet unclassified' }
