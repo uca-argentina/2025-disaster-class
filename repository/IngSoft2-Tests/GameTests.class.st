@@ -1,11 +1,10 @@
 Class {
-	#name : 'GameTests',
-	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#name : #GameTests,
+	#superclass : #TestCase,
+	#category : #'IngSoft2-Tests'
 }
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
 	self
@@ -15,7 +14,7 @@ GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 		self assert: error messageText equals: errorMessage ]
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame aBoard |
@@ -29,7 +28,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 	self assert: aGame board equals: aBoard
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
 	| aDie aGame aBoard someShips |
@@ -41,7 +40,7 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	self assert: aGame dice equals: aDie
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	| aDie aGame aBoard |
@@ -56,7 +55,7 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
 	| aDie aGame aBoard |
@@ -73,7 +72,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
 	| aDie aBoard aGame positions |
@@ -88,7 +87,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	| aDie aGame aBoard positionsBefore positionsAfter |
@@ -112,7 +111,7 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 	self assert: (positionsAfter at: 'Orion') equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	| aDie aBoard game positionsAfterTurn2 |
@@ -135,7 +134,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
 	| aDie aBoard aGame positionsAfter |
@@ -153,7 +152,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
 	| aDie aBoard aGame positionsBefore positionsAfter |
@@ -175,8 +174,8 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : 'tests' }
-GameTests >> test010GameIsOverWhenShipReachesLastCell [
+{ #category : #tests }
+GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 
 	| aDie aBoard aGame |
 	aDie := OrderedCollection with: (TestDie withForcedRoll: 20).
@@ -184,7 +183,8 @@ GameTests >> test010GameIsOverWhenShipReachesLastCell [
 	aGame := Game
 		         playedIn: aBoard
 		         with: aDie
-		         andShipsNamed: #( 'Apollo' ).
+		         andShipsNamed: #( 'Apollo' )
+		         numberOfLaps: 1.
 
 	self deny: aGame isOver.
 
@@ -193,7 +193,7 @@ GameTests >> test010GameIsOverWhenShipReachesLastCell [
 	self assert: aGame isOver
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 
 	| die board game |
@@ -208,7 +208,7 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 	self deny: game isOver
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 	| die board game |
@@ -227,7 +227,7 @@ GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test013GameIsOverWhenThereIsAWinner [
 
 	| die board game |
@@ -244,8 +244,8 @@ GameTests >> test013GameIsOverWhenThereIsAWinner [
 	self assert: (game winner name) equals: 'Apollo'.
 ]
 
-{ #category : 'tests' }
-GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsValid [
+{ #category : #tests }
+GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 	| aDie aBoard aGame somePositions |
 	aDie := TestDie withForcedRoll: 20.
@@ -253,41 +253,58 @@ GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsVal
 	aGame := Game
 		         playedIn: aBoard
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( 'Apollo' ).
+		         andShipsNamed: #( 'Apollo' )
+		         numberOfLaps: 1.
 
+	"Primer turno completa una vuelta"
 	aGame playTurn.
 	self assert: aGame isOver.
 
+	"Posición después de terminar"
 	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Apollo')
+		= (aBoard indexOfCellContaining: aGame ships first).
 
+	"Intento de jugar otro turno no debe cambiar nada"
 	aGame playTurn.
 
-	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: aGame isOver.
+	self assert: (aGame positions at: 'Apollo')
+		= (aBoard indexOfCellContaining: aGame ships first).
 	self assert: aGame isOver
 ]
 
-{ #category : 'tests' }
-GameTests >> test015IfYouCanPlayWithMultipleDieThenIsValid [
+{ #category : #tests }
+GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
+	| die1 die2 dice board game positions |
 
-	| aDie aSecondDie someDice aBoard aGame somePositions |
-	aDie := TestDie withForcedRoll: 10.
-	aSecondDie := TestDie withForcedRoll: 10.
-	someDice := OrderedCollection with: aDie with: aSecondDie.
-	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
-	aGame := Game
-		         playedIn: aBoard
-		         with: someDice
-		         andShipsNamed: #( 'Apollo' ).
+	die1 := TestDie withRolls: #(6 4).
+	die2 := TestDie withRolls: #(5 5).
+	dice := OrderedCollection with: die1 with: die2.
 
-	aGame playTurn.
+	board := Board with: 20 withWormholesAt: 10 And: 18.
+	game := Game
+		playedIn: board
+		with: dice
+		andShipsNamed: #( 'Apollo' )
+		numberOfLaps: 1.
 
-	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 20
+	game playTurn.
+	self deny: game isOver.
+
+	positions := game positions.
+	self assert: (positions at: 'Apollo') equals: 12.
+
+	game playTurn.
+	self assert: game isOver.
+
+	positions := game positions.
+	self assert: (positions at: 'Apollo') equals: 1.
+	self assert: (game currentLapsFor: (game ships first)) equals: 1.
+
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
 	| aDie aBoard aGame somePositions |
@@ -296,19 +313,19 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 	aGame := Game
 		         playedIn: aBoard
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( 'Apollo' 'Orion' ).
+		         andShipsNamed: #( 'Apollo' 'Orion' )
+		         numberOfLaps: 1.
 
 	aGame playTurn.
-
 	self assert: aGame isOver.
 	self assert: aGame winner name equals: 'Apollo'.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Apollo') equals: 1.
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test017WhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 	self
@@ -319,7 +336,7 @@ GameTests >> test017WhenFirstWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test018WhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails [
 
 	self
@@ -330,11 +347,11 @@ GameTests >> test018WhenSecondWormholeIsGreaterThanBoardLengthThenCreationFails 
 
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
 	| aDie aBoard aGame somePositions |
-	aDie := TestDie withForcedRoll: 20.
+	aDie := TestDie withForcedRoll: 21.
 	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
 	aGame := Game
 		         playedIn: aBoard
@@ -346,17 +363,17 @@ GameTests >> test019IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 	self assert: aGame isOver.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Apollo') equals: 2.
 	self assert: (somePositions at: 'Orion') equals: 1.
 
 	aGame playTurn.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 20.
+	self assert: (somePositions at: 'Apollo') equals: 2.
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test020ShipStartsWithFuelAndConsumesItPerStepMoved [
 
 	| aDie aBoard aGame initialFuel fuelAfterTurn |
