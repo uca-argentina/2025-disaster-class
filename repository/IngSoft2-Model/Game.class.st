@@ -218,6 +218,15 @@ Game >> ships [
 	^ ships
 ]
 
+{ #category : 'as yet unclassified' }
+Game >> skipTurn [
+
+	| ship |
+	ship := self currentShip.
+	ship refuel.
+	self advanceToNextPlayer
+]
+
 { #category : 'testing' }
 Game >> winner [
 

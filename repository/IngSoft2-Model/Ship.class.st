@@ -43,6 +43,12 @@ Ship >> fuel [
 	^ fuel
 ]
 
+{ #category : 'accessing' }
+Ship >> fuelCapacity [
+
+	^ fuelCapacity
+]
+
 { #category : 'as yet unclassified' }
 Ship >> initializeWith: aName and: aFuelAmount [
 

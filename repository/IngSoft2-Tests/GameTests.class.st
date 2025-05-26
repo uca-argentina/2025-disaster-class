@@ -435,3 +435,23 @@ GameTests >> test022IfShipRunsOutOfFuelThenLosesTwoTurns [
 	game playTurn.
 	self assert: ship canPlay "turno 3"
 ]
+
+{ #category : 'tests' }
+GameTests >> test023IfPlayerSkipsTurnThenFuelIsRestoredToMax [
+
+	| die board game ship |
+	die := TestDie withForcedRoll: 3.
+	board := Board with: 10 withWormholesAt: 2 And: 4.
+	game := Game
+		        playedIn: board
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
+	ship := game ships first.
+	ship consumeFuel: 5.
+	self assert: ship fuel equals: 1. "Partía con 6 de fuel (2*dado)"
+
+	game skipTurn.
+
+	self assert: ship fuel equals: ship fuelCapacity
+]
