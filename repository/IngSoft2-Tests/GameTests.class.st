@@ -449,7 +449,7 @@ GameTests >> test023IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	ship := game ships first.
 	ship consumeFuel: 5.
-	self assert: ship fuel equals: 1. "Partía con 6 de fuel (2*dado)"
+	self assert: ship fuel equals: 1. 
 
 	game skipTurn.
 
