@@ -546,13 +546,13 @@ GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 	ship := game ships first.
 	ship consumeFuel: 12.
 
-	game playTurn. "turno 1"
+	game playTurn. 
 	self deny: ship canPlay.
 
-	game playTurn. "turno 2"
+	game playTurn. 
 	self deny: ship canPlay.
 
-	game playTurn. "turno 3"
+	game playTurn.
 	self assert: ship canPlay
 ]
 
@@ -651,5 +651,103 @@ GameTests >> test024AtomicBombCellDoesNotResetLaps [
 
     self assert: (board lapsCompletedOf: ship1) equals: 1.
     self assert: (board lapsCompletedOf: ship2) equals: 1.
+
+]
+
+{ #category : #tests }
+GameTests >> test025BlackHoleCellMovesShipBackwardsAndConsumesFuel [
+    | ship board blackHoleCell cells initialFuel |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 6 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 5.
+
+    initialFuel := ship fuel.
+
+    (board cellAt: 6) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 2.
+    self assert: ship fuel < initialFuel.
+
+]
+
+{ #category : #tests }
+GameTests >> test026BlackHoleCellSendsShipToStartAndPenalizesWhenNotEnoughFuel [
+    | ship board blackHoleCell cells |
+
+    ship := Ship withName: 'Apollo' and: 2.
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 6 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 5. 
+
+    (board cellAt: 6) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1.
+    self assert: ship fuel equals: ship fuelCapacity.
+    self assert: ship canPlay not.
+
+]
+
+{ #category : #tests }
+GameTests >> test027BlackHoleCellWrapsAroundWhenMovingBackwards [
+    | ship board blackHoleCell cells |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 3 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 2. 
+
+    (board cellAt: 3) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 9.
+
+
+]
+
+{ #category : #tests }
+GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoard [
+    | ship board blackHoleCell cells |
+
+    ship := Ship withName: 'Apollo' and: 3.  
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 2 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 1. 
+
+    (board cellAt: 2) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1.
+    self assert: ship fuel equals: ship fuelCapacity.
+    self assert: ship canPlay not.
+
+
 
 ]

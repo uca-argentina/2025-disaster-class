@@ -7,7 +7,7 @@ Class {
 		'fuelCapacity',
 		'lostTurns'
 	],
-	#category : 'IngSoft2-Model'
+	#category : #'IngSoft2-Model'
 }
 
 { #category : #'as yet unclassified' }
@@ -32,7 +32,7 @@ Ship >> canPlay [
 
 { #category : #accessing }
 Ship >> consumeFuel: steps [ 
-	fuel := fuel - steps.
+	fuel := fuel - steps abs.
 
 ]
 
@@ -66,8 +66,10 @@ Ship >> lostATurn [
 { #category : #accessing }
 Ship >> moveS: steps in: board [
 
-	fuel < steps ifTrue: [ ^ self applyPenaltyIn: board ].
-	self consumeFuel: steps.
+	| cost |
+	cost := steps abs.
+	fuel < cost ifTrue: [ ^ self applyPenaltyIn: board ].
+	self consumeFuel: cost.
 	board moveShip: self steps: steps
 ]
 
