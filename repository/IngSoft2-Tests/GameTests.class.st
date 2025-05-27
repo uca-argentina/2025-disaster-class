@@ -751,3 +751,110 @@ GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoa
 
 
 ]
+
+{ #category : #tests }
+GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
+    | apollo orion board moonWalkCell cells initialFuelApollo initialFuelOrion |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 10.
+
+    moonWalkCell := MoonWalkCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 4 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 3. 
+    board moveShip: orion steps: 5.   
+
+    initialFuelApollo := apollo fuel.
+    initialFuelOrion := orion fuel.
+
+    (board cellAt: 4) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 4.  
+    self assert: (board indexOfCellContaining: orion) equals: 5.  
+
+    self assert: apollo fuel equals: initialFuelApollo.
+    self assert: orion fuel < initialFuelOrion.
+]
+
+{ #category : #tests }
+GameTests >> test30MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfNeeded [
+    | apollo orion board moonWalkCell cells |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 1.  
+
+    moonWalkCell := MoonWalkCell withSteps: 3.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 4.
+    board moveShip: orion steps: 6.  
+
+    (board cellAt: 5) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 5.  
+    self assert: (board indexOfCellContaining: orion) equals: 1. 
+    self assert: orion fuel equals: orion fuelCapacity.
+    self assert: orion canPlay not.
+
+]
+
+{ #category : #tests }
+GameTests >> test31MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
+    | apollo orion board moonWalkCell cells |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 10.
+
+    moonWalkCell := MoonWalkCell withSteps: 3.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 4.  
+    board moveShip: orion steps: 1.  
+
+    (board cellAt: 5) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 5.  
+    self assert: (board indexOfCellContaining: orion) equals: 9.  
+]
+
+{ #category : #tests }
+GameTests >> test32MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
+    | apollo orion board moonWalkCell cells |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 2.  
+
+    moonWalkCell := MoonWalkCell withSteps: 3.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 4.  
+    board moveShip: orion steps: 1.   
+
+    (board cellAt: 5) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 5. 
+    self assert: (board indexOfCellContaining: orion) equals: 1. 
+    self assert: orion fuel equals: orion fuelCapacity.
+    self assert: orion canPlay not.
+]
