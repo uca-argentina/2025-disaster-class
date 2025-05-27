@@ -1,11 +1,10 @@
 Class {
-	#name : 'DefaultCellGeneratorTests',
-	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#name : #DefaultCellGeneratorTests,
+	#superclass : #TestCase,
+	#category : 'IngSoft2-Tests'
 }
 
-{ #category : 'tests' }
+{ #category : #tests }
 DefaultCellGeneratorTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
 	self
@@ -15,7 +14,7 @@ DefaultCellGeneratorTests >> should: anErrorBlock raise: anErrorClass withMessag
 		self assert: error messageText equals: errorMessage ]
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DefaultCellGeneratorTests >> test001IfGeneratorCreatesRequestedAmountOfCellsThenIsValid [
 
 	| generator cells |
@@ -29,7 +28,7 @@ DefaultCellGeneratorTests >> test001IfGeneratorCreatesRequestedAmountOfCellsThen
 		(cells allSatisfy: [ :cell | cell isKindOf: RegularCell ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DefaultCellGeneratorTests >> test002IfGeneratorCanCreateWormholeCellsThenIsValid [ 
 	| generator cells |
 	generator := DefaultCellGenerator withDistributions: {
@@ -43,7 +42,7 @@ DefaultCellGeneratorTests >> test002IfGeneratorCanCreateWormholeCellsThenIsValid
 
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 DefaultCellGeneratorTests >> test003IfProbabilitiesDoNotSumToOneThenFails [
 
 	self

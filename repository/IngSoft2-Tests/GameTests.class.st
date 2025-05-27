@@ -1,11 +1,10 @@
 Class {
-	#name : 'GameTests',
-	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#name : #GameTests,
+	#superclass : #TestCase,
+	#category : #'IngSoft2-Tests'
 }
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
 	self
@@ -15,7 +14,7 @@ GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 		self assert: error messageText equals: errorMessage ]
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame cells aGenerator aBoard |
@@ -42,7 +41,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
 	| aDie aGame aGenerator someDice |
@@ -64,7 +63,7 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	self assert: aGame dice equals: someDice
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	| aDie aGame aGenerator someDice |
@@ -87,7 +86,7 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
 	| aDie aGame aGenerator someDice |
@@ -112,7 +111,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
 	| aDie aGenerator aGame someDice positions |
@@ -136,7 +135,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	| aDie aGame aGenerator positionsBefore positionsAfter |
@@ -166,7 +165,7 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 	self assert: (positionsAfter at: 'Orion') equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	| aDie aGenerator game positionsAfterTurn2 |
@@ -195,7 +194,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
 	| aDie aGenerator aGame positionsAfter |
@@ -219,7 +218,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
 	| aDie aGenerator aGame positionsBefore positionsAfter |
@@ -247,7 +246,7 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 
 	| aDie aGenerator aGame |
@@ -272,7 +271,7 @@ GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 	self assert: aGame isOver
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 
 	| die generator game |
@@ -296,7 +295,7 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 	self deny: game isOver
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 	| die generator game |
@@ -320,7 +319,7 @@ GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 	self assert: game winner name equals: 'Apollo'
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test013GameIsOverWhenThereIsAWinner [
 
 	| die generator game |
@@ -346,7 +345,7 @@ GameTests >> test013GameIsOverWhenThereIsAWinner [
 	self assert: game winner name equals: 'Apollo'
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 	| aDie aGenerator aGame somePositions aShip |
@@ -376,10 +375,11 @@ GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 
 	aShip := aGame ships first.
-	self assert: (aGame currentLapsFor: aShip) equals: 1
+	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
+
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 
 	| aDie1 aDie2 someDice aGenerator aGame somePositions aShip |
@@ -412,10 +412,11 @@ GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 	self assert: (somePositions at: 'Apollo') equals: 1.
 
 	aShip := aGame ships first.
-	self assert: (aGame currentLapsFor: aShip) equals: 1
+	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
+
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
 	| aDie aGenerator aGame somePositions |
@@ -443,7 +444,7 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
 	| aDie aGenerator aGame somePositions |
@@ -474,7 +475,7 @@ GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 
 	| aDie aGenerator aGame initialFuel fuelAfterTurn |
@@ -500,7 +501,7 @@ GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 	self assert: fuelAfterTurn equals: 3
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 
 	| die generator game ship |
@@ -525,7 +526,7 @@ GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 	self assert: (game board indexOfCellContaining: ship) equals: 1
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 
 	| die generator game ship |
@@ -555,7 +556,7 @@ GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 	self assert: ship canPlay
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	| die generator game ship |
@@ -581,7 +582,7 @@ GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 	self assert: ship fuel equals: ship fuelCapacity
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
 
 	| die generator game |
@@ -600,4 +601,55 @@ GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
 		        andShipsNamed: #( 'Apollo' 'Orion' ).
 
 	self assert: game board size equals: 5
+]
+
+{ #category : #tests }
+GameTests >> test023AtomicBombCellMovesAllShipsToStart [
+    | ship1 ship2 board bombCell cells |
+
+    ship1 := Ship withName: 'Apollo' and: 10.
+    ship2 := Ship withName: 'Orion' and: 10.
+
+    bombCell := AtomicBombCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: bombCell.
+
+    board := Board withCells: cells andShips: { ship1. ship2 } asOrderedCollection.
+    board placeAllShipsAtStart: { ship1. ship2 } asOrderedCollection.
+
+    board moveShip: ship1 steps: 4. 
+    board moveShip: ship2 steps: 6.
+
+    (board cellAt: 5) applyEffectTo: ship1 in: board.
+
+    self assert: (board indexOfCellContaining: ship1) equals: 1.
+    self assert: (board indexOfCellContaining: ship2) equals: 1.
+]
+
+{ #category : #tests }
+GameTests >> test024AtomicBombCellDoesNotResetLaps [
+    | ship1 ship2 board bombCell cells |
+
+    ship1 := Ship withName: 'Apollo' and: 10.
+    ship2 := Ship withName: 'Orion' and: 10.
+
+    bombCell := AtomicBombCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: bombCell.
+
+    board := Board withCells: cells andShips: { ship1. ship2 } asOrderedCollection.
+    board placeAllShipsAtStart: { ship1. ship2 } asOrderedCollection.
+
+    board incrementLapsFor: ship1.
+    board incrementLapsFor: ship2.
+
+    board moveShip: ship1 steps: 4.
+
+    (board cellAt: 5) applyEffectTo: ship1 in: board.
+
+    self assert: (board lapsCompletedOf: ship1) equals: 1.
+    self assert: (board lapsCompletedOf: ship2) equals: 1.
+
 ]

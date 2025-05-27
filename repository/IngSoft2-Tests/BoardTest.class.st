@@ -1,11 +1,10 @@
 Class {
-	#name : 'BoardTest',
-	#superclass : 'TestCase',
-	#category : 'IngSoft2-Tests',
-	#package : 'IngSoft2-Tests'
+	#name : #BoardTest,
+	#superclass : #TestCase,
+	#category : 'IngSoft2-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
 	| aNumberOfCells aBoard cells |
@@ -17,7 +16,7 @@ BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 	self assert: aBoard size equals: aNumberOfCells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 BoardTest >> test002FirstElementIsACell [
 
 	| aBoard cells |
@@ -28,7 +27,7 @@ BoardTest >> test002FirstElementIsACell [
 	self assert: ((aBoard cellAt: 1) isKindOf: RegularCell)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 BoardTest >> test003AllElementsAreCellsThenIsValid [
 
 	| aBoard cells |
@@ -40,7 +39,7 @@ BoardTest >> test003AllElementsAreCellsThenIsValid [
 			 (aBoard cellAt: i) isKindOf: Cell ])
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [
 
 	| aBoard aShip aCell cells |

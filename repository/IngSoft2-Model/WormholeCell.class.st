@@ -1,14 +1,13 @@
 Class {
-	#name : 'WormholeCell',
-	#superclass : 'Cell',
+	#name : #WormholeCell,
+	#superclass : #Cell,
 	#instVars : [
 		'linkedCell'
 	],
-	#category : 'IngSoft2-Model',
-	#package : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [ 
 	| aWormhole anotherWormhole |
 	aWormhole := self new.
@@ -21,7 +20,7 @@ WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [
 	aBoard at: secondPosition put: anotherWormhole.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 WormholeCell >> applyEffectTo: aShip in: aBoard [
 
 	| currentCell |
@@ -30,7 +29,7 @@ WormholeCell >> applyEffectTo: aShip in: aBoard [
 	linkedCell enters: aShip
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 WormholeCell >> linkWith: anotherWormholeCell [
 
 	linkedCell := anotherWormholeCell
