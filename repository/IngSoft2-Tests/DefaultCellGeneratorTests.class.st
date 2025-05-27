@@ -20,7 +20,7 @@ DefaultCellGeneratorTests >> test001IfGeneratorCreatesRequestedAmountOfCellsThen
 
 	| generator cells |
 	generator := DefaultCellGenerator withDistributions:
-		             { ([ RegularCell with: OrderedCollection new ] -> 1.0) }.
+		             { ([ RegularCell new] -> 1.0) }.
 
 	cells := generator generateCells: 10.
 

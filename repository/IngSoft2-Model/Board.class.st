@@ -17,6 +17,13 @@ Board class >> with: aNumberOfCells withWormholesAt: someFirstPosition And: some
 		  and: someSecondPosition
 ]
 
+{ #category : 'instance creation' }
+Board class >> withCells: someCells [
+
+	^ self new
+		  initializeWith: someCells 
+]
+
 { #category : 'as yet unclassified' }
 Board >> applyEffectTo: aShip [
 
@@ -47,7 +54,7 @@ Board >> createMapOf: aNumberOfCells withWormholesAt: someFirstPosition and: som
 			ifFalse: [
 				i = someSecondPosition
 					ifTrue: [ map add: (wormholePair at: 2) ]
-					ifFalse: [ map add: (RegularCell with: OrderedCollection new) ] ] ].
+					ifFalse: [ map add: (RegularCell new) ] ] ].
 
 	^ map
 ]
@@ -60,6 +67,12 @@ Board >> firstCell [
 { #category : 'as yet unclassified' }
 Board >> indexOfCellContaining: aShip [
 	^ map indexOf: (self cellContaining: aShip).
+]
+
+{ #category : 'initialization' }
+Board >> initializeWith: someCells [
+
+	map := someCells
 ]
 
 { #category : 'initialization' }

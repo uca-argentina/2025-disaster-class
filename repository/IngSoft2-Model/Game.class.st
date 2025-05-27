@@ -14,6 +14,19 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation for: aLapCount with: someDice andShipsNamed: someShipNames [
+
+	^ self new
+		  initializeWith: aBoardSize
+		  using: aCellGenerator
+		  withWormholesAt: aFirstWormholeLocation
+		  and: aSecondWormholeLocation
+		  and: someDice
+		  andShipNames: someShipNames
+		  andLaps: aLapCount
+]
+
+{ #category : 'as yet unclassified' }
 Game class >> playedIn: aBoard with: someDice andShipsNamed: someShipNames [
 
 	^ self new
@@ -23,12 +36,12 @@ Game class >> playedIn: aBoard with: someDice andShipsNamed: someShipNames [
 ]
 
 { #category : 'as yet unclassified' }
-Game class >> playedIn: aBoard with: someDice andShipsNamed: someShipNames numberOfLaps: lapsCount [ 
+Game class >> playedOnABoardSized: aBoardSize for: aLapCount with: someDice andShipsNamed: someShipNames [ 
 	^ self new
-		initializeWith: aBoard
+		initializeWith: aBoardSize
 		and: someDice
 		andShipNames: someShipNames
-		andLaps: lapsCount
+		andLaps: aLapCount
 
 ]
 
@@ -119,6 +132,26 @@ Game >> initializeWith: aBoard and: someDice andShipNames: someShipNames andLaps
 	laps := Dictionary newFromKeys: ships andValues: (ships collect: [ :_ | 0 ]).
 	numberOfLaps := lapsCount.
 
+]
+
+{ #category : 'initialization' }
+Game >> initializeWith: aBoardSize using: aCellGenerator withWormholesAt: firstWormhole and: secondWormhole and: someDice andShipNames: someShipNames andLaps: aLapCount [
+
+	| cells |
+	dice := someDice.
+
+	ships := someShipNames collect: [ :eachName |
+		         Ship withName: eachName and: 2 * self maxDiceRoll ].
+
+	cells := aCellGenerator generateCells: aBoardSize.
+	WormholeCell newPairIn: cells at: firstWormhole and: secondWormhole.
+
+	board := Board withCells: cells.
+	board placeAllShipsAtStart: ships.
+
+	shipTurnIndex := 1.
+	laps := Dictionary newFromKeys: ships andValues: (ships collect: [ :_ | 0 ]).
+	numberOfLaps := aLapCount
 ]
 
 { #category : 'testing' }

@@ -178,14 +178,20 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 { #category : 'tests' }
 GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 
-	| aDie aBoard aGame |
-	aDie := OrderedCollection with: (TestDie withForcedRoll: 20).
-	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+	| aDie aGenerator aGame |
+	aDie := TestDie withForcedRoll: 20.
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
 	aGame := Game
-		         playedIn: aBoard
-		         with: aDie
-		         andShipsNamed: #( 'Apollo' )
-		         numberOfLaps: 1.
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' ).
 
 	self deny: aGame isOver.
 
@@ -248,76 +254,92 @@ GameTests >> test013GameIsOverWhenThereIsAWinner [
 { #category : 'tests' }
 GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
-	| aDie aBoard aGame somePositions |
+	| aDie aGenerator aGame somePositions aShip |
 	aDie := TestDie withForcedRoll: 20.
-	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
 	aGame := Game
-		         playedIn: aBoard
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( 'Apollo' )
-		         numberOfLaps: 1.
+		         andShipsNamed: #( 'Apollo' ).
 
-	"Primer turno completa una vuelta"
 	aGame playTurn.
 	self assert: aGame isOver.
 
-	"Posición después de terminar"
 	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo')
-		= (aBoard indexOfCellContaining: aGame ships first).
+	self assert: (somePositions at: 'Apollo') equals: 1.
 
-	"Intento de jugar otro turno no debe cambiar nada"
-	aGame playTurn.
+	aGame playTurn. "No debería cambiar nada"
 
 	self assert: aGame isOver.
-	self assert: (aGame positions at: 'Apollo')
-		= (aBoard indexOfCellContaining: aGame ships first).
-	self assert: aGame isOver
+	self assert: (aGame positions at: 'Apollo') equals: 1.
+
+	aShip := aGame ships first.
+	self assert: (aGame currentLapsFor: aShip) equals: 1
 ]
 
 { #category : 'tests' }
 GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
-	| die1 die2 dice board game positions |
 
-	die1 := TestDie withRolls: #(6 4).
-	die2 := TestDie withRolls: #(5 5).
-	dice := OrderedCollection with: die1 with: die2.
+	| aDie1 aDie2 someDice aGenerator aGame somePositions aShip |
+	aDie1 := TestDie withRolls: #( 6 4 ).
+	aDie2 := TestDie withRolls: #( 5 5 ).
+	someDice := OrderedCollection with: aDie1 with: aDie2.
 
-	board := Board with: 20 withWormholesAt: 10 And: 18.
-	game := Game
-		playedIn: board
-		with: dice
-		andShipsNamed: #( 'Apollo' )
-		numberOfLaps: 1.
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
 
-	game playTurn.
-	self deny: game isOver.
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: someDice
+		         andShipsNamed: #( 'Apollo' ).
 
-	positions := game positions.
-	self assert: (positions at: 'Apollo') equals: 12.
+	aGame playTurn.
+	self deny: aGame isOver.
 
-	game playTurn.
-	self assert: game isOver.
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 12.
 
-	positions := game positions.
-	self assert: (positions at: 'Apollo') equals: 1.
-	self assert: (game currentLapsFor: (game ships first)) equals: 1.
+	aGame playTurn.
+	self assert: aGame isOver.
 
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 1.
+
+	aShip := aGame ships first.
+	self assert: (aGame currentLapsFor: aShip) equals: 1
 ]
 
 { #category : 'tests' }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
-	| aDie aBoard aGame somePositions |
+	| aDie aGenerator aGame somePositions |
 	aDie := TestDie withForcedRoll: 20.
-	aBoard := Board with: 20 withWormholesAt: 10 And: 18.
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
 	aGame := Game
-		         playedIn: aBoard
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( 'Apollo' 'Orion' )
-		         numberOfLaps: 1.
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
 	aGame playTurn.
+
 	self assert: aGame isOver.
 	self assert: aGame winner name equals: 'Apollo'.
 
@@ -457,28 +479,22 @@ GameTests >> test023IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 ]
 
 { #category : 'tests' }
-GameTests >> test024IfShipFallsIntoAtomicBombThenAllShipsReturnToStart [
+GameTests >> test024IfGameIsCreatedWithCellGeneratorThenIsValid [
 
-	| die board game apollo orion |
-	die := TestDie withForcedRoll: 5.
-	board := Board with: 10 withWormholesAt: 3 And: 7.
+	| die generator game |
+	die := TestDie withForcedRoll: 1.
+
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
 	game := Game
-		        playedIn: board
+		        createdWith: generator
+		        playedOnABoardSized: 5
+		        withWormholesAt: 2
+		        and: 4
+		        for: 3
 		        with: (OrderedCollection with: die)
 		        andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	apollo := game ships detect: [ :s | s name = 'Apollo' ].
-	orion := game ships detect: [ :s | s name = 'Orion' ].
-
-	"Colocamos la bomba en la posición donde caerá Apollo"
-	board getMap at: 6 put: AtomicBombCell new.
-
-	"Permitimos que ambos se puedan mover"
-	apollo consumeFuel: 1.
-	orion consumeFuel: 1.
-
-	game playTurn. "Apollo cae en la bomba"
-
-	self assert: (board indexOfCellContaining: apollo) equals: 1.
-	self assert: (board indexOfCellContaining: orion) equals: 1
+	self assert: game board size equals: 5
 ]

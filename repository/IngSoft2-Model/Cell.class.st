@@ -8,11 +8,6 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
-{ #category : 'instance creation' }
-Cell class >> with: aShipContainer [
-	^self new initializeWith: aShipContainer.
-]
-
 { #category : 'as yet unclassified' }
 Cell >> enters: aShip [
 
@@ -45,9 +40,9 @@ Cell >> includesAll: aCollectionOfShips [
 ]
 
 { #category : 'initialization' }
-Cell >> initializeWith: aShipContainer [
+Cell >> initialize [
 
-	shipContainer := aShipContainer
+	shipContainer := OrderedCollection new.
 ]
 
 { #category : 'accessing' }
