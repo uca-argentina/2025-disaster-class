@@ -455,3 +455,30 @@ GameTests >> test023IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	self assert: ship fuel equals: ship fuelCapacity
 ]
+
+{ #category : 'tests' }
+GameTests >> test024IfShipFallsIntoAtomicBombThenAllShipsReturnToStart [
+
+	| die board game apollo orion |
+	die := TestDie withForcedRoll: 5.
+	board := Board with: 10 withWormholesAt: 3 And: 7.
+	game := Game
+		        playedIn: board
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' 'Orion' ).
+
+	apollo := game ships detect: [ :s | s name = 'Apollo' ].
+	orion := game ships detect: [ :s | s name = 'Orion' ].
+
+	"Colocamos la bomba en la posición donde caerá Apollo"
+	board getMap at: 6 put: AtomicBombCell new.
+
+	"Permitimos que ambos se puedan mover"
+	apollo consumeFuel: 1.
+	orion consumeFuel: 1.
+
+	game playTurn. "Apollo cae en la bomba"
+
+	self assert: (board indexOfCellContaining: apollo) equals: 1.
+	self assert: (board indexOfCellContaining: orion) equals: 1
+]

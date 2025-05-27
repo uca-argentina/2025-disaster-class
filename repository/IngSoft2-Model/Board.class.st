@@ -27,7 +27,8 @@ Board >> applyEffectTo: aShip [
 
 { #category : 'as yet unclassified' }
 Board >> cellAt: aPosition [
-	^ map at: aPosition.
+
+	^ map at: aPosition
 ]
 
 { #category : 'as yet unclassified' }
