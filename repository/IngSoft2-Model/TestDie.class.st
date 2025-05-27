@@ -11,28 +11,16 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-TestDie class >> withForcedRoll: aNumber [
-
-	^ self new initializeWithForcedRoll: aNumber
-]
-
-{ #category : 'as yet unclassified' }
 TestDie class >> withRolls: aCollection [
 
 	^ self new initializeWithRolls: aCollection
 ]
 
-{ #category : 'initialization' }
-TestDie >> initializeWithForcedRoll: aNumber [
-	forcedRoll := aNumber.
-	
-]
-
 { #category : 'accessing' }
 TestDie >> initializeWithRolls: aCollection [
-    forcedRolls := aCollection.
-    index := 1.
 
+	forcedRolls := aCollection.
+	index := 1
 ]
 
 { #category : 'accessing' }
@@ -42,13 +30,13 @@ TestDie >> rollDice [
 	forcedRoll ifNotNil: [ ^ forcedRoll ].
 
 	forcedRolls ifNotNil: [
-		index > forcedRolls size ifTrue: [ index := 1 ]. 
+		index > forcedRolls size ifTrue: [ index := 1 ].
 		roll := forcedRolls at: index.
 		index := index + 1.
-		^ roll
-	].
+		^ roll ].
 
-	Error signal: 'TestDie requires either a forced roll or a list of rolls.'
+	Error signal:
+		'TestDie requires either a forced roll or a list of rolls.'
 ]
 
 { #category : 'accessing' }

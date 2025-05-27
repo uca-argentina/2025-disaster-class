@@ -9,15 +9,6 @@ Class {
 }
 
 { #category : 'instance creation' }
-Board class >> with: aNumberOfCells withWormholesAt: someFirstPosition And: someSecondPosition [
-
-	^ self new
-		  initializeWith: aNumberOfCells
-		  withWormholesAt: someFirstPosition
-		  and: someSecondPosition
-]
-
-{ #category : 'instance creation' }
 Board class >> withCells: someCells [
 
 	^ self new
@@ -44,21 +35,6 @@ Board >> cellContaining: aShip [
 	^ map detect: [ :each | each includes: aShip ]
 ]
 
-{ #category : 'accessing' }
-Board >> createMapOf: aNumberOfCells withWormholesAt: someFirstPosition and: someSecondPosition using: wormholePair [
-	map := OrderedCollection new: aNumberOfCells.
-
-	1 to: aNumberOfCells do: [ :i |
-		i = someFirstPosition
-			ifTrue: [ map add: (wormholePair at: 1) ]
-			ifFalse: [
-				i = someSecondPosition
-					ifTrue: [ map add: (wormholePair at: 2) ]
-					ifFalse: [ map add: (RegularCell new) ] ] ].
-
-	^ map
-]
-
 { #category : 'as yet unclassified' }
 Board >> firstCell [
 	^ map first
@@ -73,23 +49,6 @@ Board >> indexOfCellContaining: aShip [
 Board >> initializeWith: someCells [
 
 	map := someCells
-]
-
-{ #category : 'initialization' }
-Board >> initializeWith: aNumberOfCells withWormholesAt: someFirstPosition and: someSecondPosition [
-
-	| wormholePair |
-	wormholePair := WormholeCell createPair.
-	self
-		validateIf: someFirstPosition
-		and: someSecondPosition
-		areBetweenOneAnd: aNumberOfCells.
-
-	map := self
-		createMapOf: aNumberOfCells
-		withWormholesAt: someFirstPosition
-		and: someSecondPosition
-		using: wormholePair.
 ]
 
 { #category : 'as yet unclassified' }
@@ -126,15 +85,4 @@ Board >> placeAllShipsAtStart: someShips [
 { #category : 'as yet unclassified' }
 Board >> size [
 	^ map size.
-]
-
-{ #category : 'as yet unclassified' }
-Board >> validateIf: someFirstPosition and: someSecondPosition areBetweenOneAnd: aBoardLength [
-
-	((someFirstPosition between: 1 and: aBoardLength) and:
-		 (someSecondPosition between: 1 and: aBoardLength)) ifFalse: [
-		Error signal: 'Posiciones de agujeros de gusano fuera de rango: '
-			,
-			(Array with: someFirstPosition with: someSecondPosition)
-				printString ]
 ]

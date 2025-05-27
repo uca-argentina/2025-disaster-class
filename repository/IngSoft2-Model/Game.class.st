@@ -27,25 +27,6 @@ Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWo
 ]
 
 { #category : 'as yet unclassified' }
-Game class >> playedIn: aBoard with: someDice andShipsNamed: someShipNames [
-
-	^ self new
-		  initializeWith: aBoard
-		  and: someDice
-		  andShipNames: someShipNames
-]
-
-{ #category : 'as yet unclassified' }
-Game class >> playedOnABoardSized: aBoardSize for: aLapCount with: someDice andShipsNamed: someShipNames [ 
-	^ self new
-		initializeWith: aBoardSize
-		and: someDice
-		andShipNames: someShipNames
-		andLaps: aLapCount
-
-]
-
-{ #category : 'as yet unclassified' }
 Game >> advanceToNextPlayer [
 
 	shipTurnIndex := shipTurnIndex \\ ships size + 1
@@ -102,36 +83,6 @@ Game >> finishLineCell [
 Game >> fuelOf: aName [
 
 	^ (ships detect: [ :s | s name = aName ]) fuel 
-]
-
-{ #category : 'initialization' }
-Game >> initializeWith: aBoard and: someDice andShipNames: someShipNames [
-
-	| ship |
-	board := aBoard.
-	dice := someDice.
-	ships := someShipNames collect: [ :eachName |
-		         ship := Ship withName: eachName and: 2 * self maxDiceRoll.
-		         ship ].
-	shipTurnIndex := 1.
-	board placeAllShipsAtStart: ships.
-	laps := Dictionary new.
-	ships do: [ :s | laps at: s put: 0 ].
-	numberOfLaps := 1.  "Por defecto, o podés parametrizarlo"
-]
-
-{ #category : 'initialization' }
-Game >> initializeWith: aBoard and: someDice andShipNames: someShipNames andLaps: lapsCount [ 
-	board := aBoard.
-	dice := someDice.
-	ships := someShipNames collect: [ :eachName |
-		Ship withName: eachName and: 2 * self maxDiceRoll ].
-	shipTurnIndex := 1.
-	board placeAllShipsAtStart: ships.
-
-	laps := Dictionary newFromKeys: ships andValues: (ships collect: [ :_ | 0 ]).
-	numberOfLaps := lapsCount.
-
 ]
 
 { #category : 'initialization' }
