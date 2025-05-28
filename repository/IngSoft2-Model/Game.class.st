@@ -1,6 +1,6 @@
 Class {
-	#name : #Game,
-	#superclass : #Object,
+	#name : 'Game',
+	#superclass : 'Object',
 	#instVars : [
 		'board',
 		'dice',
@@ -8,10 +8,11 @@ Class {
 		'shipTurnIndex',
 		'numberOfLaps'
 	],
-	#category : #'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation for: aLapCount with: someDice andShipsNamed: someShipNames [
 
 	^ self new
@@ -24,19 +25,19 @@ Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWo
 		  andLaps: aLapCount
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> advanceToNextPlayer [
 
 	shipTurnIndex := shipTurnIndex \\ ships size + 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> board [
 
 	^ board
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 
 	| currentIndex maxIndex targetIndex |
@@ -46,37 +47,37 @@ Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 	^ board cellAt: targetIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> currentCellOf: aShip [
 
 	^ board cellContaining: aShip
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> currentShip [
 
 	^ ships at: shipTurnIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> dice [
 
 	^ dice
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> finishLineCell [
 
 	^ board lastCell
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> fuelOf: aName [
 
 	^ (ships detect: [ :s | s name = aName ]) fuel 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 Game >> initializeWith: aBoardSize using: aCellGenerator withWormholesAt: firstWormhole and: secondWormhole and: someDice andShipNames: someShipNames andLaps: aLapCount [
 
 	| cells |
@@ -95,19 +96,19 @@ Game >> initializeWith: aBoardSize using: aCellGenerator withWormholesAt: firstW
 	numberOfLaps := aLapCount
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> isOver [
 
 	^ board ships anySatisfy: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> isShipAtFinishLine: aShip [
 
 	^ (self currentCellOf: aShip) = board lastCell
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> maxDiceRoll [
 	| allDice sidesList |
 	
@@ -123,7 +124,7 @@ Game >> maxDiceRoll [
 	^ sidesList sum.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> performTurnWith: aShip [
 
 	| steps previousIndex newIndex boardSize |
@@ -141,7 +142,7 @@ Game >> performTurnWith: aShip [
 	board applyEffectTo: aShip.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> playTurn [
 
 	| ship |
@@ -157,13 +158,13 @@ Game >> playTurn [
 	self advanceToNextPlayer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> positionOfShip: aShip [
 
 	^ board indexOfCellContaining: aShip
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> positions [
 
 	^ Dictionary newFrom:
@@ -171,19 +172,19 @@ Game >> positions [
 			   ship name -> (self positionOfShip: ship) ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> rollAllDice [
 
 	^ (dice collect: [ :d | d rollDice ]) sum.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Game >> ships [
 
 	^ ships
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Game >> skipTurn [
 
 	| ship |
@@ -192,7 +193,7 @@ Game >> skipTurn [
 	self advanceToNextPlayer
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 Game >> winner [
 
 	^ board ships

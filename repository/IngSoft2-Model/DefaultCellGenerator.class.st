@@ -1,27 +1,41 @@
 Class {
-	#name : #DefaultCellGenerator,
-	#superclass : #Object,
+	#name : 'DefaultCellGenerator',
+	#superclass : 'Object',
 	#instVars : [
 		'distribution'
 	],
-	#category : 'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
+DefaultCellGenerator class >> defaultDistributions [
+    ^ self withDistributions: {
+        ([ RegularCell new ] -> 0.4).
+        ([ BlackHoleCell new ] -> 0.2).
+        ([ HyperGravityCell requiringMinimumRoll: 2 ] -> 0.2).
+        ([ MoonWalkCell withSteps: 3 ] -> 0.1).
+        ([ HyperJumpCell withParsecList: #(100 50 20) totalParsecs: 100 ] -> 0.08).
+        ([ AtomicBombCell new ] -> 0.02)
+    }
+
+]
+
+{ #category : 'as yet unclassified' }
 DefaultCellGenerator class >> validateProbabilities: aBlockToProbabilityCollection [
 
 	(aBlockToProbabilityCollection collect: [ :each | each value ]) sum
 	= 1 ifFalse: [ Error signal: 'The sum of probabilities must equal 1' ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 DefaultCellGenerator class >> withDistributions: aBlockToProbabilityCollection [
 
 	self validateProbabilities: aBlockToProbabilityCollection.
 	^ self new initializeWith: aBlockToProbabilityCollection
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DefaultCellGenerator >> cellCollection: amount with: aBlock [
 
 	| collection |
@@ -30,7 +44,7 @@ DefaultCellGenerator >> cellCollection: amount with: aBlock [
 	^ collection
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DefaultCellGenerator >> generateCells: anAmountOfCells [
 
 	| cellPool cells |
@@ -46,13 +60,13 @@ DefaultCellGenerator >> generateCells: anAmountOfCells [
 	^ cells
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DefaultCellGenerator >> initializeWith: aBlockToProbabilityCollection [
 
 	distribution := aBlockToProbabilityCollection
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DefaultCellGenerator >> validateProbabilities [
 
 	distribution values sum = 1 ifFalse: [

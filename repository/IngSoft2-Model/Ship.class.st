@@ -1,22 +1,23 @@
 Class {
-	#name : #Ship,
-	#superclass : #Object,
+	#name : 'Ship',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'fuel',
 		'fuelCapacity',
 		'lostTurns'
 	],
-	#category : #'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Ship class >> withName: aName and: aFuelAmount [
 
 	^ self new initializeWith: aName and: aFuelAmount
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Ship >> applyPenaltyIn: board [
 
 	board moveShipToStart: self.
@@ -24,31 +25,31 @@ Ship >> applyPenaltyIn: board [
 	lostTurns := 2
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Ship >> canPlay [
 
 	^ lostTurns = 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Ship >> consumeFuel: steps [ 
 	fuel := fuel - steps abs.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Ship >> fuel [
 
 	^ fuel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Ship >> fuelCapacity [
 
 	^ fuelCapacity
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Ship >> initializeWith: aName and: aFuelAmount [
 
 	name := aName.
@@ -57,13 +58,13 @@ Ship >> initializeWith: aName and: aFuelAmount [
 	lostTurns := 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Ship >> lostATurn [
 
 	lostTurns := lostTurns - 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Ship >> moveS: steps in: board [
 
 	| cost |
@@ -73,13 +74,13 @@ Ship >> moveS: steps in: board [
 	board moveShip: self steps: steps
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 Ship >> name [
 
 	^ name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Ship >> refuel [
 
 	fuel := fuelCapacity 

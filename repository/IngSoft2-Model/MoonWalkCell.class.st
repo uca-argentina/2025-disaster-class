@@ -1,18 +1,19 @@
 Class {
-	#name : #MoonWalkCell,
-	#superclass : #Cell,
+	#name : 'MoonWalkCell',
+	#superclass : 'Cell',
 	#instVars : [
 		'stepsBack'
 	],
-	#category : #'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MoonWalkCell class >> withSteps: n [
     ^ self new initializeWithSteps: n
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MoonWalkCell >> applyEffectTo: aShip in: aBoard [
     | allOtherShips |
     
@@ -22,7 +23,7 @@ MoonWalkCell >> applyEffectTo: aShip in: aBoard [
         ship moveS: stepsBack negated in: aBoard ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MoonWalkCell >> initializeWithSteps: n [
 
 	super initialize.

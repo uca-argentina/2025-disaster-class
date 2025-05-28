@@ -1,10 +1,11 @@
 Class {
-	#name : #GameTests,
-	#superclass : #TestCase,
-	#category : #'IngSoft2-Tests'
+	#name : 'GameTests',
+	#superclass : 'TestCase',
+	#category : 'IngSoft2-Tests',
+	#package : 'IngSoft2-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
 	self
@@ -14,7 +15,7 @@ GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 		self assert: error messageText equals: errorMessage ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	| aDie aGame cells aGenerator aBoard |
@@ -41,7 +42,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
 	| aDie aGame aGenerator someDice |
@@ -63,7 +64,7 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	self assert: aGame dice equals: someDice
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	| aDie aGame aGenerator someDice |
@@ -86,7 +87,7 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
 	| aDie aGame aGenerator someDice |
@@ -111,7 +112,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
 	| aDie aGenerator aGame someDice positions |
@@ -135,7 +136,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	| aDie aGame aGenerator positionsBefore positionsAfter |
@@ -165,7 +166,7 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 	self assert: (positionsAfter at: 'Orion') equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	| aDie aGenerator game positionsAfterTurn2 |
@@ -194,7 +195,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
 	| aDie aGenerator aGame positionsAfter |
@@ -218,7 +219,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
 	| aDie aGenerator aGame positionsBefore positionsAfter |
@@ -246,7 +247,7 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 
 	| aDie aGenerator aGame |
@@ -271,7 +272,7 @@ GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 	self assert: aGame isOver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 
 	| die generator game |
@@ -295,7 +296,7 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 	self deny: game isOver
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 	| die generator game |
@@ -319,7 +320,7 @@ GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 	self assert: game winner name equals: 'Apollo'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test013GameIsOverWhenThereIsAWinner [
 
 	| die generator game |
@@ -345,7 +346,7 @@ GameTests >> test013GameIsOverWhenThereIsAWinner [
 	self assert: game winner name equals: 'Apollo'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 	| aDie aGenerator aGame somePositions aShip |
@@ -379,7 +380,7 @@ GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 
 	| aDie1 aDie2 someDice aGenerator aGame somePositions aShip |
@@ -416,7 +417,7 @@ GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
 	| aDie aGenerator aGame somePositions |
@@ -444,7 +445,7 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
 	| aDie aGenerator aGame somePositions |
@@ -475,7 +476,7 @@ GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 
 	| aDie aGenerator aGame initialFuel fuelAfterTurn |
@@ -501,7 +502,7 @@ GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 	self assert: fuelAfterTurn equals: 3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 
 	| die generator game ship |
@@ -526,7 +527,7 @@ GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 	self assert: (game board indexOfCellContaining: ship) equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 
 	| die generator game ship |
@@ -556,7 +557,7 @@ GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 	self assert: ship canPlay
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	| die generator game ship |
@@ -582,7 +583,7 @@ GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 	self assert: ship fuel equals: ship fuelCapacity
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
 
 	| die generator game |
@@ -603,7 +604,7 @@ GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
 	self assert: game board size equals: 5
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test023AtomicBombCellMovesAllShipsToStart [
     | ship1 ship2 board bombCell cells |
 
@@ -627,7 +628,7 @@ GameTests >> test023AtomicBombCellMovesAllShipsToStart [
     self assert: (board indexOfCellContaining: ship2) equals: 1.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test024AtomicBombCellDoesNotResetLaps [
     | ship1 ship2 board bombCell cells |
 
@@ -654,7 +655,7 @@ GameTests >> test024AtomicBombCellDoesNotResetLaps [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test025BlackHoleCellMovesShipBackwardsAndConsumesFuel [
     | ship board blackHoleCell cells initialFuel |
 
@@ -679,7 +680,7 @@ GameTests >> test025BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test026BlackHoleCellSendsShipToStartAndPenalizesWhenNotEnoughFuel [
     | ship board blackHoleCell cells |
 
@@ -703,7 +704,7 @@ GameTests >> test026BlackHoleCellSendsShipToStartAndPenalizesWhenNotEnoughFuel [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test027BlackHoleCellWrapsAroundWhenMovingBackwards [
     | ship board blackHoleCell cells |
 
@@ -726,7 +727,7 @@ GameTests >> test027BlackHoleCellWrapsAroundWhenMovingBackwards [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoard [
     | ship board blackHoleCell cells |
 
@@ -752,7 +753,7 @@ GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoa
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
     | apollo orion board moonWalkCell cells initialFuelApollo initialFuelOrion |
 
@@ -782,7 +783,7 @@ GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
     self assert: orion fuel < initialFuelOrion.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test030MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfNeeded [
     | apollo orion board moonWalkCell cells |
 
@@ -809,7 +810,7 @@ GameTests >> test030MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIf
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test031MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
     | apollo orion board moonWalkCell cells |
 
@@ -833,7 +834,7 @@ GameTests >> test031MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
     self assert: (board indexOfCellContaining: orion) equals: 9.  
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test032MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
     | apollo orion board moonWalkCell cells |
 
@@ -859,7 +860,7 @@ GameTests >> test032MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
     self assert: orion canPlay not.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
     | ship board hyperCell cells parsecList initialFuel |
 
@@ -883,7 +884,7 @@ GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
     self assert: ship fuel < initialFuel.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test034HyperJumpCellCyclesThroughParsecList [
     | apollo orion board hyperCell cells parsecList |
 
@@ -909,7 +910,7 @@ GameTests >> test034HyperJumpCellCyclesThroughParsecList [
     self assert: (board indexOfCellContaining: orion) equals: 5.  
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test035HyperJumpCellResetsTheParsecListAfterAllParsecValuesUsed [
     | ship1 ship2 ship3 board hyperCell cells parsecList |
 
@@ -943,7 +944,7 @@ GameTests >> test035HyperJumpCellResetsTheParsecListAfterAllParsecValuesUsed [
     self assert: (board indexOfCellContaining: ship3) equals: 5. 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test036HyperJumpCellGoesInCircle [
     | ship board hyperCell cells parsecList |
 
@@ -964,7 +965,7 @@ GameTests >> test036HyperJumpCellGoesInCircle [
     self assert: (board indexOfCellContaining: ship) equals: 3. 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test037HyperJumpCellPenalizesShipIfNotEnoughFuel [
     | ship board hyperCell cells parsecList |
 
@@ -988,7 +989,7 @@ GameTests >> test037HyperJumpCellPenalizesShipIfNotEnoughFuel [
     self assert: ship canPlay not.  
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
 
 	| ship board gravityCell cells die game maxRoll |
@@ -1020,7 +1021,7 @@ GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
 	self assert: (board indexOfCellContaining: ship) equals: 5
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 GameTests >> test039HyperGravityLetsShipAdvanceIfRollIsSufficient [
     | ship board gravityCell cells die game maxRoll |
 

@@ -1,20 +1,21 @@
 Class {
-	#name : #HyperJumpCell,
-	#superclass : #Cell,
+	#name : 'HyperJumpCell',
+	#superclass : 'Cell',
 	#instVars : [
 		'parsecList',
 		'index',
 		'totalParsecs'
 	],
-	#category : #'IngSoft2-Model'
+	#category : 'IngSoft2-Model',
+	#package : 'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 HyperJumpCell class >> withParsecList: aList totalParsecs: aTotal [
     ^ self new initializeWithParsecList: aList totalParsecs: aTotal
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 HyperJumpCell >> applyEffectTo: aShip in: aBoard [
     | parsecs parsecsPerCell cellsToAdvance |
 
@@ -28,7 +29,7 @@ HyperJumpCell >> applyEffectTo: aShip in: aBoard [
     aShip moveS: cellsToAdvance in: aBoard.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 HyperJumpCell >> initializeWithParsecList: aList totalParsecs: aTotal [
 
 	super initialize.
