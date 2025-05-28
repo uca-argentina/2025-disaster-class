@@ -1051,3 +1051,47 @@ GameTests >> test039HyperGravityLetsShipAdvanceIfRollIsSufficient [
     self assert: (board indexOfCellContaining: ship) equals: 1.
 
 ]
+
+{ #category : 'tests' }
+GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
+
+	| die game apollo orion generator board minRoll steps parsecList totalParsecs winner aNumberOfSides |
+
+	aNumberOfSides := 6.
+	
+	die := Die with: aNumberOfSides.
+
+	minRoll := 3.
+	steps := 3.
+	parsecList := #( 20 10 5 ).
+	totalParsecs := 300.
+
+	generator := DefaultCellGenerator
+		             withDefaultDistributionsRequiring: minRoll
+		             withSteps: steps
+		             parsecs: parsecList
+		             totalParsecs: totalParsecs.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 30
+		        withWormholesAt: 10
+		        and: 15
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' 'Orion' ).
+
+	apollo := game ships first.
+	orion := game ships second.
+	board := game board.
+
+	
+	[ game isOver ] whileFalse: [ game playTurn ].
+
+	self assert: game isOver.
+	
+	winner := game winner.
+	
+	self assert: winner isNotNil.
+	
+]

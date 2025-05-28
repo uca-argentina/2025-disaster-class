@@ -23,7 +23,7 @@ HyperJumpCell >> applyEffectTo: aShip in: aBoard [
     index := index + 1.
     index > parsecList size ifTrue: [ index := 1 ]. 
 
-    parsecsPerCell := totalParsecs // aBoard size.
+    parsecsPerCell :=  totalParsecs // aBoard size .
     cellsToAdvance := parsecs // parsecsPerCell.
 
     aShip moveS: cellsToAdvance in: aBoard.

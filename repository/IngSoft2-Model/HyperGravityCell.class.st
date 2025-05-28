@@ -15,6 +15,12 @@ HyperGravityCell class >> requiringMinimumRoll: aNumber [
 ]
 
 { #category : 'as yet unclassified' }
+HyperGravityCell >> applyEffectTo: aShip in: aBoard [
+    self applyEffectTo: aShip in: aBoard withRoll: 3.
+
+]
+
+{ #category : 'as yet unclassified' }
 HyperGravityCell >> applyEffectTo: aShip in: aBoard withRoll: aRoll [
     aRoll < requiredRoll ifTrue: [ ^ self ].  
     aShip moveS: aRoll in: aBoard.
