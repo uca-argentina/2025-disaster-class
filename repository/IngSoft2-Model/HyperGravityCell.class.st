@@ -23,7 +23,7 @@ HyperGravityCell >> applyEffectTo: aShip in: aBoard [
 { #category : 'as yet unclassified' }
 HyperGravityCell >> applyEffectTo: aShip in: aBoard withRoll: aRoll [
     aRoll < requiredRoll ifTrue: [ ^ self ].  
-    aShip moveS: aRoll in: aBoard.
+    aShip attemptMoveBy: aRoll in: aBoard.
 ]
 
 { #category : 'as yet unclassified' }

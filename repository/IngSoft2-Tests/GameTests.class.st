@@ -959,7 +959,7 @@ GameTests >> test036HyperJumpCellGoesInCircle [
     board := Board withCells: cells andShips: { ship } asOrderedCollection.
     board placeAllShipsAtStart: { ship } asOrderedCollection.
 
-    board moveShip: ship steps: 9.  
+    board moveShipDirectly: ship steps: 9.  
     (board cellAt: 10) applyEffectTo: ship in: board.
 
     self assert: (board indexOfCellContaining: ship) equals: 3. 

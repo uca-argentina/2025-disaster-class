@@ -41,11 +41,6 @@ Board >> cellContaining: aShip [
 	^ map detect: [ :each | each includes: aShip ]
 ]
 
-{ #category : 'as yet unclassified' }
-Board >> firstCell [
-	^ map first
-]
-
 { #category : 'initialization' }
 Board >> incrementLapsFor: aShip [
     laps at: aShip put: (self lapsCompletedOf: aShip) + 1
@@ -69,6 +64,14 @@ Board >> initializeWith: someCells andShips: someShips [
 	laps := Dictionary newFromKeys: someShips andValues: (someShips collect: [ :_ | 0 ]).
 ]
 
+{ #category : 'removing' }
+Board >> insertShip: aShip at: newIndex [
+
+	| newCell |
+	newCell := map at: newIndex.
+	newCell enters: aShip
+]
+
 { #category : 'initialization' }
 Board >> lapsCompletedOf: aShip [
     ^ laps at: aShip ifAbsent: [ 0 ]
@@ -85,14 +88,25 @@ Board >> moveAllToStart [
 ]
 
 { #category : 'as yet unclassified' }
-Board >> moveShip: aShip steps: aStepCount [
+Board >> moveShip: aShip steps: steps [
 
-	| currentIndex newIndex oldCell newCell |
-	currentIndex := self indexOfCellContaining: aShip.
-	newIndex := (currentIndex + aStepCount - 1) \\ self size + 1.
+	aShip attemptMoveBy: steps in: self
+]
 
-	(oldCell := map at: currentIndex) leaves: aShip.
-	(newCell := map at: newIndex) enters: aShip
+{ #category : 'as yet unclassified' }
+Board >> moveShipDirectly: aShip steps: steps [
+
+	| previousIndex newIndex boardSize |
+	previousIndex := self indexOfCellContaining: aShip.
+	boardSize := self size.
+	newIndex := previousIndex + steps - 1 \\ self size + 1.
+
+	self remove: aShip at: previousIndex.
+	self insertShip: aShip at: newIndex.
+
+	previousIndex + steps - 1 // boardSize
+	> (previousIndex - 1 // boardSize) ifTrue: [
+		self incrementLapsFor: aShip ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -108,6 +122,14 @@ Board >> moveShipToStart: aShip [
 Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
+]
+
+{ #category : 'removing' }
+Board >> remove: aShip at: someIndex [
+
+	| oldCell |
+	oldCell := map at: someIndex.
+	oldCell leaves: aShip
 ]
 
 { #category : 'initialization' }

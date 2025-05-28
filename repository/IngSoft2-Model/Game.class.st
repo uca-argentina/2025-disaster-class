@@ -125,20 +125,11 @@ Game >> maxDiceRoll [
 ]
 
 { #category : 'as yet unclassified' }
-Game >> performTurnWith: aShip [
+Game >> performTurnSequenceFor: aShip [
 
-	| steps previousIndex newIndex boardSize |
+	| steps |
 	steps := self rollAllDice.
-	previousIndex := board indexOfCellContaining: aShip.
-	boardSize := board size.
-
-	aShip moveS: steps in: board.
-
-	newIndex := board indexOfCellContaining: aShip.
-	"Checkea que haga vuelta aunque quede en un cell mas alto q el inicial"
-	(((previousIndex + steps - 1) // boardSize) > ((previousIndex - 1) // boardSize))
-		ifTrue: [ board incrementLapsFor: aShip ].
-
+	board moveShip: aShip steps: steps.
 	board applyEffectTo: aShip.
 ]
 
@@ -154,7 +145,7 @@ Game >> playTurn [
 		ship lostATurn.
 		^ self advanceToNextPlayer ].
 
-	self performTurnWith: ship.
+	self performTurnSequenceFor: ship.
 	self advanceToNextPlayer
 ]
 

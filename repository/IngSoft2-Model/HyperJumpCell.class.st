@@ -26,7 +26,7 @@ HyperJumpCell >> applyEffectTo: aShip in: aBoard [
     parsecsPerCell :=  totalParsecs // aBoard size .
     cellsToAdvance := parsecs // parsecsPerCell.
 
-    aShip moveS: cellsToAdvance in: aBoard.
+    aShip attemptMoveBy: cellsToAdvance in: aBoard.
 ]
 
 { #category : 'initialization' }

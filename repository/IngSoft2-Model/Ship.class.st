@@ -25,6 +25,16 @@ Ship >> applyPenaltyIn: board [
 	lostTurns := 2
 ]
 
+{ #category : 'accessing' }
+Ship >> attemptMoveBy: steps in: board [
+
+	| cost |
+	cost := steps abs.
+	fuel < cost ifTrue: [ ^ self applyPenaltyIn: board ].
+	self consumeFuel: cost.
+	board moveShipDirectly: self steps: steps
+]
+
 { #category : 'as yet unclassified' }
 Ship >> canPlay [
 
@@ -62,16 +72,6 @@ Ship >> initializeWith: aName and: aFuelAmount [
 Ship >> lostATurn [
 
 	lostTurns := lostTurns - 1
-]
-
-{ #category : 'accessing' }
-Ship >> moveS: steps in: board [
-
-	| cost |
-	cost := steps abs.
-	fuel < cost ifTrue: [ ^ self applyPenaltyIn: board ].
-	self consumeFuel: cost.
-	board moveShip: self steps: steps
 ]
 
 { #category : 'accessing' }
