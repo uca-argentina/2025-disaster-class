@@ -759,7 +759,7 @@ GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
     apollo := Ship withName: 'Apollo' and: 10.
     orion := Ship withName: 'Orion' and: 10.
 
-    moonWalkCell := MoonWalkCell new.
+    moonWalkCell := MoonWalkCell withSteps: 2.
 
     cells := (1 to: 10) collect: [:i | RegularCell new].
     cells at: 4 put: moonWalkCell.
@@ -767,7 +767,7 @@ GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
     board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
     board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
 
-    board moveShip: apollo steps: 3. 
+    board moveShip: apollo steps: 3.
     board moveShip: orion steps: 5.   
 
     initialFuelApollo := apollo fuel.
@@ -776,14 +776,14 @@ GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
     (board cellAt: 4) applyEffectTo: apollo in: board.
 
     self assert: (board indexOfCellContaining: apollo) equals: 4.  
-    self assert: (board indexOfCellContaining: orion) equals: 5.  
+    self assert: (board indexOfCellContaining: orion) equals: 4.
 
     self assert: apollo fuel equals: initialFuelApollo.
     self assert: orion fuel < initialFuelOrion.
 ]
 
 { #category : #tests }
-GameTests >> test30MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfNeeded [
+GameTests >> test030MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfNeeded [
     | apollo orion board moonWalkCell cells |
 
     apollo := Ship withName: 'Apollo' and: 10.
@@ -810,7 +810,7 @@ GameTests >> test30MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfN
 ]
 
 { #category : #tests }
-GameTests >> test31MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
+GameTests >> test031MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
     | apollo orion board moonWalkCell cells |
 
     apollo := Ship withName: 'Apollo' and: 10.
@@ -834,7 +834,7 @@ GameTests >> test31MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 ]
 
 { #category : #tests }
-GameTests >> test32MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
+GameTests >> test032MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
     | apollo orion board moonWalkCell cells |
 
     apollo := Ship withName: 'Apollo' and: 10.
@@ -857,4 +857,196 @@ GameTests >> test32MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
     self assert: (board indexOfCellContaining: orion) equals: 1. 
     self assert: orion fuel equals: orion fuelCapacity.
     self assert: orion canPlay not.
+]
+
+{ #category : #tests }
+GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
+    | ship board hyperCell cells parsecList initialFuel |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    parsecList := #(20 10). 
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 4 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 3. 
+    initialFuel := ship fuel.
+
+    (board cellAt: 4) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 6.  
+    self assert: ship fuel < initialFuel.
+]
+
+{ #category : #tests }
+GameTests >> test034HyperJumpCellCyclesThroughParsecList [
+    | apollo orion board hyperCell cells parsecList |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 10.
+
+    parsecList := #(20 10). 
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 4 put: hyperCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 3.  
+    (board cellAt: 4) applyEffectTo: apollo in: board.
+
+    board moveShip: orion steps: 3.  
+    (board cellAt: 4) applyEffectTo: orion in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 6.  
+    self assert: (board indexOfCellContaining: orion) equals: 5.  
+]
+
+{ #category : #tests }
+GameTests >> test035HyperJumpCellResetsTheParsecListAfterAllParsecValuesUsed [
+    | ship1 ship2 ship3 board hyperCell cells parsecList |
+
+    ship1 := Ship withName: 'Apollo' and: 10.
+    ship2 := Ship withName: 'Orion' and: 10.
+    ship3 := Ship withName: 'Artemis' and: 10.
+
+    parsecList := #(20 10).  
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 3 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship1. ship2. ship3 } asOrderedCollection.
+    board placeAllShipsAtStart: { ship1. ship2. ship3 } asOrderedCollection.
+
+    
+    board moveShip: ship1 steps: 2.  
+    (board cellAt: 3) applyEffectTo: ship1 in: board.
+
+  
+    board moveShip: ship2 steps: 2.
+    (board cellAt: 3) applyEffectTo: ship2 in: board.
+
+    
+    board moveShip: ship3 steps: 2.
+    (board cellAt: 3) applyEffectTo: ship3 in: board.
+
+    self assert: (board indexOfCellContaining: ship1) equals: 5. 
+    self assert: (board indexOfCellContaining: ship2) equals: 4.  
+    self assert: (board indexOfCellContaining: ship3) equals: 5. 
+]
+
+{ #category : #tests }
+GameTests >> test036HyperJumpCellGoesInCircle [
+    | ship board hyperCell cells parsecList |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    parsecList := #(30).
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 10 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 9.  
+    (board cellAt: 10) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 3. 
+]
+
+{ #category : #tests }
+GameTests >> test037HyperJumpCellPenalizesShipIfNotEnoughFuel [
+    | ship board hyperCell cells parsecList |
+
+   
+    ship := Ship withName: 'Apollo' and: 2.
+
+    parsecList := #(30). 
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 4. 
+    (board cellAt: 5) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1. 
+    self assert: ship fuel equals: ship fuelCapacity. 
+    self assert: ship canPlay not.  
+]
+
+{ #category : #tests }
+GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
+
+	| ship board gravityCell cells die game maxRoll |
+	ship := Ship withName: 'Apollo' and: 10.
+	die := TestDie withRolls: #( 3 ). 
+	maxRoll := 6. 
+
+	gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
+
+	cells := (1 to: 10) collect: [ :i | RegularCell new ].
+	cells at: 5 put: gravityCell. 
+
+	board := Board
+		         withCells: cells
+		         andShips: { ship } asOrderedCollection.
+	board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+	game := Game new.
+	game instVarNamed: 'board' put: board.
+	game instVarNamed: 'dice' put: { die } asOrderedCollection.
+	game instVarNamed: 'ships' put: { ship } asOrderedCollection.
+	game instVarNamed: 'shipTurnIndex' put: 1.
+	game instVarNamed: 'numberOfLaps' put: 1.
+
+	board moveShip: ship steps: 4.
+
+	(board cellAt: 5) applyEffectTo: ship in: board withRoll: 3.
+
+	self assert: (board indexOfCellContaining: ship) equals: 5
+]
+
+{ #category : #tests }
+GameTests >> test039HyperGravityLetsShipAdvanceIfRollIsSufficient [
+    | ship board gravityCell cells die game maxRoll |
+
+    ship := Ship withName: 'Apollo' and: 10.
+    die := TestDie withRolls: #(6).  
+    maxRoll := 6.
+
+    gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new ].
+    cells at: 5 put: gravityCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    game := Game new.
+    game instVarNamed: 'board' put: board.
+    game instVarNamed: 'dice' put: { die } asOrderedCollection.
+    game instVarNamed: 'ships' put: { ship } asOrderedCollection.
+    game instVarNamed: 'shipTurnIndex' put: 1.
+    game instVarNamed: 'numberOfLaps' put: 1.
+
+    board moveShip: ship steps: 4.  
+
+    (board cellAt: 5) applyEffectTo: ship in: board withRoll: 6.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1.
+
 ]

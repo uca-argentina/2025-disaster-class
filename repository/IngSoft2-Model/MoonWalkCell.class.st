@@ -24,6 +24,7 @@ MoonWalkCell >> applyEffectTo: aShip in: aBoard [
 
 { #category : #'as yet unclassified' }
 MoonWalkCell >> initializeWithSteps: n [
-    stepsBack := n
 
+	super initialize.
+	stepsBack := n
 ]
