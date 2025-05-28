@@ -29,6 +29,19 @@ DefaultCellGenerator class >> validateProbabilities: aBlockToProbabilityCollecti
 ]
 
 { #category : 'as yet unclassified' }
+DefaultCellGenerator class >> withDefaultDistributionsRequiring: minRoll withSteps: steps parsecs: parsecList totalParsecs: total [
+    ^ self withDistributions: {
+        ([ RegularCell new ] -> 0.4).
+        ([ BlackHoleCell new ] -> 0.2).
+        ([ HyperGravityCell requiringMinimumRoll: minRoll ] -> 0.2).
+        ([ MoonWalkCell withSteps: steps ] -> 0.1).
+        ([ HyperJumpCell withParsecList: parsecList totalParsecs: total ] -> 0.08).
+        ([ AtomicBombCell new ] -> 0.02)
+    }
+
+]
+
+{ #category : 'as yet unclassified' }
 DefaultCellGenerator class >> withDistributions: aBlockToProbabilityCollection [
 
 	self validateProbabilities: aBlockToProbabilityCollection.

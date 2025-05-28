@@ -109,3 +109,35 @@ DefaultCellGeneratorTests >> test005DefaultDistributionGeneratesExpectedCellCoun
 
 
 ]
+
+{ #category : 'tests' }
+DefaultCellGeneratorTests >> test006DefaultDistributionWithEffectCellsParametersGeneratesExpectedCellCounts [
+
+	| generator cells counts totalCells minRoll steps parsecList totalParsecs |
+	minRoll := 4.
+	steps := 3.
+	parsecList := #( 100 50 20 ).
+	totalParsecs := 100.
+
+	generator := DefaultCellGenerator
+		             withDefaultDistributionsRequiring: minRoll
+		             withSteps: steps
+		             parsecs: parsecList
+		             totalParsecs: totalParsecs.
+
+	totalCells := 1000.
+	cells := generator generateCells: totalCells.
+
+	counts := Dictionary new.
+	cells do: [ :cell |
+		counts
+			at: cell class
+			put: (counts at: cell class ifAbsent: [ 0 ]) + 1 ].
+
+	self assert: ((counts at: RegularCell) between: 350 and: 450).
+	self assert: ((counts at: BlackHoleCell) between: 150 and: 250).
+	self assert: ((counts at: HyperGravityCell) between: 150 and: 250).
+	self assert: ((counts at: MoonWalkCell) between: 50 and: 150).
+	self assert: ((counts at: HyperJumpCell) between: 40 and: 120).
+	self assert: ((counts at: AtomicBombCell) between: 10 and: 30)
+]
