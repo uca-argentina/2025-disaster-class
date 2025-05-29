@@ -62,7 +62,6 @@ DiceTest >> testThatIfRollIsBetween1AndNumberOfSidesThenIsValid [
 	self assert: (roll >= 1 and: [ roll <= numberOfSides ])
 ]
 
-
 { #category : 'tests' }
 DiceTest >> testYouCanForceRollSequenceOfDieResults [
 	| die rolls |
@@ -75,4 +74,3 @@ DiceTest >> testYouCanForceRollSequenceOfDieResults [
 	self assert: die rollDice equals: 2.
 
 ]
-

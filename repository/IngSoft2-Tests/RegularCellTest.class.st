@@ -63,7 +63,6 @@ RegularCellTest >> test004IfACellContainsOnlyShipsThenIsValid [
 ]
 
 { #category : 'tests' }
-
 RegularCellTest >> test005IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsEmpty [
 
 | aRegularCell aShip aShipContainer |
@@ -83,7 +82,6 @@ RegularCellTest >> test005IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsE
 ]
 
 { #category : 'tests' }
-
 RegularCellTest >> test006IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNotEmpty [
 
 	| aRegularCell aShip aShipContainer aSecondShip |
@@ -102,7 +100,6 @@ RegularCellTest >> test006IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNot
 ]
 
 { #category : 'tests' }
-
 RegularCellTest >> test007TwoShipsEnterAndLeaveThenCellIsEmptyAfter [
 
 | aRegularCell aShip aShipContainer aSecondShip |
