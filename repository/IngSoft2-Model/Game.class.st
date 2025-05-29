@@ -5,16 +5,28 @@ Class {
 		'board',
 		'dice',
 		'ships',
-		'shipTurnIndex'
+
+		'shipTurnIndex',
+		'numberOfLaps'
+
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-Game class >> playedIn: aBoard with: aDie and: someShips [
 
-	^ self new initializeWith: aBoard and: aDie and: someShips
+Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation for: aLapCount with: someDice andShipsNamed: someShipNames [
+
+	^ self new
+		  initializeWith: aBoardSize
+		  using: aCellGenerator
+		  withWormholesAt: aFirstWormholeLocation
+		  and: aSecondWormholeLocation
+		  and: someDice
+		  andShipNames: someShipNames
+		  andLaps: aLapCount
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -33,18 +45,20 @@ Game >> board [
 Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 
 	| currentIndex maxIndex targetIndex |
-	
+
 	currentIndex := self positionOfShip: aShip.
-	maxIndex := board getMap size.
+	maxIndex := board size.
 	targetIndex := currentIndex + totalRoll min: maxIndex.
-	
-	^ board getMap at: targetIndex
+	^ board cellAt: targetIndex
+
 ]
 
 { #category : 'as yet unclassified' }
 Game >> currentCellOf: aShip [
 
-	^ board getMap detect: [ :cell | cell includes: aShip ]
+
+	^ board cellContaining: aShip
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -59,84 +73,141 @@ Game >> dice [
 	^ dice
 ]
 
-{ #category : 'as yet unclassified' }
-Game >> finalPositions [
-
-	^ Dictionary newFrom:
-		  (ships collect: [ :ship | ship -> (self positionOfShip: ship) ])
-]
 
 { #category : 'testing' }
 Game >> finishLineCell [
 
-	^ board getMap last
+	^ board lastCell
+]
+
+{ #category : 'as yet unclassified' }
+Game >> fuelOf: aName [
+
+	^ (ships detect: [ :s | s name = aName ]) fuel 
 ]
 
 { #category : 'initialization' }
-Game >> initializeWith: aBoard and: someDice and: someShips [
+Game >> initializeWith: aBoardSize using: aCellGenerator withWormholesAt: firstWormhole and: secondWormhole and: someDice andShipNames: someShipNames andLaps: aLapCount [
 
-	board := aBoard.
+	| cells |
 	dice := someDice.
-	ships := someShips.
+
+	ships := someShipNames collect: [ :eachName |
+		         Ship withName: eachName and: 2 * self maxDiceRoll ].
+
+	cells := aCellGenerator generateCells: aBoardSize.
+	WormholeCell newPairIn: cells at: firstWormhole and: secondWormhole.
+
+	board := Board withCells: cells andShips: ships.
+	board placeAllShipsAtStart: ships.
+
 	shipTurnIndex := 1.
-	board placeAllShipsAtStart: someShips
+	numberOfLaps := aLapCount
+
 ]
 
 { #category : 'testing' }
 Game >> isOver [
 
-	^ self winner notNil
+
+	^ board ships anySatisfy: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
+
 ]
 
 { #category : 'testing' }
 Game >> isShipAtFinishLine: aShip [
 
-	^ (self currentCellOf: aShip) = self finishLineCell
+
+	^ (self currentCellOf: aShip) = board lastCell
+]
+
+{ #category : 'accessing' }
+Game >> maxDiceRoll [
+	| allDice sidesList |
+	
+	allDice := dice isCollection
+		ifTrue: [ dice ]
+		ifFalse: [ Array with: dice ].
+
+	sidesList := allDice collect: [ :die |
+		(die respondsTo: #sides)
+			ifTrue: [ die sides ]
+			ifFalse: [ 0 ] ].
+
+	^ sidesList sum.
 ]
 
 { #category : 'as yet unclassified' }
-Game >> moveShip: aShip from: oldCell to: newCell [
+Game >> performTurnSequenceFor: aShip [
 
-	oldCell leaves: aShip.
-	newCell enters: aShip
+	| steps |
+	steps := self rollAllDice.
+	board moveShip: aShip steps: steps.
+	board applyEffectTo: aShip.
+
 ]
 
 { #category : 'as yet unclassified' }
 Game >> playTurn [
 
-	| shipToPlay oldCell newCell |
-	self isOver ifTrue: [ ^ self ].
 
-	shipToPlay := self currentShip.
-	oldCell := self currentCellOf: shipToPlay.
+	| ship |
+	self isOver ifTrue: [ ^ nil ].
 
-	newCell := self
-		           calculateNewPositionFor: shipToPlay
-		           afterRolling: self rollAllDice.
+	ship := self currentShip.
 
-	self moveShip: shipToPlay from: oldCell to: newCell.
+	ship canPlay ifFalse: [
+		ship lostATurn.
+		^ self advanceToNextPlayer ].
 
-	board applyEffectTo: shipToPlay.
-
+	self performTurnSequenceFor: ship.
 	self advanceToNextPlayer
 ]
 
 { #category : 'as yet unclassified' }
 Game >> positionOfShip: aShip [
 
-	^ board getMap indexOf: (self currentCellOf: aShip)
+	^ board indexOfCellContaining: aShip
+]
+
+{ #category : 'as yet unclassified' }
+Game >> positions [
+
+	^ Dictionary newFrom:
+		  (ships collect: [ :ship |
+			   ship name -> (self positionOfShip: ship) ])
+
 ]
 
 { #category : 'as yet unclassified' }
 Game >> rollAllDice [
 
-	^ dice sum: [ :eachDie | eachDie rollDice ]
+
+	^ (dice collect: [ :d | d rollDice ]) sum.
+]
+
+{ #category : 'accessing' }
+Game >> ships [
+
+	^ ships
+]
+
+{ #category : 'as yet unclassified' }
+Game >> skipTurn [
+
+	| ship |
+	ship := self currentShip.
+	ship refuel.
+	self advanceToNextPlayer
+
 ]
 
 { #category : 'testing' }
 Game >> winner [
 
-	^ ships
-		  detect: [ :ship | self isShipAtFinishLine: ship ]
-		  ifNone: [ nil ]
+
+	^ board ships
+        detect: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
+        ifNone: [ nil ]
+
 ]

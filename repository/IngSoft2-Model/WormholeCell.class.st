@@ -9,23 +9,27 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-WormholeCell class >> createPair [
 
-	| cell1 cell2 |
-	cell1 := self new initializeWith: OrderedCollection new.
-	cell2 := self new initializeWith: OrderedCollection new.
-	cell1 linkWith: cell2.
-	cell2 linkWith: cell1.
-	^ {
-		  cell1.
-		  cell2 }
+WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [ 
+	| aWormhole anotherWormhole |
+	aWormhole := self new.
+	anotherWormhole := self new.
+
+	aWormhole linkWith: anotherWormhole.
+	anotherWormhole linkWith: aWormhole.
+
+	aBoard at: firstPosition put: aWormhole.
+	aBoard at: secondPosition put: anotherWormhole.
+
 ]
 
 { #category : 'as yet unclassified' }
 WormholeCell >> applyEffectTo: aShip in: aBoard [
 
 	| currentCell |
-	currentCell := aBoard getMap detect: [ :cell | cell includes: aShip ].
+
+	currentCell := aBoard cellContaining: aShip.
+
 	currentCell leaves: aShip.
 	linkedCell enters: aShip
 ]

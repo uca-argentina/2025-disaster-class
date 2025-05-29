@@ -8,36 +8,54 @@ Class {
 { #category : 'as yet unclassified' }
 BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
-	| aNumberOfCells aBoard |
+
+	| aNumberOfCells aBoard cells |
 	aNumberOfCells := 20.
-	aBoard := Board with: aNumberOfCells.
-	self assert: aBoard getMap size equals: aNumberOfCells
+	cells := (1 to: aNumberOfCells) collect: [ :i | RegularCell new ].
+	WormholeCell newPairIn: cells at: 2 and: 4.
+	aBoard := Board withCells: cells.
+
+	self assert: aBoard size equals: aNumberOfCells
+
 ]
 
 { #category : 'as yet unclassified' }
 BoardTest >> test002FirstElementIsACell [
 
-	| aBoard |
-	aBoard := Board with: 1.
-	self assert: (aBoard getMap first isKindOf: RegularCell)
+	| aBoard cells |
+	cells := (1 to: 20) collect: [ :i | RegularCell new ].
+	WormholeCell newPairIn: cells at: 2 and: 4.
+	aBoard := Board withCells: cells.
+
+	self assert: ((aBoard cellAt: 1) isKindOf: RegularCell)
+
 ]
 
 { #category : 'as yet unclassified' }
 BoardTest >> test003AllElementsAreCellsThenIsValid [
 
-	| aBoard |
-	aBoard := Board with: 20.
-	self assert:
-		(aBoard getMap allSatisfy: [ :element | element isKindOf: RegularCell ])
+
+	| aBoard cells |
+	cells := (1 to: 20) collect: [ :i | RegularCell new ].
+	WormholeCell newPairIn: cells at: 2 and: 4.
+	aBoard := Board withCells: cells.
+
+	self assert: ((1 to: aBoard size) allSatisfy: [ :i |
+			 (aBoard cellAt: i) isKindOf: Cell ])
 ]
 
 { #category : 'as yet unclassified' }
-BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [ 
-	| aMap aBoard aShip aCell |
-	aBoard := Board with: 5.
+BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [
+
+	| aBoard aShip aCell cells |
+	cells := (1 to: 20) collect: [ :i | RegularCell new ].
+	WormholeCell newPairIn: cells at: 2 and: 4.
+	aBoard := Board withCells: cells.
+
 	aShip := Ship new.
-	aMap := aBoard getMap.
-	aCell := (aMap at:1).
+	aCell := aBoard cellAt: 1.
 	aCell enters: aShip.
-	self assert: ((aCell getShips at: 1) isKindOf: Ship ).
+
+	self assert: ((aCell getShips at: 1) isKindOf: Ship)
+
 ]

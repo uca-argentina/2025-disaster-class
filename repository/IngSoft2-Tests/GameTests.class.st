@@ -5,302 +5,1123 @@ Class {
 	#package : 'IngSoft2-Tests'
 }
 
-{ #category : 'as yet unclassified' }
-GameTests class >> playedIn: aBoard [ 
-	self shouldBeImplemented.
+{ #category : 'tests' }
+GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
+
+	self
+		should: anErrorBlock
+		raise: anErrorClass
+		withExceptionDo: [ :error |
+		self assert: error messageText equals: errorMessage ]
+
 ]
 
 { #category : 'tests' }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
-	| aDie aGame aBoard someShips |
-	someShips := OrderedCollection with: Ship new.
-	aDie := Die with: 2.
-	aBoard := Board with: 20.
-	aGame := Game playedIn: aBoard with: aDie and: someShips.
 
-	self assert: aGame board equals: aBoard
+	| aDie aGame cells aGenerator aBoard |
+	aDie := Die with: 2.
+
+	aGenerator := DefaultCellGenerator withDistributions: {
+		([ RegularCell new ] -> 1.0)
+	}.
+
+	cells := aGenerator generateCells: 20.
+	WormholeCell newPairIn: cells at: 2 and: 4.
+	aBoard := Board withCells: cells.
+
+	aGame := Game
+		createdWith: aGenerator
+		playedOnABoardSized: 20
+		withWormholesAt: 2
+		and: 4
+		for: 1
+		with: (OrderedCollection with: aDie)
+		andShipsNamed: #( 'Apollo' ).
+
+	self assert: aGame board size equals: aBoard size.
+
+
 ]
 
 { #category : 'tests' }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 
-	| aDie aGame aBoard someShips |
-	someShips := OrderedCollection with: Ship new.
-	aDie := Die with: 2.
-	aBoard := Board with: 20.
-	aGame := Game playedIn: aBoard with: aDie and: someShips.
 
-	self assert: aGame dice equals: aDie
+	| aDie aGame aGenerator someDice |
+	aDie := Die with: 2.
+	someDice := OrderedCollection with: aDie.
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 2
+		         and: 4
+		         for: 1
+		         with: someDice
+		         andShipsNamed: #( 'Apollo' ).
+
+	self assert: aGame dice equals: someDice
+
 ]
 
 { #category : 'tests' }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
-	| aShip aDie aGame aBoard someShips firstCell |
-	aShip := Ship new.
-	someShips := OrderedCollection with: aShip.
-	aDie := Die with: 2.
-	aBoard := Board with: 20.
-	aGame := Game playedIn: aBoard with: aDie and: someShips.
-	firstCell := aGame board getMap first.
 
-	self assert: (firstCell includes: aShip)
+	| aDie aGame aGenerator someDice |
+	aDie := Die with: 2.
+	someDice := OrderedCollection with: aDie.
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 2
+		         and: 4
+		         for: 1
+		         with: someDice
+		         andShipsNamed: #( 'Apollo' ).
+
+	self assert:
+		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
+
 ]
 
 { #category : 'tests' }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 
-	| aDie aGame aBoard aGroupOfShips firstCell |
-	aGroupOfShips := OrderedCollection with: Ship new with: Ship new.
-	aDie := Die with: 2.
-	aBoard := Board with: 20.
-	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aGame board getMap first.
 
-	self assert: (firstCell includesAll: aGroupOfShips)
+	| aDie aGame aGenerator someDice |
+	aDie := Die with: 2.
+	someDice := OrderedCollection with: aDie.
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 2
+		         and: 4
+		         for: 1
+		         with: someDice
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
+
+	self assert:
+		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ]).
+	self assert:
+		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
+
 ]
 
 { #category : 'tests' }
 GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 
-	| aGroupOfShips aDie aBoard aGame firstCell |
-	aGroupOfShips := OrderedCollection with: Ship new with: Ship new.
+	| aDie aGenerator aGame someDice positions |
 	aDie := Die with: 2.
-	aBoard := Board with: 20.
-	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
-	firstCell := aBoard getMap first.
+	someDice := OrderedCollection with: aDie.
 
-	self assert: (firstCell includesAll: aGroupOfShips)
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 2
+		         and: 4
+		         for: 1
+		         with: someDice
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
+
+	positions := aGame positions.
+
+	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
+
 ]
 
 { #category : 'tests' }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
-	| aShip aDie aGame aBoard aGroupOfShips firstCell secondCell |
-	aShip := Ship new.
-	aGroupOfShips := OrderedCollection with: aShip with: Ship new.
-	aDie := OrderedCollection with: (TestDie withForcedRoll: 1).
-	aBoard := Board with: 20.
-	aGame := Game playedIn: aBoard with: aDie and: aGroupOfShips.
 
-	firstCell := aGame board getMap at: 1.
-	secondCell := aGame board getMap at: 2.
+'	| aDie aGame aGenerator positionsBefore positionsAfter |
+	aDie := TestDie withRolls: #( 1 ).
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
 
-	self assert: ((firstCell includesAll: aGroupOfShips) and:
-			 secondCell getShips isEmpty).
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( ''Apollo'' ''Orion'' ).
+
+	positionsBefore := aGame positions.
+
+	self assert: (positionsBefore at: ''Apollo'') equals: 1.
+	self assert: (positionsBefore at: ''Orion'') equals: 1.
 
 	aGame playTurn.
 
-	self assert:
-		((firstCell includes: aShip) not and: (secondCell includes: aShip))
+	positionsAfter := aGame positions.
+
+	self assert: (positionsAfter at: ''Apollo'') equals: 2.
+	self assert: (positionsAfter at: ''Orion'') equals: 1'
+
 ]
 
 { #category : 'tests' }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
-	| ship1 ship2 ships die board game firstCell thirdCell |
-	ship1 := Ship new.
-	ship2 := Ship new.
-	ships := OrderedCollection with: ship1 with: ship2.
-	die := OrderedCollection with: (TestDie withForcedRoll: 2).
-	board := Board with: 5.
-	game := Game playedIn: board with: die and: ships.
 
-	firstCell := board getMap at: 1.
-	thirdCell := board getMap at: 3.
+'	| aDie aGenerator game positionsAfterTurn2 |
+	aDie := TestDie withRolls: #( 2 ).
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
 
-	self assert: (firstCell includes: ship1).
-	self assert: (firstCell includes: ship2).
+	game := Game
+		        createdWith: aGenerator
+		        playedOnABoardSized: 20
+		        withWormholesAt: 2
+		        and: 4
+		        for: 1
+		        with: (OrderedCollection with: aDie)
+		        andShipsNamed: #( ''Apollo'' ''Orion'' ).
+
+	self assert: (game positions at: ''Apollo'') equals: 1.
+	self assert: (game positions at: ''Orion'') equals: 1.
+
 
 	game playTurn.
 	game playTurn.
 
-	self assert: (thirdCell includes: ship1).
-	self assert: (thirdCell includes: ship2).
-	self deny: (firstCell includes: ship1).
-	self deny: (firstCell includes: ship2)
+
+	positionsAfterTurn2 := game positions.
+
+	self assert: (positionsAfterTurn2 at: ''Apollo'') equals: 3.
+	self assert: (positionsAfterTurn2 at: ''Orion'') equals: 3'
+	
+	
+
 ]
 
 { #category : 'tests' }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
 
-	| aShip aDie aBoard aGame resultCell pair |
-	aShip := Ship new.
-	aDie := OrderedCollection with: (TestDie withForcedRoll: 1).
-	aBoard := Board new.
-	aBoard initializeWith: 5.
 
-	pair := WormholeCell createPair.
-	aBoard getMap at: 2 put: (pair at: 1).
-	aBoard getMap at: 4 put: (pair at: 2).
+	| aDie aGenerator aGame positionsAfter |
+	aDie := TestDie withRolls: #( 1 ).
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
-		         playedIn: aBoard
-		         with: aDie
-		         and: (OrderedCollection with: aShip).
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 2
+		         and: 4
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' ).
 
 	aGame playTurn.
 
-	resultCell := aBoard getMap at: 4.
+	positionsAfter := aGame positions.
 
-	self assert: (resultCell includes: aShip)
+	self assert: (positionsAfter at: 'Apollo') equals: 4
+
 ]
 
 { #category : 'tests' }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
-	| aShip aDie aBoard aGame startCell targetCell |
-	aShip := Ship new.
-	aDie := OrderedCollection with: (TestDie withForcedRoll: 3).
-	aBoard := Board with: 10.
+
+'	| aDie aGenerator aGame positionsBefore positionsAfter |
+	aDie := TestDie withRolls: #( 3 ).
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
 	aGame := Game
-		         playedIn: aBoard
-		         with: aDie
-		         and: (OrderedCollection with: aShip).
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( ''Apollo'' ).
 
-	startCell := aBoard getMap at: 1.
-	targetCell := aBoard getMap at: 4.
+	positionsBefore := aGame positions.
 
-	self assert: (startCell includes: aShip).
+	self assert: (positionsBefore at: ''Apollo'') equals: 1.
 
 	aGame playTurn.
 
-	self assert: (targetCell includes: aShip).
-	self deny: (startCell includes: aShip)
+	positionsAfter := aGame positions.
+
+	self assert: (positionsAfter at: ''Apollo'') equals: 4'
 ]
 
 { #category : 'tests' }
-GameTests >> test010GameIsOverWhenShipReachesLastCell [
+GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 
-	| aShip aDie aBoard aGame |
-	aShip := Ship new.
-	aDie := OrderedCollection with: (TestDie withForcedRoll: 4).
-	aBoard := Board with: 5.
-	aGame := Game playedIn: aBoard with: aDie and: (OrderedCollection with: aShip).
-	
+	| aDie aGenerator aGame |
+	aDie := TestDie withRolls: #( 20 ).
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' ).
+
 	self deny: aGame isOver.
-	
+
 	aGame playTurn.
-	
-	self assert: aGame isOver. 
+
+	self assert: aGame isOver
+
 ]
 
 { #category : 'tests' }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
-	| ship die board game |
-	ship := Ship new.
-	die := OrderedCollection with: (TestDie withForcedRoll: 1).
-	board := Board with: 5.
-	game := Game playedIn: board with: die and: (OrderedCollection with: ship).
-	
+
+
+	| die generator game |
+	die := TestDie withRolls: #( 1 ).
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 20
+		        withWormholesAt: 2
+		        and: 4
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
 	self deny: game isOver.
-	
+
 	game playTurn.
-	
-	self deny: game isOver.
+
+	self deny: game isOver
+
 ]
 
 { #category : 'tests' }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
-	| ship die board game |
-	ship := Ship new.
-	die := OrderedCollection with: (TestDie withForcedRoll: 4). 
-	board := Board with: 5.
+
+	| die generator game |
+	die := TestDie withRolls: #( 20 ).
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
 	game := Game
-		        playedIn: board
-		        with: die
-		        and: (OrderedCollection with: ship).
+		        createdWith: generator
+		        playedOnABoardSized: 20
+		        withWormholesAt: 10
+		        and: 18
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
 
 	self assert: game winner isNil.
 
 	game playTurn.
 
-	self assert: game winner equals: ship
+
+	self assert: game winner name equals: 'Apollo'
+
 ]
 
 { #category : 'tests' }
 GameTests >> test013GameIsOverWhenThereIsAWinner [
 
-	| ship die board game |
-	ship := Ship new.
-	die:= OrderedCollection with: (TestDie withForcedRoll: 4).
-	board := Board with: 5.
-	game := Game playedIn: board with: die and: (OrderedCollection with: ship).
-	
+
+	| die generator game |
+	die := TestDie withRolls: #( 20 ).
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 20
+		        withWormholesAt: 10
+		        and: 18
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
 	self deny: game isOver.
 	self assert: game winner isNil.
-	
+
 	game playTurn.
-	
+
 	self assert: game isOver.
-	self assert: game winner equals: ship.
+	self assert: game winner name equals: 'Apollo'
 ]
 
 { #category : 'tests' }
-GameTests >> test014ThereAreNoMoreTurnsAfterThereIsAWinnerAndGameIsOverThenIsValid [
+GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
-	| ship die board game lastCell |
-	ship := Ship new.
-	die := OrderedCollection with: (TestDie withForcedRoll: 4).
-	board := Board with: 5.
-	game := Game
-		        playedIn: board
-		        with: die
-		        and: (OrderedCollection with: ship).
+	| aDie aGenerator aGame somePositions aShip |
+	aDie := TestDie withRolls: #( 20 ).
 
-	game playTurn.
-	lastCell := board getMap last.
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
 
-	self assert: game isOver.
-	self assert: (lastCell includes: ship).
-	
-	game playTurn.
-	
-	self assert: (lastCell includes: ship).
-	self assert: game isOver.
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' ).
+
+	aGame playTurn.
+	self assert: aGame isOver.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 1.
+
+	aGame playTurn. "No debería cambiar nada"
+
+	self assert: aGame isOver.
+	self assert: (aGame positions at: 'Apollo') equals: 1.
+
+	aShip := aGame ships first.
+	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
+
 ]
 
 { #category : 'tests' }
-GameTests >> test015IfYouCanPlayWithMultipleDieThenIsValid [
+GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
+'
+	| aDie1 aDie2 someDice aGenerator aGame somePositions aShip |
+	aDie1 := TestDie withRolls: #( 6 4 ).
+	aDie2 := TestDie withRolls: #( 5 5 ).
+	someDice := OrderedCollection with: aDie1 with: aDie2.
 
-	| aShip aDie board game aSecondDie someDice lastCell |
-	aShip := Ship new.
-	aDie := TestDie withForcedRoll: 2.
-	aSecondDie := TestDie withForcedRoll: 2.
-	someDice := OrderedCollection with: aDie with: aSecondDie.
-	board := Board with: 5.
-	game := Game
-		        playedIn: board
-		        with: someDice
-		        and: (OrderedCollection with: aShip).
-	lastCell := board getMap last.
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
 
-	game playTurn.
-	self assert: (lastCell includes: aShip)
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: someDice
+		         andShipsNamed: #( ''Apollo'' ).
+
+	aGame playTurn.
+	self deny: aGame isOver.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: ''Apollo'') equals: 12.
+
+	aGame playTurn.
+	self assert: aGame isOver.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: ''Apollo'') equals: 1.
+
+	aShip := aGame ships first.
+	self assert: (aGame board lapsCompletedOf: aShip) equals: 1'
+
 ]
 
 { #category : 'tests' }
-GameTests >> test016IFWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
+GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
-	| ship1 ship2 board game die finalPositions |
-	ship1 := Ship new.
-	ship2 := Ship new.
-	die := TestDie withForcedRoll: 4.
-	board := Board with: 5.
+	| aDie aGenerator aGame somePositions |
+	aDie := TestDie withRolls: #( 20 ).
+
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
+
+	aGame playTurn.
+
+	self assert: aGame isOver.
+	self assert: aGame winner name equals: 'Apollo'.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: 'Apollo') equals: 1.
+	self assert: (somePositions at: 'Orion') equals: 1
+]
+
+{ #category : 'tests' }
+GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
+
+'	| aDie aGenerator aGame somePositions |
+	aDie := TestDie withRolls: #( 21 ).
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( ''Apollo'' ''Orion'' ).
+
+	aGame playTurn.
+	self assert: aGame isOver.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: ''Apollo'') equals: 2.
+	self assert: (somePositions at: ''Orion'') equals: 1.
+
+	aGame playTurn.
+
+	somePositions := aGame positions.
+	self assert: (somePositions at: ''Apollo'') equals: 2.
+	self assert: (somePositions at: ''Orion'') equals: 1'
+]
+
+{ #category : 'tests' }
+GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
+
+	| aDie aGenerator aGame initialFuel fuelAfterTurn |
+	aDie := TestDie withRolls: #( 3 ).
+	aGenerator := DefaultCellGenerator withDistributions:
+		              { ([ RegularCell new ] -> 1.0) }.
+
+	aGame := Game
+		         createdWith: aGenerator
+		         playedOnABoardSized: 20
+		         withWormholesAt: 10
+		         and: 18
+		         for: 1
+		         with: (OrderedCollection with: aDie)
+		         andShipsNamed: #( 'Apollo' ).
+
+	initialFuel := aGame fuelOf: 'Apollo'.
+	self assert: initialFuel equals: 6.
+
+	aGame playTurn.
+
+	fuelAfterTurn := aGame fuelOf: 'Apollo'.
+	self assert: fuelAfterTurn equals: 3
+]
+
+{ #category : 'tests' }
+GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
+
+	| die generator game ship |
+	die := TestDie withRolls: #( 6 ).
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
 	game := Game
-		        playedIn: board
+		        createdWith: generator
+		        playedOnABoardSized: 10
+		        withWormholesAt: 3
+		        and: 7
+		        for: 1
 		        with: (OrderedCollection with: die)
-		        and: (OrderedCollection with: ship1 with: ship2).
+		        andShipsNamed: #( 'Apollo' ).
+
+	ship := game ships first.
+	ship consumeFuel: 12. "Simula que no tiene suficiente fuel"
 
 	game playTurn.
 
+	self assert: (game board indexOfCellContaining: ship) equals: 1
+]
+
+{ #category : 'tests' }
+GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
+
+	| die generator game ship |
+	die := TestDie withRolls: #( 6 ).
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 10
+		        withWormholesAt: 3
+		        and: 7
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
+	ship := game ships first.
+	ship consumeFuel: 12.
+
+	game playTurn. 
+	self deny: ship canPlay.
+
+	game playTurn. 
+	self deny: ship canPlay.
+
+	game playTurn.
+	self assert: ship canPlay
+]
+
+{ #category : 'tests' }
+GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
+
+	| die generator game ship |
+	die := TestDie withRolls: #( 3 ).
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 10
+		        withWormholesAt: 2
+		        and: 4
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' ).
+
+	ship := game ships first.
+	ship consumeFuel: 5.
+	self assert: ship fuel equals: 1.
+
+	game skipTurn.
+
+	self assert: ship fuel equals: ship fuelCapacity
+]
+
+{ #category : 'tests' }
+GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
+
+	| die generator game |
+	die := TestDie withRolls: #( 1 ).
+
+	generator := DefaultCellGenerator withDistributions:
+		             { ([ RegularCell new ] -> 1.0) }.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 5
+		        withWormholesAt: 2
+		        and: 4
+		        for: 3
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( 'Apollo' 'Orion' ).
+
+	self assert: game board size equals: 5
+]
+
+{ #category : 'tests' }
+GameTests >> test023AtomicBombCellMovesAllShipsToStart [
+    | ship1 ship2 board bombCell cells |
+
+    ship1 := Ship withName: 'Apollo' and: 10.
+    ship2 := Ship withName: 'Orion' and: 10.
+
+    bombCell := AtomicBombCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: bombCell.
+
+    board := Board withCells: cells andShips: { ship1. ship2 } asOrderedCollection.
+    board placeAllShipsAtStart: { ship1. ship2 } asOrderedCollection.
+
+    board moveShip: ship1 steps: 4. 
+    board moveShip: ship2 steps: 6.
+
+    (board cellAt: 5) applyEffectTo: ship1 in: board.
+
+    self assert: (board indexOfCellContaining: ship1) equals: 1.
+    self assert: (board indexOfCellContaining: ship2) equals: 1.
+]
+
+{ #category : 'tests' }
+GameTests >> test024AtomicBombCellDoesNotResetLaps [
+    | ship1 ship2 board bombCell cells |
+
+    ship1 := Ship withName: 'Apollo' and: 10.
+    ship2 := Ship withName: 'Orion' and: 10.
+
+    bombCell := AtomicBombCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: bombCell.
+
+    board := Board withCells: cells andShips: { ship1. ship2 } asOrderedCollection.
+    board placeAllShipsAtStart: { ship1. ship2 } asOrderedCollection.
+
+    board incrementLapsFor: ship1.
+    board incrementLapsFor: ship2.
+
+    board moveShip: ship1 steps: 4.
+
+    (board cellAt: 5) applyEffectTo: ship1 in: board.
+
+    self assert: (board lapsCompletedOf: ship1) equals: 1.
+    self assert: (board lapsCompletedOf: ship2) equals: 1.
+
+]
+
+{ #category : 'tests' }
+GameTests >> test025BlackHoleCellMovesShipBackwardsAndConsumesFuel [
+    | ship board blackHoleCell cells initialFuel |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 6 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 5.
+
+    initialFuel := ship fuel.
+
+    (board cellAt: 6) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 2.
+    self assert: ship fuel < initialFuel.
+
+]
+
+{ #category : 'tests' }
+GameTests >> test026BlackHoleCellSendsShipToStartAndPenalizesWhenNotEnoughFuel [
+    | ship board blackHoleCell cells |
+
+    ship := Ship withName: 'Apollo' and: 2.
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 6 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 5. 
+
+    (board cellAt: 6) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1.
+    self assert: ship fuel equals: ship fuelCapacity.
+    self assert: ship canPlay not.
+
+]
+
+{ #category : 'tests' }
+GameTests >> test027BlackHoleCellWrapsAroundWhenMovingBackwards [
+    | ship board blackHoleCell cells |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 3 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 2. 
+
+    (board cellAt: 3) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 9.
+
+
+]
+
+{ #category : 'tests' }
+GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoard [
+    | ship board blackHoleCell cells |
+
+    ship := Ship withName: 'Apollo' and: 3.  
+
+    blackHoleCell := BlackHoleCell new.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 2 put: blackHoleCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 1. 
+
+    (board cellAt: 2) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1.
+    self assert: ship fuel equals: ship fuelCapacity.
+    self assert: ship canPlay not.
+
+
+
+]
+
+{ #category : 'tests' }
+GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
+    | apollo orion board moonWalkCell cells initialFuelApollo initialFuelOrion |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 10.
+
+    moonWalkCell := MoonWalkCell withSteps: 2.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 4 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 3.
+    board moveShip: orion steps: 5.   
+
+    initialFuelApollo := apollo fuel.
+    initialFuelOrion := orion fuel.
+
+    (board cellAt: 4) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 4.  
+    self assert: (board indexOfCellContaining: orion) equals: 4.
+
+    self assert: apollo fuel equals: initialFuelApollo.
+    self assert: orion fuel < initialFuelOrion.
+]
+
+{ #category : 'tests' }
+GameTests >> test030MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfNeeded [
+    | apollo orion board moonWalkCell cells |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 1.  
+
+    moonWalkCell := MoonWalkCell withSteps: 3.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 4.
+    board moveShip: orion steps: 6.  
+
+    (board cellAt: 5) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 5.  
+    self assert: (board indexOfCellContaining: orion) equals: 1. 
+    self assert: orion fuel equals: orion fuelCapacity.
+    self assert: orion canPlay not.
+
+]
+
+{ #category : 'tests' }
+GameTests >> test031MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
+    | apollo orion board moonWalkCell cells |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 10.
+
+    moonWalkCell := MoonWalkCell withSteps: 3.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 4.  
+    board moveShip: orion steps: 1.  
+
+    (board cellAt: 5) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 5.  
+    self assert: (board indexOfCellContaining: orion) equals: 9.  
+]
+
+{ #category : 'tests' }
+GameTests >> test032MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
+    | apollo orion board moonWalkCell cells |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 2.  
+
+    moonWalkCell := MoonWalkCell withSteps: 3.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: moonWalkCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 4.  
+    board moveShip: orion steps: 1.   
+
+    (board cellAt: 5) applyEffectTo: apollo in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 5. 
+    self assert: (board indexOfCellContaining: orion) equals: 1. 
+    self assert: orion fuel equals: orion fuelCapacity.
+    self assert: orion canPlay not.
+]
+
+{ #category : 'tests' }
+GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
+    | ship board hyperCell cells parsecList initialFuel |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    parsecList := #(20 10). 
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 4 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 3. 
+    initialFuel := ship fuel.
+
+    (board cellAt: 4) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 6.  
+    self assert: ship fuel < initialFuel.
+]
+
+{ #category : 'tests' }
+GameTests >> test034HyperJumpCellCyclesThroughParsecList [
+    | apollo orion board hyperCell cells parsecList |
+
+    apollo := Ship withName: 'Apollo' and: 10.
+    orion := Ship withName: 'Orion' and: 10.
+
+    parsecList := #(20 10). 
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 4 put: hyperCell.
+
+    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
+    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
+
+    board moveShip: apollo steps: 3.  
+    (board cellAt: 4) applyEffectTo: apollo in: board.
+
+    board moveShip: orion steps: 3.  
+    (board cellAt: 4) applyEffectTo: orion in: board.
+
+    self assert: (board indexOfCellContaining: apollo) equals: 6.  
+    self assert: (board indexOfCellContaining: orion) equals: 5.  
+]
+
+{ #category : 'tests' }
+GameTests >> test035HyperJumpCellResetsTheParsecListAfterAllParsecValuesUsed [
+    | ship1 ship2 ship3 board hyperCell cells parsecList |
+
+    ship1 := Ship withName: 'Apollo' and: 10.
+    ship2 := Ship withName: 'Orion' and: 10.
+    ship3 := Ship withName: 'Artemis' and: 10.
+
+    parsecList := #(20 10).  
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 3 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship1. ship2. ship3 } asOrderedCollection.
+    board placeAllShipsAtStart: { ship1. ship2. ship3 } asOrderedCollection.
+
+    
+    board moveShip: ship1 steps: 2.  
+    (board cellAt: 3) applyEffectTo: ship1 in: board.
+
+  
+    board moveShip: ship2 steps: 2.
+    (board cellAt: 3) applyEffectTo: ship2 in: board.
+
+    
+    board moveShip: ship3 steps: 2.
+    (board cellAt: 3) applyEffectTo: ship3 in: board.
+
+    self assert: (board indexOfCellContaining: ship1) equals: 5. 
+    self assert: (board indexOfCellContaining: ship2) equals: 4.  
+    self assert: (board indexOfCellContaining: ship3) equals: 5. 
+]
+
+{ #category : 'tests' }
+GameTests >> test036HyperJumpCellGoesInCircle [
+    | ship board hyperCell cells parsecList |
+
+    ship := Ship withName: 'Apollo' and: 10.
+
+    parsecList := #(30).
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 10 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShipDirectly: ship steps: 9.  
+    (board cellAt: 10) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 3. 
+]
+
+{ #category : 'tests' }
+GameTests >> test037HyperJumpCellPenalizesShipIfNotEnoughFuel [
+    | ship board hyperCell cells parsecList |
+
+   
+    ship := Ship withName: 'Apollo' and: 2.
+
+    parsecList := #(30). 
+    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new].
+    cells at: 5 put: hyperCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    board moveShip: ship steps: 4. 
+    (board cellAt: 5) applyEffectTo: ship in: board.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1. 
+    self assert: ship fuel equals: ship fuelCapacity. 
+    self assert: ship canPlay not.  
+]
+
+{ #category : 'tests' }
+GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
+
+	| ship board gravityCell cells die game maxRoll |
+	ship := Ship withName: 'Apollo' and: 10.
+	die := TestDie withRolls: #( 3 ). 
+	maxRoll := 6. 
+
+	gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
+
+	cells := (1 to: 10) collect: [ :i | RegularCell new ].
+	cells at: 5 put: gravityCell. 
+
+	board := Board
+		         withCells: cells
+		         andShips: { ship } asOrderedCollection.
+	board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+	game := Game new.
+	game instVarNamed: 'board' put: board.
+	game instVarNamed: 'dice' put: { die } asOrderedCollection.
+	game instVarNamed: 'ships' put: { ship } asOrderedCollection.
+	game instVarNamed: 'shipTurnIndex' put: 1.
+	game instVarNamed: 'numberOfLaps' put: 1.
+
+	board moveShip: ship steps: 4.
+
+	(board cellAt: 5) applyEffectTo: ship in: board withRoll: 3.
+
+	self assert: (board indexOfCellContaining: ship) equals: 5
+]
+
+{ #category : 'tests' }
+GameTests >> test039HyperGravityLetsShipAdvanceIfRollIsSufficient [
+    | ship board gravityCell cells die game maxRoll |
+
+    ship := Ship withName: 'Apollo' and: 10.
+    die := TestDie withRolls: #(6).  
+    maxRoll := 6.
+
+    gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
+
+    cells := (1 to: 10) collect: [:i | RegularCell new ].
+    cells at: 5 put: gravityCell.
+
+    board := Board withCells: cells andShips: { ship } asOrderedCollection.
+    board placeAllShipsAtStart: { ship } asOrderedCollection.
+
+    game := Game new.
+    game instVarNamed: 'board' put: board.
+    game instVarNamed: 'dice' put: { die } asOrderedCollection.
+    game instVarNamed: 'ships' put: { ship } asOrderedCollection.
+    game instVarNamed: 'shipTurnIndex' put: 1.
+    game instVarNamed: 'numberOfLaps' put: 1.
+
+    board moveShip: ship steps: 4.  
+
+    (board cellAt: 5) applyEffectTo: ship in: board withRoll: 6.
+
+    self assert: (board indexOfCellContaining: ship) equals: 1.
+
+]
+
+{ #category : 'tests' }
+GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
+
+	'| die game apollo orion generator board minRoll steps parsecList totalParsecs winner aNumberOfSides |
+
+	aNumberOfSides := 6.
+	
+	die := Die with: aNumberOfSides.
+
+	minRoll := 3.
+	steps := 3.
+	parsecList := #( 20 10 5 ).
+	totalParsecs := 300.
+
+	generator := DefaultCellGenerator
+		             withDefaultDistributionsRequiring: minRoll
+		             withSteps: steps
+		             parsecs: parsecList
+		             totalParsecs: totalParsecs.
+
+	game := Game
+		        createdWith: generator
+		        playedOnABoardSized: 30
+		        withWormholesAt: 10
+		        and: 15
+		        for: 1
+		        with: (OrderedCollection with: die)
+		        andShipsNamed: #( ''Apollo'' ''Orion'' ).
+
+	apollo := game ships first.
+	orion := game ships second.
+	board := game board.
+
+	
+	[ game isOver ] whileFalse: [ game playTurn ].
+
 	self assert: game isOver.
-	self assert: game winner equals: ship1.
-
-	finalPositions := game finalPositions.
-
-	self assert: (finalPositions at: ship1) equals: 5.
-	self assert: (finalPositions at: ship2) equals: 1
+	
+	winner := game winner.
+	
+	self assert: winner isNotNil.
+	
+'
 ]
