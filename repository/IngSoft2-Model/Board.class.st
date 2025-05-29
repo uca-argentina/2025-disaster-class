@@ -2,14 +2,17 @@ Class {
 	#name : 'Board',
 	#superclass : 'Object',
 	#instVars : [
+
 		'map',
 		'laps'
+
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'instance creation' }
+
 Board class >> withCells: someCells [
 
 	^ self new
@@ -19,6 +22,7 @@ Board class >> withCells: someCells [
 { #category : 'instance creation' }
 Board class >> withCells: someCells andShips: someShips [
     ^ self new initializeWith: someCells andShips: someShips
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -30,6 +34,7 @@ Board >> applyEffectTo: aShip [
 ]
 
 { #category : 'as yet unclassified' }
+
 Board >> cellAt: aPosition [
 
 	^ map at: aPosition
@@ -116,6 +121,7 @@ Board >> moveShipToStart: aShip [
 	index := self indexOfCellContaining: aShip.
 	(map at: index) leaves: aShip.
 	(map at: 1) enters: aShip
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -123,6 +129,7 @@ Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
 ]
+
 
 { #category : 'removing' }
 Board >> remove: aShip at: someIndex [
@@ -141,3 +148,4 @@ Board >> ships [
 Board >> size [
 	^ map size.
 ]
+

@@ -8,6 +8,7 @@ Class {
 { #category : 'as yet unclassified' }
 BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 
+
 	| aNumberOfCells aBoard cells |
 	aNumberOfCells := 20.
 	cells := (1 to: aNumberOfCells) collect: [ :i | RegularCell new ].
@@ -15,6 +16,7 @@ BoardTest >> test001IfCreatedMapIsSizeOfAllocatedValueThenIsValid [
 	aBoard := Board withCells: cells.
 
 	self assert: aBoard size equals: aNumberOfCells
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -26,10 +28,12 @@ BoardTest >> test002FirstElementIsACell [
 	aBoard := Board withCells: cells.
 
 	self assert: ((aBoard cellAt: 1) isKindOf: RegularCell)
+
 ]
 
 { #category : 'as yet unclassified' }
 BoardTest >> test003AllElementsAreCellsThenIsValid [
+
 
 	| aBoard cells |
 	cells := (1 to: 20) collect: [ :i | RegularCell new ].
@@ -53,4 +57,5 @@ BoardTest >> test004AddShipAtFirstCellOfBoardAndShipIsThere [
 	aCell enters: aShip.
 
 	self assert: ((aCell getShips at: 1) isKindOf: Ship)
+
 ]

@@ -9,6 +9,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+
 WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [ 
 	| aWormhole anotherWormhole |
 	aWormhole := self new.
@@ -19,13 +20,16 @@ WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [
 
 	aBoard at: firstPosition put: aWormhole.
 	aBoard at: secondPosition put: anotherWormhole.
+
 ]
 
 { #category : 'as yet unclassified' }
 WormholeCell >> applyEffectTo: aShip in: aBoard [
 
 	| currentCell |
+
 	currentCell := aBoard cellContaining: aShip.
+
 	currentCell leaves: aShip.
 	linkedCell enters: aShip
 ]

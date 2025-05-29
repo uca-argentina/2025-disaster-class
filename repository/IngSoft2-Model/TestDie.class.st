@@ -2,15 +2,18 @@ Class {
 	#name : 'TestDie',
 	#superclass : 'Object',
 	#instVars : [
+
 		'forcedRoll',
 		'forcedRolls',
 		'index'
+
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
+
 TestDie class >> withRolls: aCollection [
 
 	^ self new initializeWithRolls: aCollection
@@ -45,4 +48,5 @@ TestDie >> sides [
 	^ forcedRolls
 		  ifNotNil: [ forcedRolls max ]
 		  ifNil: [ forcedRoll ifNotNil: [ forcedRoll ] ifNil: [ 0 ] ]
+
 ]

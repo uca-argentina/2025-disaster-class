@@ -12,7 +12,9 @@ RegularCellTest >> test001IfACellIsEmptyThenIsValid [
 
 	| aShipContainer aCell |
 	aShipContainer := OrderedCollection new.
+
 	aCell := RegularCell new.
+
 
 	self assert:
 		(aCell getShips isEmpty)
@@ -25,9 +27,11 @@ RegularCellTest >> test002IfCellHasCollectionOfShipsThenIsValid [
 
 	| aCollection aCell |
 	aCollection := OrderedCollection new.
+
 	aCell := RegularCell new.
 
 	self assert: aCell getShips equals: aCollection
+
 ]
 
 { #category : 'tests' }
@@ -37,6 +41,7 @@ RegularCellTest >> test003IfACellContainsAShipThenIsValid [
 	| aShip aCell |
 	aShip := Ship new.
 	aCell := RegularCell new enters: aShip.
+
 	self assert:
 		(aCell getShips anySatisfy: [ :ship | ship isKindOf: Ship ])
 ]
@@ -52,16 +57,19 @@ RegularCellTest >> test004IfACellContainsOnlyShipsThenIsValid [
 	aCell enters: aShip.
 	aCell enters: aSecondShip.
 
+
 	self assert:
 		(aCell getShips allSatisfy: [ :ship | ship isKindOf: Ship ])
 ]
 
 { #category : 'tests' }
+
 RegularCellTest >> test005IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsEmpty [
 
 | aRegularCell aShip aShipContainer |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell new.
+
 	aShip := Ship new.
 	
 	aRegularCell enters: aShip.
@@ -75,11 +83,13 @@ RegularCellTest >> test005IfAShipEntersToACellAndThenTheShipLeavesThenTheCellIsE
 ]
 
 { #category : 'tests' }
+
 RegularCellTest >> test006IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNotEmpty [
 
 	| aRegularCell aShip aShipContainer aSecondShip |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell new.
+
 	aShip := Ship new.
 	aSecondShip := Ship new.
 
@@ -92,11 +102,13 @@ RegularCellTest >> test006IfTwoShipsEnterToACellAndOneShipLeavesThenTheCellIsNot
 ]
 
 { #category : 'tests' }
+
 RegularCellTest >> test007TwoShipsEnterAndLeaveThenCellIsEmptyAfter [
 
 | aRegularCell aShip aShipContainer aSecondShip |
 	aShipContainer := OrderedCollection new.
 	aRegularCell := RegularCell new.
+
 	aShip := Ship new.
 	aSecondShip := Ship new.
 	

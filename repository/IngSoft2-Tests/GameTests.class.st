@@ -5,6 +5,7 @@ Class {
 	#package : 'IngSoft2-Tests'
 }
 
+
 { #category : 'tests' }
 GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessage [
 
@@ -13,10 +14,12 @@ GameTests >> should: anErrorBlock raise: anErrorClass withMessageText: errorMess
 		raise: anErrorClass
 		withExceptionDo: [ :error |
 		self assert: error messageText equals: errorMessage ]
+
 ]
 
 { #category : 'tests' }
 GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
+
 
 	| aDie aGame cells aGenerator aBoard |
 	aDie := Die with: 2.
@@ -40,10 +43,12 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 
 	self assert: aGame board size equals: aBoard size.
 
+
 ]
 
 { #category : 'tests' }
 GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
+
 
 	| aDie aGame aGenerator someDice |
 	aDie := Die with: 2.
@@ -62,10 +67,12 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 		         andShipsNamed: #( 'Apollo' ).
 
 	self assert: aGame dice equals: someDice
+
 ]
 
 { #category : 'tests' }
 GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
+
 
 	| aDie aGame aGenerator someDice |
 	aDie := Die with: 2.
@@ -85,10 +92,12 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 
 	self assert:
 		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ])
+
 ]
 
 { #category : 'tests' }
 GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
+
 
 	| aDie aGame aGenerator someDice |
 	aDie := Die with: 2.
@@ -110,6 +119,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 		(aGame ships anySatisfy: [ :ship | ship name = 'Apollo' ]).
 	self assert:
 		(aGame ships anySatisfy: [ :ship | ship name = 'Orion' ])
+
 ]
 
 { #category : 'tests' }
@@ -134,10 +144,12 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	positions := aGame positions.
 
 	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
+
 ]
 
 { #category : 'tests' }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
+
 
 	| aDie aGame aGenerator positionsBefore positionsAfter |
 	aDie := TestDie withRolls: #( 1 ).
@@ -164,10 +176,12 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	self assert: (positionsAfter at: 'Apollo') equals: 2.
 	self assert: (positionsAfter at: 'Orion') equals: 1
+
 ]
 
 { #category : 'tests' }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
+
 
 	| aDie aGenerator game positionsAfterTurn2 |
 	aDie := TestDie withRolls: #( 2 ).
@@ -186,17 +200,21 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 	self assert: (game positions at: 'Apollo') equals: 1.
 	self assert: (game positions at: 'Orion') equals: 1.
 
+
 	game playTurn.
 	game playTurn.
+
 
 	positionsAfterTurn2 := game positions.
 
 	self assert: (positionsAfterTurn2 at: 'Apollo') equals: 3.
 	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
+
 ]
 
 { #category : 'tests' }
 GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsValid [
+
 
 	| aDie aGenerator aGame positionsAfter |
 	aDie := TestDie withRolls: #( 1 ).
@@ -217,10 +235,12 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 	positionsAfter := aGame positions.
 
 	self assert: (positionsAfter at: 'Apollo') equals: 4
+
 ]
 
 { #category : 'tests' }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
+
 
 	| aDie aGenerator aGame positionsBefore positionsAfter |
 	aDie := TestDie withRolls: #( 3 ).
@@ -270,10 +290,12 @@ GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 	aGame playTurn.
 
 	self assert: aGame isOver
+
 ]
 
 { #category : 'tests' }
 GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
+
 
 	| die generator game |
 	die := TestDie withRolls: #( 1 ).
@@ -294,10 +316,12 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 	game playTurn.
 
 	self deny: game isOver
+
 ]
 
 { #category : 'tests' }
 GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
+
 
 	| die generator game |
 	die := TestDie withRolls: #( 20 ).
@@ -313,15 +337,19 @@ GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 		        with: (OrderedCollection with: die)
 		        andShipsNamed: #( 'Apollo' ).
 
+
 	self assert: game winner isNil.
 
 	game playTurn.
 
+
 	self assert: game winner name equals: 'Apollo'
+
 ]
 
 { #category : 'tests' }
 GameTests >> test013GameIsOverWhenThereIsAWinner [
+
 
 	| die generator game |
 	die := TestDie withRolls: #( 20 ).
@@ -1094,4 +1122,5 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 	
 	self assert: winner isNotNil.
 	
+
 ]

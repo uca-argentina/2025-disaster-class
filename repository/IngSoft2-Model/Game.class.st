@@ -5,14 +5,17 @@ Class {
 		'board',
 		'dice',
 		'ships',
+
 		'shipTurnIndex',
 		'numberOfLaps'
+
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
+
 Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation for: aLapCount with: someDice andShipsNamed: someShipNames [
 
 	^ self new
@@ -23,6 +26,7 @@ Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWo
 		  and: someDice
 		  andShipNames: someShipNames
 		  andLaps: aLapCount
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -41,16 +45,20 @@ Game >> board [
 Game >> calculateNewPositionFor: aShip afterRolling: totalRoll [
 
 	| currentIndex maxIndex targetIndex |
+
 	currentIndex := self positionOfShip: aShip.
 	maxIndex := board size.
 	targetIndex := currentIndex + totalRoll min: maxIndex.
 	^ board cellAt: targetIndex
+
 ]
 
 { #category : 'as yet unclassified' }
 Game >> currentCellOf: aShip [
 
+
 	^ board cellContaining: aShip
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -64,6 +72,7 @@ Game >> dice [
 
 	^ dice
 ]
+
 
 { #category : 'testing' }
 Game >> finishLineCell [
@@ -94,16 +103,20 @@ Game >> initializeWith: aBoardSize using: aCellGenerator withWormholesAt: firstW
 
 	shipTurnIndex := 1.
 	numberOfLaps := aLapCount
+
 ]
 
 { #category : 'testing' }
 Game >> isOver [
 
+
 	^ board ships anySatisfy: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
+
 ]
 
 { #category : 'testing' }
 Game >> isShipAtFinishLine: aShip [
+
 
 	^ (self currentCellOf: aShip) = board lastCell
 ]
@@ -131,10 +144,12 @@ Game >> performTurnSequenceFor: aShip [
 	steps := self rollAllDice.
 	board moveShip: aShip steps: steps.
 	board applyEffectTo: aShip.
+
 ]
 
 { #category : 'as yet unclassified' }
 Game >> playTurn [
+
 
 	| ship |
 	self isOver ifTrue: [ ^ nil ].
@@ -161,10 +176,12 @@ Game >> positions [
 	^ Dictionary newFrom:
 		  (ships collect: [ :ship |
 			   ship name -> (self positionOfShip: ship) ])
+
 ]
 
 { #category : 'as yet unclassified' }
 Game >> rollAllDice [
+
 
 	^ (dice collect: [ :d | d rollDice ]) sum.
 ]
@@ -182,12 +199,15 @@ Game >> skipTurn [
 	ship := self currentShip.
 	ship refuel.
 	self advanceToNextPlayer
+
 ]
 
 { #category : 'testing' }
 Game >> winner [
 
+
 	^ board ships
         detect: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
         ifNone: [ nil ]
+
 ]
