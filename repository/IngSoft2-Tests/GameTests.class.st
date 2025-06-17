@@ -149,8 +149,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 { #category : 'tests' }
 GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
-
-'	| aDie aGame aGenerator positionsBefore positionsAfter |
+	| aDie aGame aGenerator positionsBefore positionsAfter |
 	aDie := TestDie withRolls: #( 1 ).
 	aGenerator := DefaultCellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
@@ -162,27 +161,25 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 		         and: 18
 		         for: 1
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( ''Apollo'' ''Orion'' ).
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
 	positionsBefore := aGame positions.
 
-	self assert: (positionsBefore at: ''Apollo'') equals: 1.
-	self assert: (positionsBefore at: ''Orion'') equals: 1.
+	self assert: (positionsBefore at: 'Apollo') equals: 1.
+	self assert: (positionsBefore at: 'Orion') equals: 1.
 
 	aGame playTurn.
 
 	positionsAfter := aGame positions.
 
-	self assert: (positionsAfter at: ''Apollo'') equals: 2.
-	self assert: (positionsAfter at: ''Orion'') equals: 1'
-
+	self assert: (positionsAfter at: 'Apollo') equals: 2.
+	self assert: (positionsAfter at: 'Orion') equals: 1
 ]
 
 { #category : 'tests' }
 GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
-
-'	| aDie aGenerator game positionsAfterTurn2 |
+	| aDie aGenerator game positionsAfterTurn2 |
 	aDie := TestDie withRolls: #( 2 ).
 	aGenerator := DefaultCellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
@@ -194,10 +191,10 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 		        and: 4
 		        for: 1
 		        with: (OrderedCollection with: aDie)
-		        andShipsNamed: #( ''Apollo'' ''Orion'' ).
+		        andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	self assert: (game positions at: ''Apollo'') equals: 1.
-	self assert: (game positions at: ''Orion'') equals: 1.
+	self assert: (game positions at: 'Apollo') equals: 1.
+	self assert: (game positions at: 'Orion') equals: 1.
 
 
 	game playTurn.
@@ -206,11 +203,8 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	positionsAfterTurn2 := game positions.
 
-	self assert: (positionsAfterTurn2 at: ''Apollo'') equals: 3.
-	self assert: (positionsAfterTurn2 at: ''Orion'') equals: 3'
-	
-	
-
+	self assert: (positionsAfterTurn2 at: 'Apollo') equals: 3.
+	self assert: (positionsAfterTurn2 at: 'Orion') equals: 3
 ]
 
 { #category : 'tests' }
@@ -242,8 +236,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 { #category : 'tests' }
 GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
-
-'	| aDie aGenerator aGame positionsBefore positionsAfter |
+	| aDie aGenerator aGame positionsBefore positionsAfter |
 	aDie := TestDie withRolls: #( 3 ).
 	aGenerator := DefaultCellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
@@ -255,17 +248,17 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 		         and: 18
 		         for: 1
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( ''Apollo'' ).
+		         andShipsNamed: #( 'Apollo' ).
 
 	positionsBefore := aGame positions.
 
-	self assert: (positionsBefore at: ''Apollo'') equals: 1.
+	self assert: (positionsBefore at: 'Apollo') equals: 1.
 
 	aGame playTurn.
 
 	positionsAfter := aGame positions.
 
-	self assert: (positionsAfter at: ''Apollo'') equals: 4'
+	self assert: (positionsAfter at: 'Apollo') equals: 4
 ]
 
 { #category : 'tests' }
@@ -411,7 +404,7 @@ GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 { #category : 'tests' }
 GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
-'
+
 	| aDie1 aDie2 someDice aGenerator aGame somePositions aShip |
 	aDie1 := TestDie withRolls: #( 6 4 ).
 	aDie2 := TestDie withRolls: #( 5 5 ).
@@ -427,23 +420,22 @@ GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 		         and: 18
 		         for: 1
 		         with: someDice
-		         andShipsNamed: #( ''Apollo'' ).
+		         andShipsNamed: #( 'Apollo' ).
 
 	aGame playTurn.
 	self deny: aGame isOver.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: ''Apollo'') equals: 12.
+	self assert: (somePositions at: 'Apollo') equals: 12.
 
 	aGame playTurn.
 	self assert: aGame isOver.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: ''Apollo'') equals: 1.
+	self assert: (somePositions at: 'Apollo') equals: 1.
 
 	aShip := aGame ships first.
-	self assert: (aGame board lapsCompletedOf: aShip) equals: 1'
-
+	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
 ]
 
 { #category : 'tests' }
@@ -477,7 +469,7 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 { #category : 'tests' }
 GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
-'	| aDie aGenerator aGame somePositions |
+	| aDie aGenerator aGame somePositions |
 	aDie := TestDie withRolls: #( 21 ).
 	aGenerator := DefaultCellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
@@ -489,20 +481,20 @@ GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 		         and: 18
 		         for: 1
 		         with: (OrderedCollection with: aDie)
-		         andShipsNamed: #( ''Apollo'' ''Orion'' ).
+		         andShipsNamed: #( 'Apollo' 'Orion' ).
 
 	aGame playTurn.
 	self assert: aGame isOver.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: ''Apollo'') equals: 2.
-	self assert: (somePositions at: ''Orion'') equals: 1.
+	self assert: (somePositions at: 'Apollo') equals: 2.
+	self assert: (somePositions at: 'Orion') equals: 1.
 
 	aGame playTurn.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: ''Apollo'') equals: 2.
-	self assert: (somePositions at: ''Orion'') equals: 1'
+	self assert: (somePositions at: 'Apollo') equals: 2.
+	self assert: (somePositions at: 'Orion') equals: 1
 ]
 
 { #category : 'tests' }
@@ -1084,10 +1076,9 @@ GameTests >> test039HyperGravityLetsShipAdvanceIfRollIsSufficient [
 { #category : 'tests' }
 GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 
-	'| die game apollo orion generator board minRoll steps parsecList totalParsecs winner aNumberOfSides |
-
+	| die game apollo orion generator board minRoll steps parsecList totalParsecs winner aNumberOfSides |
 	aNumberOfSides := 6.
-	
+
 	die := Die with: aNumberOfSides.
 
 	minRoll := 3.
@@ -1108,20 +1099,18 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 		        and: 15
 		        for: 1
 		        with: (OrderedCollection with: die)
-		        andShipsNamed: #( ''Apollo'' ''Orion'' ).
+		        andShipsNamed: #( '' Apollo '' '' Orion '' ).
 
 	apollo := game ships first.
 	orion := game ships second.
 	board := game board.
 
-	
+
 	[ game isOver ] whileFalse: [ game playTurn ].
 
 	self assert: game isOver.
-	
+
 	winner := game winner.
-	
-	self assert: winner isNotNil.
-	
-'
+
+	self assert: winner isNotNil
 ]
