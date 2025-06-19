@@ -9,7 +9,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-
 WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [ 
 	| aWormhole anotherWormhole |
 	aWormhole := self new.

@@ -5,17 +5,14 @@ Class {
 		'board',
 		'dice',
 		'ships',
-
 		'shipTurnIndex',
 		'numberOfLaps'
-
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-
 Game class >> createdWith: aCellGenerator playedOnABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation for: aLapCount with: someDice andShipsNamed: someShipNames [
 
 	^ self new
@@ -72,7 +69,6 @@ Game >> dice [
 
 	^ dice
 ]
-
 
 { #category : 'testing' }
 Game >> finishLineCell [

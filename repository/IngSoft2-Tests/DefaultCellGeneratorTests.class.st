@@ -19,7 +19,7 @@ DefaultCellGeneratorTests >> should: anErrorBlock raise: anErrorClass withMessag
 DefaultCellGeneratorTests >> test001IfGeneratorCreatesRequestedAmountOfCellsThenIsValid [
 
 	| generator cells |
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new] -> 1.0) }.
 
 	cells := generator generateCells: 10.
@@ -32,7 +32,7 @@ DefaultCellGeneratorTests >> test001IfGeneratorCreatesRequestedAmountOfCellsThen
 { #category : 'tests' }
 DefaultCellGeneratorTests >> test002IfGeneratorCanCreateWormholeCellsThenIsValid [ 
 	| generator cells |
-	generator := DefaultCellGenerator withDistributions: {
+	generator := CellGenerator withDistributions: {
 		([ WormholeCell new ] -> 1.0)
 	}.
 
@@ -48,8 +48,8 @@ DefaultCellGeneratorTests >> test003IfProbabilitiesDoNotSumToOneThenFails [
 
 	self
 		should: [
-			DefaultCellGenerator withDistributions: {
-					([ RegularCell with: OrderedCollection new ] -> 0.8).
+			CellGenerator withDistributions: {
+					([ RegularCell new] -> 0.8).
 					([ WormholeCell new ] -> 0.3) } ]
 		raise: Error
 		withMessageText: 'The sum of probabilities must equal 1'
@@ -59,7 +59,7 @@ DefaultCellGeneratorTests >> test003IfProbabilitiesDoNotSumToOneThenFails [
 DefaultCellGeneratorTests >> test004CustomDistributionGeneratesExpectedCellCounts [ 
     | generator cells counts totalCells |
 
-    generator := DefaultCellGenerator withDistributions: {
+    generator := CellGenerator withDistributions: {
         ([ RegularCell new ] -> 0.4).
         ([ BlackHoleCell new ] -> 0.2).
         ([ HyperGravityCell requiringMinimumRoll: 2 ] -> 0.2).
@@ -84,60 +84,4 @@ DefaultCellGeneratorTests >> test004CustomDistributionGeneratesExpectedCellCount
     self assert: ((counts at: AtomicBombCell) between: 10 and: 30).
 
 
-]
-
-{ #category : 'tests' }
-DefaultCellGeneratorTests >> test005DefaultDistributionGeneratesExpectedCellCounts [ 
-    | generator cells counts totalCells |
-
-    generator := DefaultCellGenerator defaultDistributions .
-
-    totalCells := 1000.
-    cells := generator generateCells: totalCells.
-
-    counts := Dictionary new.
-    cells do: [ :cell |
-        counts at: cell class put: ((counts at: cell class ifAbsent: [ 0 ]) + 1)
-    ].
-
-    self assert: ((counts at: RegularCell) between: 350 and: 450).
-    self assert: ((counts at: BlackHoleCell) between: 150 and: 250).
-    self assert: ((counts at: HyperGravityCell) between: 150 and: 250).
-    self assert: ((counts at: MoonWalkCell) between: 50 and: 150).
-    self assert: ((counts at: HyperJumpCell) between: 40 and: 120).
-    self assert: ((counts at: AtomicBombCell) between: 10 and: 30).
-
-
-]
-
-{ #category : 'tests' }
-DefaultCellGeneratorTests >> test006DefaultDistributionWithEffectCellsParametersGeneratesExpectedCellCounts [
-
-	| generator cells counts totalCells minRoll steps parsecList totalParsecs |
-	minRoll := 4.
-	steps := 3.
-	parsecList := #( 100 50 20 ).
-	totalParsecs := 100.
-
-	generator := DefaultCellGenerator
-		             withDefaultDistributionsRequiring: minRoll
-		             withSteps: steps
-		             parsecs: parsecList
-		             totalParsecs: totalParsecs.
-
-	totalCells := 1000.
-	cells := generator generateCells: totalCells.
-
-	counts := Dictionary new.
-	cells do: [ :cell |
-		counts
-			at: cell class
-			put: (counts at: cell class ifAbsent: [ 0 ]) + 1 ].
-
-	self assert: ((counts at: RegularCell) between: 350 and: 450).
-	self assert: ((counts at: BlackHoleCell) between: 150 and: 250).
-	self assert: ((counts at: HyperGravityCell) between: 150 and: 250).
-	self assert: ((counts at: MoonWalkCell) between: 50 and: 150).
-	self assert: ((counts at: HyperJumpCell) between: 40 and: 120).
-	self assert: ((counts at: AtomicBombCell) between: 10 and: 30)
 ]

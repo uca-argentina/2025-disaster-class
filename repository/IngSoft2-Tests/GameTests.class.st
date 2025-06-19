@@ -23,7 +23,7 @@ GameTests >> test001IfGameIsCreatedWithABoardThenIsValid [
 	| aDie aGame cells aGenerator aBoard |
 	aDie := Die with: 2.
 
-	aGenerator := DefaultCellGenerator withDistributions: {
+	aGenerator := CellGenerator withDistributions: {
 		([ RegularCell new ] -> 1.0)
 	}.
 
@@ -53,7 +53,7 @@ GameTests >> test002IfGameIsCreatedWithASingleDieThenIsValid [
 	aDie := Die with: 2.
 	someDice := OrderedCollection with: aDie.
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -77,7 +77,7 @@ GameTests >> test003IfGameIsCreatedWithAShipThenIsValid [
 	aDie := Die with: 2.
 	someDice := OrderedCollection with: aDie.
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -102,7 +102,7 @@ GameTests >> test004IfGameIsCreatedWithMultipleShipsThenIsValid [
 	aDie := Die with: 2.
 	someDice := OrderedCollection with: aDie.
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -128,7 +128,7 @@ GameTests >> test005IfGameIsCreatedThenAllShipsAreAtCell1 [
 	aDie := Die with: 2.
 	someDice := OrderedCollection with: aDie.
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -151,7 +151,7 @@ GameTests >> test006IfPlayTurnMovesShipOneSpaceThenIsValid [
 
 	| aDie aGame aGenerator positionsBefore positionsAfter |
 	aDie := TestDie withRolls: #( 1 ).
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -181,7 +181,7 @@ GameTests >> test007IfPlayTurnTwiceMovesSecondShipThenIsValid [
 
 	| aDie aGenerator game positionsAfterTurn2 |
 	aDie := TestDie withRolls: #( 2 ).
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -213,7 +213,7 @@ GameTests >> test008IfShipFallsIntoWormholeThenIsTransportedToOtherEndThenIsVali
 
 	| aDie aGenerator aGame positionsAfter |
 	aDie := TestDie withRolls: #( 1 ).
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -238,7 +238,7 @@ GameTests >> test009IfRollDiceMovesShipAccordinglyThenIsValid [
 
 	| aDie aGenerator aGame positionsBefore positionsAfter |
 	aDie := TestDie withRolls: #( 3 ).
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -267,7 +267,7 @@ GameTests >> test010GameIsOverWhenShipCompletesTheRequiredLaps [
 	| aDie aGenerator aGame |
 	aDie := TestDie withRolls: #( 20 ).
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -293,7 +293,7 @@ GameTests >> test011GameIsNotOverWhenNoShipHasReachedTheEnd [
 
 	| die generator game |
 	die := TestDie withRolls: #( 1 ).
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -319,7 +319,7 @@ GameTests >> test012IfShipReachesLastCellThenWinnerIsThatShip [
 
 	| die generator game |
 	die := TestDie withRolls: #( 20 ).
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -347,7 +347,7 @@ GameTests >> test013GameIsOverWhenThereIsAWinner [
 
 	| die generator game |
 	die := TestDie withRolls: #( 20 ).
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -374,7 +374,7 @@ GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 	| aDie aGenerator aGame somePositions aShip |
 	aDie := TestDie withRolls: #( 20 ).
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -410,7 +410,7 @@ GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 	aDie2 := TestDie withRolls: #( 5 5 ).
 	someDice := OrderedCollection with: aDie1 with: aDie2.
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -444,7 +444,7 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 	| aDie aGenerator aGame somePositions |
 	aDie := TestDie withRolls: #( 20 ).
 
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -471,7 +471,7 @@ GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
 	| aDie aGenerator aGame somePositions |
 	aDie := TestDie withRolls: #( 21 ).
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -502,7 +502,7 @@ GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 
 	| aDie aGenerator aGame initialFuel fuelAfterTurn |
 	aDie := TestDie withRolls: #( 3 ).
-	aGenerator := DefaultCellGenerator withDistributions:
+	aGenerator := CellGenerator withDistributions:
 		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := Game
@@ -528,7 +528,7 @@ GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 
 	| die generator game ship |
 	die := TestDie withRolls: #( 6 ).
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -553,7 +553,7 @@ GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 
 	| die generator game ship |
 	die := TestDie withRolls: #( 6 ).
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -583,7 +583,7 @@ GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	| die generator game ship |
 	die := TestDie withRolls: #( 3 ).
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -610,7 +610,7 @@ GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
 	| die generator game |
 	die := TestDie withRolls: #( 1 ).
 
-	generator := DefaultCellGenerator withDistributions:
+	generator := CellGenerator withDistributions:
 		             { ([ RegularCell new ] -> 1.0) }.
 
 	game := Game
@@ -1084,13 +1084,16 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 	minRoll := 3.
 	steps := 3.
 	parsecList := #( 20 10 5 ).
-	totalParsecs := 300.
+	totalParsecs := 30.
 
-	generator := DefaultCellGenerator
-		             withDefaultDistributionsRequiring: minRoll
-		             withSteps: steps
-		             parsecs: parsecList
-		             totalParsecs: totalParsecs.
+	generator := CellGenerator withDistributions: {
+        ([ RegularCell new ] -> 0.4).
+        ([ BlackHoleCell new ] -> 0.2).
+        ([ HyperGravityCell requiringMinimumRoll: minRoll ] -> 0.2).
+        ([ MoonWalkCell withSteps: steps ] -> 0.1).
+        ([ HyperJumpCell withParsecList: parsecList totalParsecs: totalParsecs ] -> 0.08).
+        ([ AtomicBombCell new ] -> 0.02)
+    }.
 
 	game := Game
 		        createdWith: generator
@@ -1099,7 +1102,7 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 		        and: 15
 		        for: 1
 		        with: (OrderedCollection with: die)
-		        andShipsNamed: #( '' Apollo '' '' Orion '' ).
+		        andShipsNamed: #( 'Apollo' 'Orion' ).
 
 	apollo := game ships first.
 	orion := game ships second.

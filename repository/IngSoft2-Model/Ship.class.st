@@ -1,7 +1,6 @@
 Class {
 	#name : 'Ship',
 	#superclass : 'Object',
-
 	#instVars : [
 		'name',
 		'fuel',
@@ -86,4 +85,3 @@ Ship >> refuel [
 
 	fuel := fuelCapacity 
 ]
-
