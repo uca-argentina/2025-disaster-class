@@ -223,19 +223,18 @@ GameTests >> test008GameIsOverWhenThereIsAWinner [
 { #category : 'tests' }
 GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
-	| aDie aGenerator aGame somePositions aShip |
-	aDie := TestDie withRolls: #( 20 ).
+	| someDice aFixedCellGenerator aGame somePositions aShip |
+	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
-	aGenerator := CellGenerator withDistributions:
-		              { ([ RegularCell new ] -> 1.0) }.
 
 	aGame := SpaceShipGame
-		         createdWith: aGenerator
-		         playedOnABoardSized: 20
+		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
 		         forLaps: 1
-		         withDice: (OrderedCollection with: aDie)
+		         withDice: someDice
 		         andShipsNamed: #( 'Apollo' ).
 
 	aGame playTurn.
@@ -251,23 +250,21 @@ GameTests >> test014NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 	aShip := aGame ships first.
 	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
-
 ]
 
 { #category : 'tests' }
 GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 
-	| aDie1 aDie2 someDice aGenerator aGame somePositions aShip |
+	| aDie1 aDie2 someDice aFixedCellGenerator aGame somePositions aShip |
 	aDie1 := TestDie withRolls: #( 6 4 ).
 	aDie2 := TestDie withRolls: #( 5 5 ).
 	someDice := OrderedCollection with: aDie1 with: aDie2.
 
-	aGenerator := CellGenerator withDistributions:
-		              { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	aGame := SpaceShipGame
-		         createdWith: aGenerator
-		         playedOnABoardSized: 20
+		         createdWith: aFixedCellGenerator 
 		         withWormholesAt: 10
 		         and: 18
 		         forLaps: 1
@@ -293,15 +290,14 @@ GameTests >> test015IfYouCanPlayWithMultipleDieConsecutivelyThenIsValid [
 { #category : 'tests' }
 GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenIsValid [
 
-	| aDie aGenerator aGame somePositions |
+	| aDie aFixedCellGenerator aGame somePositions |
 	aDie := TestDie withRolls: #( 20 ).
 
-	aGenerator := CellGenerator withDistributions:
-		              { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	aGame := SpaceShipGame
-		         createdWith: aGenerator
-		         playedOnABoardSized: 20
+		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
 		         forLaps: 1
@@ -321,14 +317,13 @@ GameTests >> test016IfWhenGameEndsItReportsWinnerAndFinalPositionsCorrectlyThenI
 { #category : 'tests' }
 GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 
-	| aDie aGenerator aGame somePositions |
+	| aDie aFixedCellGenerator aGame somePositions |
 	aDie := TestDie withRolls: #( 21 ).
-	aGenerator := CellGenerator withDistributions:
-		              { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	aGame := SpaceShipGame
-		         createdWith: aGenerator
-		         playedOnABoardSized: 20
+		         createdWith: aFixedCellGenerator 
 		         withWormholesAt: 10
 		         and: 18
 		         forLaps: 1
@@ -352,14 +347,13 @@ GameTests >> test017IfWhenGameEndsPlayTurnDoesNothingThenIsValid [
 { #category : 'tests' }
 GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 
-	| aDie aGenerator aGame initialFuel fuelAfterTurn |
+	| aDie aFixedCellGenerator aGame initialFuel fuelAfterTurn |
 	aDie := TestDie withRolls: #( 3 ).
-	aGenerator := CellGenerator withDistributions:
-		              { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	aGame := SpaceShipGame
-		         createdWith: aGenerator
-		         playedOnABoardSized: 20
+		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
 		         forLaps: 1
@@ -378,14 +372,13 @@ GameTests >> test018ShipStartsWithFuelAndConsumesItPerStepMoved [
 { #category : 'tests' }
 GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 
-	| die generator game ship |
+	| die aFixedCellGenerator game ship |
 	die := TestDie withRolls: #( 6 ).
-	generator := CellGenerator withDistributions:
-		             { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	game := SpaceShipGame
-		        createdWith: generator
-		        playedOnABoardSized: 10
+		        createdWith: aFixedCellGenerator
 		        withWormholesAt: 3
 		        and: 7
 		        forLaps: 1
@@ -403,14 +396,13 @@ GameTests >> test019IfShipRunsOutOfFuelThenReturnsToFirstCell [
 { #category : 'tests' }
 GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 
-	| die generator game ship |
+	| die aFixedCellGenerator game ship |
 	die := TestDie withRolls: #( 6 ).
-	generator := CellGenerator withDistributions:
-		             { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	game := SpaceShipGame
-		        createdWith: generator
-		        playedOnABoardSized: 10
+		        createdWith: aFixedCellGenerator
 		        withWormholesAt: 3
 		        and: 7
 		        forLaps: 1
@@ -433,14 +425,13 @@ GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 { #category : 'tests' }
 GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
-	| die generator game ship |
+	| die aFixedCellGenerator game ship |
 	die := TestDie withRolls: #( 3 ).
-	generator := CellGenerator withDistributions:
-		             { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	game := SpaceShipGame
-		        createdWith: generator
-		        playedOnABoardSized: 10
+		        createdWith: aFixedCellGenerator
 		        withWormholesAt: 2
 		        and: 4
 		        forLaps: 1
@@ -459,22 +450,21 @@ GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 { #category : 'tests' }
 GameTests >> test022IfGameIsCreatedWithCellGeneratorThenIsValid [
 
-	| die generator game |
+	| die aFixedCellGenerator game |
 	die := TestDie withRolls: #( 1 ).
 
-	generator := CellGenerator withDistributions:
-		             { ([ RegularCell new ] -> 1.0) }.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	game := SpaceShipGame
-		        createdWith: generator
-		        playedOnABoardSized: 5
+		        createdWith: aFixedCellGenerator
 		        withWormholesAt: 2
 		        and: 4
 		        forLaps: 3
 		        withDice: (OrderedCollection with: die)
 		        andShipsNamed: #( 'Apollo' 'Orion' ).
 
-	self assert: game board size equals: 5
+	self assert: game board size equals: 20
 ]
 
 { #category : 'tests' }
