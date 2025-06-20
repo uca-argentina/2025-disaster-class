@@ -11,16 +11,18 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-TestDie class >> withRolls: aCollection [
+TestDie class >> withRolls: aCollection [ 
 
 	^ self new initializeWithRolls: aCollection
+
 ]
 
 { #category : 'accessing' }
 TestDie >> initializeWithRolls: aCollection [
 
+	
 	forcedRolls := aCollection.
-	index := 1
+	index := 1 
 ]
 
 { #category : 'accessing' }
@@ -45,5 +47,4 @@ TestDie >> sides [
 	^ forcedRolls
 		  ifNotNil: [ forcedRolls max ]
 		  ifNil: [ forcedRoll ifNotNil: [ forcedRoll ] ifNil: [ 0 ] ]
-
 ]
