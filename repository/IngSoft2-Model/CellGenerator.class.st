@@ -13,33 +13,20 @@ Class {
 { #category : 'as yet unclassified' }
 CellGenerator class >> verifyValidityOf: someProbabilities [
 
-	(someProbabilities collect: [ :each | each value ]) sum
-	= 1 ifFalse: [ Error signal: 'The sum of probabilities must equal 1' ]
+	| probabilitiesSum |
+	probabilitiesSum := (someProbabilities collect: [ :eachProbability |
+		                     eachProbability first ]) sum.
+	probabilitiesSum ~= 1 ifTrue: [
+		Error signal: 'probabilities should sum one in total' ]
 ]
 
 { #category : 'as yet unclassified' }
-CellGenerator class >> withCellCount: aNumberOfCells andDistribution: someProbabilities [
+CellGenerator class >> withCellCount: aNumberOfCells andDistribution: aDistribution [
 
-	self verifyValidityOf: someProbabilities.
+	self verifyValidityOf: aDistribution.
 	^ self new
 		  initializeWith: aNumberOfCells
-		  and: someProbabilities
-]
-
-{ #category : 'as yet unclassified' }
-CellGenerator class >> withDistributions: someProbabilities [
-
-	self verifyValidityOf: someProbabilities.
-	^ self new initializeWith: someProbabilities
-]
-
-{ #category : 'initialization' }
-CellGenerator >> cellCollection: amount with: aBlock [
-
-	| collection |
-	collection := OrderedCollection new.
-	amount timesRepeat: [ collection add: aBlock value ].
-	^ collection
+		  and: aDistribution
 ]
 
 { #category : 'initialization' }
@@ -56,34 +43,12 @@ CellGenerator >> generate [
 ]
 
 { #category : 'initialization' }
-CellGenerator >> generateCells: anAmountOfCells [
-
-	| cellPool cells |
-	cellPool := distribution collect: [ :each |
-		            self
-			            cellCollection: (each value * 100) asInteger
-			            with: each key ].
-	cellPool := cellPool flattened.
-
-	cells := OrderedCollection new.
-	anAmountOfCells timesRepeat: [ cells add: cellPool atRandom ].
-
-	^ cells
-]
-
-{ #category : 'initialization' }
-CellGenerator >> initializeWith: aBlockToProbabilityCollection [
-
-	distribution := aBlockToProbabilityCollection
-]
-
-{ #category : 'initialization' }
-CellGenerator >> initializeWith: aNumberOfCells probabilities: someProbabilities [
+CellGenerator >> initializeWith: aNumberOfCells and: aDistribution [
 
 	| rangeAcummulator aCellCreation cellRate aRangeStart |
 	rangeAcummulator := 0.
 	numberOfCells := aNumberOfCells.
-	cellProbabilities := someProbabilities collect: [ :eachProbability |
+	cellProbabilities := aDistribution collect: [ :eachProbability |
 		                     cellRate := eachProbability first.
 		                     aCellCreation := eachProbability second.
 		                     aRangeStart := rangeAcummulator.
@@ -94,11 +59,4 @@ CellGenerator >> initializeWith: aNumberOfCells probabilities: someProbabilities
 			                     rangeStart: aRangeStart
 			                     rangeEnd: rangeAcummulator ].
 	^ self
-]
-
-{ #category : 'initialization' }
-CellGenerator >> validateProbabilities [
-
-	distribution values sum = 1 ifFalse: [
-		Error signal: 'Probabilities must sum to 1' ]
 ]
