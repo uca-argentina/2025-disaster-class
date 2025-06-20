@@ -2,24 +2,35 @@ Class {
 	#name : 'CellGenerator',
 	#superclass : 'Object',
 	#instVars : [
-		'distribution'
+		'distribution',
+		'numberOfCells',
+		'cellProbabilities'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-CellGenerator class >> validateProbabilities: aBlockToProbabilityCollection [
+CellGenerator class >> verifyValidityOf: someProbabilities [
 
-	(aBlockToProbabilityCollection collect: [ :each | each value ]) sum
+	(someProbabilities collect: [ :each | each value ]) sum
 	= 1 ifFalse: [ Error signal: 'The sum of probabilities must equal 1' ]
 ]
 
 { #category : 'as yet unclassified' }
-CellGenerator class >> withDistributions: aBlockToProbabilityCollection [
+CellGenerator class >> withCellCount: aNumberOfCells andDistribution: someProbabilities [
 
-	self validateProbabilities: aBlockToProbabilityCollection.
-	^ self new initializeWith: aBlockToProbabilityCollection
+	self verifyValidityOf: someProbabilities.
+	^ self new
+		  initializeWith: aNumberOfCells
+		  and: someProbabilities
+]
+
+{ #category : 'as yet unclassified' }
+CellGenerator class >> withDistributions: someProbabilities [
+
+	self verifyValidityOf: someProbabilities.
+	^ self new initializeWith: someProbabilities
 ]
 
 { #category : 'initialization' }
@@ -29,6 +40,19 @@ CellGenerator >> cellCollection: amount with: aBlock [
 	collection := OrderedCollection new.
 	amount timesRepeat: [ collection add: aBlock value ].
 	^ collection
+]
+
+{ #category : 'initialization' }
+CellGenerator >> generate [
+
+	| cells random seed |
+	seed := Random new.
+	cells := OrderedCollection new.
+	1 to: numberOfCells do: [ :index |
+		random := seed next.
+		cellProbabilities do: [ :eachCellProbability |
+			eachCellProbability addCellTo: cells ifIsInRange: random ] ].
+	^ cells
 ]
 
 { #category : 'initialization' }
@@ -51,6 +75,25 @@ CellGenerator >> generateCells: anAmountOfCells [
 CellGenerator >> initializeWith: aBlockToProbabilityCollection [
 
 	distribution := aBlockToProbabilityCollection
+]
+
+{ #category : 'initialization' }
+CellGenerator >> initializeWith: aNumberOfCells probabilities: someProbabilities [
+
+	| rangeAcummulator aCellCreation cellRate aRangeStart |
+	rangeAcummulator := 0.
+	numberOfCells := aNumberOfCells.
+	cellProbabilities := someProbabilities collect: [ :eachProbability |
+		                     cellRate := eachProbability first.
+		                     aCellCreation := eachProbability second.
+		                     aRangeStart := rangeAcummulator.
+		                     rangeAcummulator := rangeAcummulator + cellRate.
+
+		                     CellProbability
+			                     cellCreation: aCellCreation
+			                     rangeStart: aRangeStart
+			                     rangeEnd: rangeAcummulator ].
+	^ self
 ]
 
 { #category : 'initialization' }
