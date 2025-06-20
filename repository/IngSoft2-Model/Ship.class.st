@@ -22,7 +22,8 @@ Ship >> applyPenaltyIn: board [
 
 	board moveShipToStart: self.
 	self refuel.
-	lostTurns := 2
+	self loseTurn.
+	self loseTurn.
 ]
 
 { #category : 'accessing' }
@@ -38,17 +39,21 @@ Ship >> attemptMoveBy: steps in: board [
 { #category : 'as yet unclassified' }
 Ship >> canPlay [
 
-	^ lostTurns = 0
+	^ lostTurns <= 0
 ]
 
 { #category : 'accessing' }
-Ship >> consumeFuel: steps [ 
-	fuel := fuel - steps abs.
+Ship >> consumeFuel: steps [
 
+	| cost |
+	cost := steps abs.
+	cost > fuel ifTrue: [
+		Error signal: 'Cannot consume more fuel than available.' ].
+	fuel := fuel - cost
 ]
 
 { #category : 'accessing' }
-Ship >> fuel [
+Ship >> currentFuel [
 
 	^ fuel
 ]
@@ -69,15 +74,28 @@ Ship >> initializeWith: aName and: aFuelAmount [
 ]
 
 { #category : 'as yet unclassified' }
+Ship >> loseTurn [ 
+	lostTurns := lostTurns + 1.
+]
+
+{ #category : 'as yet unclassified' }
 Ship >> lostATurn [
 
-	lostTurns := lostTurns - 1
+	lostTurns := (lostTurns - 1) max: 0
 ]
 
 { #category : 'accessing' }
 Ship >> name [
 
 	^ name
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> playTurnIn: aGame [
+
+	self canPlay
+		ifFalse: [ self lostATurn ]
+		ifTrue: [ aGame performTurnSequenceFor: self ]
 ]
 
 { #category : 'as yet unclassified' }

@@ -398,28 +398,30 @@ GameTests >> test020IfShipRunsOutOfFuelThenLosesTwoTurns [
 
 	| die aFixedCellGenerator game ship |
 	die := TestDie withRolls: #( 6 ).
-	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
-		                       20.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount: 20.
 
 	game := SpaceShipGame
-		        createdWith: aFixedCellGenerator
-		        withWormholesAt: 3
-		        and: 7
-		        forLaps: 1
-		        withDice: (OrderedCollection with: die)
-		        andShipsNamed: #( 'Apollo' ).
+		createdWith: aFixedCellGenerator
+		withWormholesAt: 3
+		and: 7
+		forLaps: 1
+		withDice: (OrderedCollection with: die)
+		andShipsNamed: #( 'Apollo' ).
 
 	ship := game ships first.
-	ship consumeFuel: 12.
+
+	self assert: ship currentFuel equals: 12.
+	ship consumeFuel: 11.  
+	self assert: ship currentFuel equals: 1. 
+
+	game playTurn. 
+
 
 	game playTurn. 
 	self deny: ship canPlay.
 
 	game playTurn. 
-	self deny: ship canPlay.
-
-	game playTurn.
-	self assert: ship canPlay
+	self assert: ship canPlay.  
 ]
 
 { #category : 'tests' }
@@ -440,11 +442,11 @@ GameTests >> test021IfPlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	ship := game ships first.
 	ship consumeFuel: 5.
-	self assert: ship fuel equals: 1.
+	self assert: ship currentFuel equals: 1.
 
 	game skipTurn.
 
-	self assert: ship fuel equals: ship fuelCapacity
+	self assert: ship currentFuel equals: ship fuelCapacity
 ]
 
 { #category : 'tests' }
@@ -534,12 +536,12 @@ GameTests >> test025BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 
     board moveShip: ship steps: 5.
 
-    initialFuel := ship fuel.
+    initialFuel := ship currentFuel.
 
     (board cellAt: 6) applyEffectTo: ship in: board.
 
     self assert: (board indexOfCellContaining: ship) equals: 2.
-    self assert: ship fuel < initialFuel.
+    self assert: ship currentFuel < initialFuel.
 
 ]
 
@@ -562,7 +564,7 @@ GameTests >> test026BlackHoleCellSendsShipToStartAndPenalizesWhenNotEnoughFuel [
     (board cellAt: 6) applyEffectTo: ship in: board.
 
     self assert: (board indexOfCellContaining: ship) equals: 1.
-    self assert: ship fuel equals: ship fuelCapacity.
+    self assert: ship currentFuel equals: ship fuelCapacity.
     self assert: ship canPlay not.
 
 ]
@@ -609,7 +611,7 @@ GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoa
     (board cellAt: 2) applyEffectTo: ship in: board.
 
     self assert: (board indexOfCellContaining: ship) equals: 1.
-    self assert: ship fuel equals: ship fuelCapacity.
+    self assert: ship currentFuel equals: ship fuelCapacity.
     self assert: ship canPlay not.
 
 
@@ -634,16 +636,16 @@ GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
     board moveShip: apollo steps: 3.
     board moveShip: orion steps: 5.   
 
-    initialFuelApollo := apollo fuel.
-    initialFuelOrion := orion fuel.
+    initialFuelApollo := apollo currentFuel.
+    initialFuelOrion := orion currentFuel.
 
     (board cellAt: 4) applyEffectTo: apollo in: board.
 
     self assert: (board indexOfCellContaining: apollo) equals: 4.  
     self assert: (board indexOfCellContaining: orion) equals: 4.
 
-    self assert: apollo fuel equals: initialFuelApollo.
-    self assert: orion fuel < initialFuelOrion.
+    self assert: apollo currentFuel equals: initialFuelApollo.
+    self assert: orion currentFuel < initialFuelOrion.
 ]
 
 { #category : 'tests' }
@@ -668,7 +670,7 @@ GameTests >> test030MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIf
 
     self assert: (board indexOfCellContaining: apollo) equals: 5.  
     self assert: (board indexOfCellContaining: orion) equals: 1. 
-    self assert: orion fuel equals: orion fuelCapacity.
+    self assert: orion currentFuel equals: orion fuelCapacity.
     self assert: orion canPlay not.
 
 ]
@@ -719,7 +721,7 @@ GameTests >> test032MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
 
     self assert: (board indexOfCellContaining: apollo) equals: 5. 
     self assert: (board indexOfCellContaining: orion) equals: 1. 
-    self assert: orion fuel equals: orion fuelCapacity.
+    self assert: orion currentFuel equals: orion fuelCapacity.
     self assert: orion canPlay not.
 ]
 
@@ -739,12 +741,12 @@ GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
     board placeAllShipsAtStart: { ship } asOrderedCollection.
 
     board moveShip: ship steps: 3. 
-    initialFuel := ship fuel.
+    initialFuel := ship currentFuel.
 
     (board cellAt: 4) applyEffectTo: ship in: board.
 
     self assert: (board indexOfCellContaining: ship) equals: 6.  
-    self assert: ship fuel < initialFuel.
+    self assert: ship currentFuel < initialFuel.
 ]
 
 { #category : 'tests' }
@@ -848,7 +850,7 @@ GameTests >> test037HyperJumpCellPenalizesShipIfNotEnoughFuel [
     (board cellAt: 5) applyEffectTo: ship in: board.
 
     self assert: (board indexOfCellContaining: ship) equals: 1. 
-    self assert: ship fuel equals: ship fuelCapacity. 
+    self assert: ship currentFuel equals: ship fuelCapacity. 
     self assert: ship canPlay not.  
 ]
 

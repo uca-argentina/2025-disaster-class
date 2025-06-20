@@ -91,7 +91,7 @@ SpaceShipGame >> finishLineCell [
 { #category : 'as yet unclassified' }
 SpaceShipGame >> fuelOf: aName [
 
-	^ (ships detect: [ :s | s name = aName ]) fuel 
+	^ (ships detect: [ :s | s name = aName ]) currentFuel 
 ]
 
 { #category : 'initialization' }
@@ -205,17 +205,10 @@ SpaceShipGame >> performTurnSequenceFor: aShip [
 { #category : 'as yet unclassified' }
 SpaceShipGame >> playTurn [
 
+	self isOver ifTrue: [ ^ self ].
 
-	| ship |
-	self isOver ifTrue: [ ^ nil ].
+	self currentShip playTurnIn: self.
 
-	ship := self currentShip.
-
-	ship canPlay ifFalse: [
-		ship lostATurn.
-		^ self advanceToNextPlayer ].
-
-	self performTurnSequenceFor: ship.
 	self advanceToNextPlayer
 ]
 
