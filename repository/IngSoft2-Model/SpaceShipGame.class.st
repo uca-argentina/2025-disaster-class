@@ -51,47 +51,15 @@ SpaceShipGame >> board [
 ]
 
 { #category : 'as yet unclassified' }
-SpaceShipGame >> calculateNewPositionFor: aShip afterRolling: totalRoll [
-
-	| currentIndex maxIndex targetIndex |
-
-	currentIndex := self positionOfShip: aShip.
-	maxIndex := board size.
-	targetIndex := currentIndex + totalRoll min: maxIndex.
-	^ board cellAt: targetIndex
-
-]
-
-{ #category : 'as yet unclassified' }
-SpaceShipGame >> currentCellOf: aShip [
-
-
-	^ board cellContaining: aShip
-
-]
-
-{ #category : 'as yet unclassified' }
-SpaceShipGame >> currentShip [
+SpaceShipGame >> currentTurnsShip [
 
 	^ ships at: shipTurnIndex
 ]
 
-{ #category : 'accessing' }
-SpaceShipGame >> dice [
-
-	^ dice
-]
-
-{ #category : 'testing' }
-SpaceShipGame >> finishLineCell [
-
-	^ board lastCell
-]
-
 { #category : 'as yet unclassified' }
-SpaceShipGame >> fuelOf: aName [
+SpaceShipGame >> diceRollResult [
 
-	^ (ships detect: [ :s | s name = aName ]) currentFuel 
+	^ (dice collect: [ :d | d rollDice ]) sum
 ]
 
 { #category : 'initialization' }
@@ -141,7 +109,7 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 				                        [
 				                        HyperJumpCell
 					                        withParsecList: #( 100 50 20 )
-					                        totalParsecs: 10 ] }
+					                        totalParsecs: 100 ] }
 		                        with: {
 				                        0.02.
 				                        [ AtomicBombCell new ] }.
@@ -169,13 +137,6 @@ SpaceShipGame >> isOver [
 
 ]
 
-{ #category : 'testing' }
-SpaceShipGame >> isShipAtFinishLine: aShip [
-
-
-	^ (self currentCellOf: aShip) = board lastCell
-]
-
 { #category : 'accessing' }
 SpaceShipGame >> maxDiceRoll [
 	| allDice sidesList |
@@ -193,22 +154,13 @@ SpaceShipGame >> maxDiceRoll [
 ]
 
 { #category : 'as yet unclassified' }
-SpaceShipGame >> performTurnSequenceFor: aShip [
-
-	| steps |
-	steps := self rollAllDice.
-	board moveShip: aShip steps: steps.
-	board applyEffectTo: aShip.
-
-]
-
-{ #category : 'as yet unclassified' }
 SpaceShipGame >> playTurn [
 
-	self isOver ifTrue: [ ^ self ].
-
-	self currentShip playTurnIn: self.
-
+	self verifyIsNotOver.
+	self currentTurnsShip canPlayATurn ifTrue: [
+		board
+			handleMovementOf: self currentTurnsShip
+			thatRolled: self diceRollResult ].
 	self advanceToNextPlayer
 ]
 
@@ -227,13 +179,6 @@ SpaceShipGame >> positions [
 
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceShipGame >> rollAllDice [
-
-
-	^ (dice collect: [ :d | d rollDice ]) sum.
-]
-
 { #category : 'accessing' }
 SpaceShipGame >> ships [
 
@@ -244,18 +189,22 @@ SpaceShipGame >> ships [
 SpaceShipGame >> skipTurn [
 
 	| ship |
-	ship := self currentShip.
+	ship := self currentTurnsShip.
 	ship refuel.
 	self advanceToNextPlayer
 
 ]
 
+{ #category : 'as yet unclassified' }
+SpaceShipGame >> verifyIsNotOver [ 
+
+	self isOver ifTrue: [ Error signal: 'game is over!' ]
+]
+
 { #category : 'testing' }
 SpaceShipGame >> winner [
 
-
 	^ board ships
-        detect: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
-        ifNone: [ nil ]
-
+		  detect: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
+		  ifNone: [ nil ]
 ]

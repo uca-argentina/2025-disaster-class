@@ -18,28 +18,29 @@ Ship class >> withName: aName and: aFuelAmount [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> applyPenaltyIn: board [
+Ship >> applyPenalty [
 
-	board moveShipToStart: self.
 	self refuel.
 	self loseTurn.
-	self loseTurn.
-]
-
-{ #category : 'accessing' }
-Ship >> attemptMoveBy: steps in: board [
-
-	| cost |
-	cost := steps abs.
-	fuel < cost ifTrue: [ ^ self applyPenaltyIn: board ].
-	self consumeFuel: cost.
-	board moveShipDirectly: self steps: steps
+	self loseTurn
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> canPlay [
+Ship >> canMoveTo: aDiceResult [
 
-	^ lostTurns <= 0
+	fuel < aDiceResult abs ifTrue: [
+		self applyPenalty.
+		^ false ].
+	self consumeFuel: aDiceResult.
+	^ true
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> canPlayATurn [
+
+	lostTurns <= 0 ifTrue: [ ^ true ].
+	self lostATurn.
+	^ false
 ]
 
 { #category : 'accessing' }
@@ -52,18 +53,6 @@ Ship >> consumeFuel: steps [
 	fuel := fuel - cost
 ]
 
-{ #category : 'accessing' }
-Ship >> currentFuel [
-
-	^ fuel
-]
-
-{ #category : 'accessing' }
-Ship >> fuelCapacity [
-
-	^ fuelCapacity
-]
-
 { #category : 'as yet unclassified' }
 Ship >> initializeWith: aName and: aFuelAmount [
 
@@ -74,8 +63,9 @@ Ship >> initializeWith: aName and: aFuelAmount [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> loseTurn [ 
-	lostTurns := lostTurns + 1.
+Ship >> loseTurn [
+
+	lostTurns := lostTurns + 1
 ]
 
 { #category : 'as yet unclassified' }
@@ -88,14 +78,6 @@ Ship >> lostATurn [
 Ship >> name [
 
 	^ name
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> playTurnIn: aGame [
-
-	self canPlay
-		ifFalse: [ self lostATurn ]
-		ifTrue: [ aGame performTurnSequenceFor: self ]
 ]
 
 { #category : 'as yet unclassified' }

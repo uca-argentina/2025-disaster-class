@@ -12,21 +12,22 @@ Class {
 
 { #category : 'as yet unclassified' }
 HyperJumpCell class >> withParsecList: aList totalParsecs: aTotal [
-    ^ self new initializeWithParsecList: aList totalParsecs: aTotal
+
+	^ self new initializeWithParsecList: aList totalParsecs: aTotal
 ]
 
 { #category : 'as yet unclassified' }
 HyperJumpCell >> applyEffectTo: aShip in: aBoard [
-    | parsecs parsecsPerCell cellsToAdvance |
 
-    parsecs := parsecList at: index.
-    index := index + 1.
-    index > parsecList size ifTrue: [ index := 1 ]. 
+	| parsecs parsecsPerCell cellsToAdvance |
+	parsecs := parsecList at: index.
+	index := index + 1.
+	index > parsecList size ifTrue: [ index := 1 ].
 
-    parsecsPerCell :=  totalParsecs // aBoard size .
-    cellsToAdvance := parsecs // parsecsPerCell.
+	parsecsPerCell := totalParsecs // aBoard mapSize.
+	cellsToAdvance := parsecs // parsecsPerCell.
 
-    aShip attemptMoveBy: cellsToAdvance in: aBoard.
+	aBoard moveShip: aShip steps: cellsToAdvance
 ]
 
 { #category : 'initialization' }

@@ -7,5 +7,6 @@ Class {
 
 { #category : 'as yet unclassified' }
 AtomicBombCell >> applyEffectTo: aShip in: aBoard [
-    aBoard moveAllToStart.
+
+	aBoard moveAllToStart
 ]

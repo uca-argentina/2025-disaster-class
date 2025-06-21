@@ -33,10 +33,11 @@ Die >> initializeWith: numberOfSides [
 { #category : 'accessing' }
 Die >> rollDice [
 
-	^(1 to: aNumberOfSides ) atRandom.
+	^ (1 to: aNumberOfSides) atRandom
 ]
 
 { #category : 'as yet unclassified' }
 Die >> sides [
-	^aNumberOfSides.
+
+	^ aNumberOfSides
 ]

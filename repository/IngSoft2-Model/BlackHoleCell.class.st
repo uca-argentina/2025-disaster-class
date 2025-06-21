@@ -7,5 +7,6 @@ Class {
 
 { #category : 'as yet unclassified' }
 BlackHoleCell >> applyEffectTo: aShip in: aBoard [
-    aShip attemptMoveBy: -4 in: aBoard.
+
+	aBoard moveShip: aShip steps: -4
 ]
