@@ -505,183 +505,147 @@ GameTests >> test018BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 ]
 
 { #category : 'tests' }
-GameTests >> test027BlackHoleCellWrapsAroundWhenMovingBackwards [
-    | ship board blackHoleCell cells |
+GameTests >> test019BlackHoleCellWrapsAroundWhenMovingBackwards [
 
-    ship := Ship withName: 'Apollo' and: 10.
+	| someDie blackHoleCell someCells aFixedCellGenerator aGame |
+	someDie := OrderedCollection with: (TestDie withRolls: #( 21 )).
+	blackHoleCell := BlackHoleCell new.
+	someCells := (1 to: 20) collect: [ :i | RegularCell new ].
+	someCells at: 2 put: blackHoleCell.
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    blackHoleCell := BlackHoleCell new.
-
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 3 put: blackHoleCell.
-
-    board := Board withCells: cells andShips: { ship } asOrderedCollection.
-    board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-    board moveShip: ship steps: 2. 
-
-    (board cellAt: 3) applyEffectTo: ship in: board.
-
-    self assert: (board indexOfCellContaining: ship) equals: 9.
-
-
+	aGame := SpaceShipGame
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 10
+		         and: 11
+		         forLaps: 1
+		         withDice: someDie
+		         andShipsNamed: #( 'Apollo' ).
+	
+	aGame playTurn.
+	self assert: (aGame positions at: 'Apollo') equals: 18.
 ]
 
 { #category : 'tests' }
-GameTests >> test028BlackHoleCellPenalizesIfNotEnoughFuelAndItCrossesCircularBoard [
-    | ship board blackHoleCell cells |
+GameTests >> test020BlackHoleCellPenalizesIfNotEnoughFuelBeforeGoingBackALap [
 
-    ship := Ship withName: 'Apollo' and: 3.  
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with: (TestDie withRolls: #( 9 10 1 )).
+	someCells := (1 to: 18) collect: [ :i | RegularCell new ].
+	someCells at: 2 put: (BlackHoleCell new).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    blackHoleCell := BlackHoleCell new.
+	aGame := SpaceShipGame
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 12
+		         and: 13
+		         forLaps: 2
+		         withDice: someDice
+		         andShipsNamed: #( 'Apollo' ).
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 2 put: blackHoleCell.
-
-    board := Board withCells: cells andShips: { ship } asOrderedCollection.
-    board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-    board moveShip: ship steps: 1. 
-
-    (board cellAt: 2) applyEffectTo: ship in: board.
-
-    self assert: (board indexOfCellContaining: ship) equals: 1.
-    self assert: ship currentFuel equals: ship fuelCapacity.
-    self assert: ship canPlay not.
-
-
-
+	aGame playTurn.
+	aGame playTurn.
+	"Cae en el Black Hole y se aplica la penalty primero antes de volver una lap"
+	self assert: (aGame positions at: 'Apollo') equals: 1.
+	aGame playTurn.
+	aGame playTurn.
+	"Pierde dos turnos"
+	aGame playTurn.
+	"Cae en el Blackhole, vuelve atras una lap y cae en 16"
+	self assert: (aGame positions at: 'Apollo') equals: 16.
 ]
 
 { #category : 'tests' }
-GameTests >> test029MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
-    | apollo orion board moonWalkCell cells initialFuelApollo initialFuelOrion |
+GameTests >> test021MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
 
-    apollo := Ship withName: 'Apollo' and: 10.
-    orion := Ship withName: 'Orion' and: 10.
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (TestDie withRolls: #( 5 5 5 0 4 5 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 11 put: (MoonWalkCell withSteps: 4).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    moonWalkCell := MoonWalkCell withSteps: 2.
+	aGame := SpaceShipGame
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         forLaps: 2
+		         withDice: someDice
+		         andShipsNamed:
+		         #( 'Apollo' 'Orion' 'Helado de menta granizada' ).
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 4 put: moonWalkCell.
+	"Se juega un turno"
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	"En el segundo turno Helado cae en moonWalk"
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
 
-    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
-    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
-
-    board moveShip: apollo steps: 3.
-    board moveShip: orion steps: 5.   
-
-    initialFuelApollo := apollo currentFuel.
-    initialFuelOrion := orion currentFuel.
-
-    (board cellAt: 4) applyEffectTo: apollo in: board.
-
-    self assert: (board indexOfCellContaining: apollo) equals: 4.  
-    self assert: (board indexOfCellContaining: orion) equals: 4.
-
-    self assert: apollo currentFuel equals: initialFuelApollo.
-    self assert: orion currentFuel < initialFuelOrion.
+	"Apollo vuelve 4, Orion se queda sin nafta y helado no se mueve"
+	self
+		assert: (aGame positions at: 'Helado de menta granizada')
+		equals: 11.
+	self assert: (aGame positions at: 'Apollo') equals: 2.
+	self assert: (aGame positions at: 'Orion') equals: 1.
 ]
 
 { #category : 'tests' }
-GameTests >> test030MoonWalkCellMovesOthersBackwardsByCustomAmountAndPenalizesIfNeeded [
-    | apollo orion board moonWalkCell cells |
+GameTests >> test022MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 
-    apollo := Ship withName: 'Apollo' and: 10.
-    orion := Ship withName: 'Orion' and: 1.  
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (TestDie withRolls: #( 8 5 13 5 )).
+	someCells := (1 to: 20) collect: [ :i | RegularCell new ].
+	someCells at: 11 put: (MoonWalkCell withSteps: 4).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    moonWalkCell := MoonWalkCell withSteps: 3.
+	aGame := SpaceShipGame
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 8
+		         and: 19
+		         forLaps: 2
+		         withDice: someDice
+		         andShipsNamed: #( 'Pancho' 'Hernan' ).
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 5 put: moonWalkCell.
-
-    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
-    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
-
-    board moveShip: apollo steps: 4.
-    board moveShip: orion steps: 6.  
-
-    (board cellAt: 5) applyEffectTo: apollo in: board.
-
-    self assert: (board indexOfCellContaining: apollo) equals: 5.  
-    self assert: (board indexOfCellContaining: orion) equals: 1. 
-    self assert: orion currentFuel equals: orion fuelCapacity.
-    self assert: orion canPlay not.
-
-]
-
-{ #category : 'tests' }
-GameTests >> test031MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
-    | apollo orion board moonWalkCell cells |
-
-    apollo := Ship withName: 'Apollo' and: 10.
-    orion := Ship withName: 'Orion' and: 10.
-
-    moonWalkCell := MoonWalkCell withSteps: 3.
-
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 5 put: moonWalkCell.
-
-    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
-    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
-
-    board moveShip: apollo steps: 4.  
-    board moveShip: orion steps: 1.  
-
-    (board cellAt: 5) applyEffectTo: apollo in: board.
-
-    self assert: (board indexOfCellContaining: apollo) equals: 5.  
-    self assert: (board indexOfCellContaining: orion) equals: 9.  
-]
-
-{ #category : 'tests' }
-GameTests >> test032MoonWalkCellWrapsAndPenalizesIfNotEnoughFuel [
-    | apollo orion board moonWalkCell cells |
-
-    apollo := Ship withName: 'Apollo' and: 10.
-    orion := Ship withName: 'Orion' and: 2.  
-
-    moonWalkCell := MoonWalkCell withSteps: 3.
-
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 5 put: moonWalkCell.
-
-    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
-    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
-
-    board moveShip: apollo steps: 4.  
-    board moveShip: orion steps: 1.   
-
-    (board cellAt: 5) applyEffectTo: apollo in: board.
-
-    self assert: (board indexOfCellContaining: apollo) equals: 5. 
-    self assert: (board indexOfCellContaining: orion) equals: 1. 
-    self assert: orion currentFuel equals: orion fuelCapacity.
-    self assert: orion canPlay not.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Pancho') equals: 9.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Hernan') equals: 6.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Pancho') equals: 2.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Hernan') equals: 11.
+	self assert: (aGame positions at: 'Pancho') equals: 18
 ]
 
 { #category : 'tests' }
 GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
-    | ship board hyperCell cells parsecList initialFuel |
 
-    ship := Ship withName: 'Apollo' and: 10.
+	| ship board hyperCell cells parsecList initialFuel |
+	ship := Ship withName: 'Apollo' and: 10.
 
-    parsecList := #(20 10). 
-    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+	parsecList := #( 20 10 ).
+	hyperCell := HyperJumpCell
+		             withParsecList: parsecList
+		             totalParsecs: 100.
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 4 put: hyperCell.
+	cells := (1 to: 10) collect: [ :i | RegularCell new ].
+	cells at: 4 put: hyperCell.
 
-    board := Board withCells: cells andShips: { ship } asOrderedCollection.
-    board placeAllShipsAtStart: { ship } asOrderedCollection.
+	board := Board
+		         withCells: cells
+		         andShips: { ship } asOrderedCollection.
+	board placeAllShipsAtStart: { ship } asOrderedCollection.
 
-    board moveShip: ship steps: 3. 
-    initialFuel := ship currentFuel.
+	board moveShip: ship steps: 3.
+	initialFuel := ship currentFuel.
 
-    (board cellAt: 4) applyEffectTo: ship in: board.
+	(board cellAt: 4) applyEffectTo: ship in: board.
 
-    self assert: (board indexOfCellContaining: ship) equals: 6.  
-    self assert: ship currentFuel < initialFuel.
+	self assert: (board indexOfCellContaining: ship) equals: 6.
+	self assert: ship currentFuel < initialFuel
 ]
 
 { #category : 'tests' }

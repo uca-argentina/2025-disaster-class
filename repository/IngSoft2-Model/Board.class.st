@@ -105,7 +105,7 @@ Board >> moveAllToStart [
 Board >> moveShip: aShip steps: someSteps [
 
 	| previousIndex newIndex boardSize |
-	(aShip canMoveTo: someSteps) ifFalse: [
+	(aShip canMove: someSteps) ifFalse: [
 		^ self moveShipToStart: aShip ].
 	previousIndex := self indexOfCellContaining: aShip.
 	boardSize := map size.

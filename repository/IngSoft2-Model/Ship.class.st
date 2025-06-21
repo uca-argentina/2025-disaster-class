@@ -26,7 +26,7 @@ Ship >> applyPenalty [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> canMoveTo: aDiceResult [
+Ship >> canMove: aDiceResult [
 
 	fuel < aDiceResult abs ifTrue: [
 		self applyPenalty.
@@ -59,7 +59,7 @@ Ship >> initializeWith: aName and: aFuelAmount [
 	name := aName.
 	fuel := aFuelAmount.
 	fuelCapacity := aFuelAmount.
-	lostTurns := 0
+	lostTurns := 0.
 ]
 
 { #category : 'as yet unclassified' }
