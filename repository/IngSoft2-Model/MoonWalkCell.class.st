@@ -21,8 +21,7 @@ MoonWalkCell >> applyEffectTo: aShip in: aBoard [
 	allOtherShips := aBoard ships reject: [ :each | each = aShip ].
 
 	allOtherShips do: [ :ship |
-		ship handleEffectMovementFor: stepsBack negated in: aBoard ]
-
+		ship move: stepsBack negated in: aBoard ]
 ]
 
 { #category : 'as yet unclassified' }

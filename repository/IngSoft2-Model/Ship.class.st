@@ -35,16 +35,6 @@ Ship >> applyPenaltyIn: aBoard [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> canMove: anAmountOfCellsToMove in: aBoard [
-
-	fuel < anAmountOfCellsToMove abs ifTrue: [
-		self applyPenaltyIn: aBoard.
-		^ false ].
-	self consumeFuel: anAmountOfCellsToMove.
-	^ true
-]
-
-{ #category : 'as yet unclassified' }
 Ship >> canPlayATurn [
 
 	lostTurns <= 0 ifTrue: [ ^ true ].
@@ -121,6 +111,14 @@ Ship >> lostATurn [
 	lostTurns := (lostTurns - 1) max: 0
 ]
 
+{ #category : 'as yet unclassified' }
+Ship >> move: anAmount in: aBoard [
+
+	fuel < anAmount abs ifTrue: [ ^self applyPenaltyIn: aBoard ].
+	self consumeFuel: anAmount.
+	aBoard moveShip: self steps: anAmount
+]
+
 { #category : 'accessing' }
 Ship >> name [
 
@@ -129,12 +127,13 @@ Ship >> name [
 
 { #category : 'as yet unclassified' }
 Ship >> playTurnIn: aBoard withDiceResult: aDiceResult [
-	|actualResult|
-	actualResult  := aDiceResult +diceAdjustment.
+
+	| anAdjustedDiceResult |
 	lostTurns > 0 ifTrue: [ ^ self lostATurn ].
-	actualResult < requiredRoll ifTrue: [ ^ self ].
+	aDiceResult < requiredRoll ifTrue: [ ^ self ].
 	requiredRoll := 0.
-	self handleTurnMovementFor: actualResult in: aBoard
+	anAdjustedDiceResult := aDiceResult + diceAdjustment.
+	self move: anAdjustedDiceResult in: aBoard
 ]
 
 { #category : 'as yet unclassified' }

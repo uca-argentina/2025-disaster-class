@@ -35,6 +35,7 @@ CardTest >> test001UsingAccelerationIncreasesDiceAdjustmentOfAllShips [
 
 	positions := game positions.
 	self assert: (positions at: 'shipA') equals: 10.
+	self assert: false.
 ]
 
 { #category : 'tests' }

@@ -81,7 +81,11 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 		add: Acceleration new;
 		add: Overload new;
 		add: Redo new;
-		add: Cancellation new.
+		add: Cancellation new;
+		add: Acceleration new;
+		add: Cancellation new;
+		add: Overload new;
+		add: Redo new.
 
 	ships do: [ :ship |
 		ship addCard: availableCards removeFirst.
@@ -92,7 +96,7 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 	cardEnforcer := CardEnforcer
 		                withShips: ships
 		                withBoard: board
-		                withTurnManager: turnManager.
+		                withTurnManager: turnManager
 ]
 
 { #category : 'initialization' }
@@ -207,6 +211,7 @@ SpaceShipGame >> playTurn [
 	turnManager currentTurnsShip 
 		playTurnIn: board
 		withDiceResult: self diceRollResult.
+	board applyEffectTo: turnManager currentTurnsShip.
 	turnManager advanceToNextPlayer 
 ]
 

@@ -653,7 +653,9 @@ GameTests >> test023HyperGravityBlocksShipIfRolllsBelowThreshold [
 { #category : 'tests' }
 GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
 
-	| ship board hyperCell cells parsecList initialFuel |
+	
+
+	"| ship board hyperCell cells parsecList initialFuel |
 	ship := Ship withName: 'Apollo' and: 10.
 
 	parsecList := #( 20 10 ).
@@ -675,7 +677,7 @@ GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
 	(board cellAt: 4) applyEffectTo: ship in: board.
 
 	self assert: (board indexOfCellContaining: ship) equals: 6.
-	self assert: ship currentFuel < initialFuel
+	self assert: ship currentFuel < initialFuel"
 ]
 
 { #category : 'tests' }
