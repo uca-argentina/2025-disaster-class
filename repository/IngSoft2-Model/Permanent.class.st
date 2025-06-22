@@ -9,3 +9,10 @@ Class {
 Permanent >> removeEffectsWith: aCardManager [ 
 	self subclassResponsibility
 ]
+
+{ #category : 'removing' }
+Permanent >> verifyCanBePlayedBy: aSpaceship with: aTurnManager [ 
+
+	aSpaceship = aTurnManager currentTurnsShip ifFalse: [
+		Error signal: 'You can only play this card when it''s your turn' ].
+]

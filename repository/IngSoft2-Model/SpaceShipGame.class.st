@@ -5,10 +5,10 @@ Class {
 		'board',
 		'dice',
 		'ships',
-		'shipTurnIndex',
 		'numberOfLaps',
 		'cardEnforcer',
-		'availableCards'
+		'availableCards',
+		'turnManager'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -40,12 +40,6 @@ SpaceShipGame class >> onABoardSized: aBoardSize withWormholesAt: aFirstWormhole
 
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceShipGame >> advanceToNextPlayer [
-
-	shipTurnIndex := shipTurnIndex \\ ships size + 1
-]
-
 { #category : 'accessing' }
 SpaceShipGame >> board [
 
@@ -60,7 +54,7 @@ SpaceShipGame >> cardEnforcer [
 { #category : 'as yet unclassified' }
 SpaceShipGame >> currentTurnsShip [
 
-	^ ships at: shipTurnIndex
+	^  turnManager currentTurnsShip 
 ]
 
 { #category : 'as yet unclassified' }
@@ -92,7 +86,10 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst ].
 
-	cardEnforcer := CardEnforcer withShips: ships withBoard: board
+	cardEnforcer := CardEnforcer
+		                withShips: ships
+		                withBoard: board
+		                withTurnManager: turnManager.
 ]
 
 { #category : 'initialization' }
@@ -109,8 +106,7 @@ SpaceShipGame >> initializeWith: aCellGenerator withWormholesAt: aFirstWormholeL
 
 	board := Board withCells: cells andShips: ships.
 	board placeAllShipsAtStart: ships.
-
-	shipTurnIndex := 1.
+	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
 	
 	self initializeCardsAndCardEnforcer
@@ -161,7 +157,7 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 	board placeAllShipsAtStart: ships.
 
 
-	shipTurnIndex := 1.
+	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
 	
 	self initializeCardsAndCardEnforcer
@@ -205,10 +201,10 @@ SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [
 SpaceShipGame >> playTurn [
 
 	self verifyIsNotOver.
-	self currentTurnsShip
+	turnManager currentTurnsShip 
 		playTurnIn: board
 		withDiceResult: self diceRollResult.
-	self advanceToNextPlayer
+	turnManager advanceToNextPlayer 
 ]
 
 { #category : 'as yet unclassified' }
@@ -238,8 +234,7 @@ SpaceShipGame >> skipTurn [
 	| ship |
 	ship := self currentTurnsShip.
 	ship refuel.
-	self advanceToNextPlayer
-
+	turnManager advanceToNextPlayer 
 ]
 
 { #category : 'as yet unclassified' }

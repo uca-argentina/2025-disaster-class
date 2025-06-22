@@ -1,12 +1,12 @@
 Class {
-	#name : 'Instantaneous',
+	#name : 'NullCard',
 	#superclass : 'Card',
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-Instantaneous >> verifyCanBePlayedBy: aSpaceship with: aTurnManager [ 
+NullCard >> verifyCanBePlayedBy: aSpaceship with: aTurnManager [ 
+	Error signal: 'There is no card to redo'
 
-	^ true
 ]

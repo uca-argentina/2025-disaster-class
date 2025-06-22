@@ -4,15 +4,18 @@ Class {
 	#instVars : [
 		'ships',
 		'board',
-		'activeCards'
+		'activeCards',
+		'turnManager',
+		'nextShip',
+		'lastCard'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-CardEnforcer class >> withShips: someShips withBoard: aBoard [
-	^ self new initializeWithShips: someShips withBoard: aBoard
+CardEnforcer class >> withShips: someShips withBoard: aBoard withTurnManager: aTurnManager [
+	^self new initializeWithShips: someShips withBoard: aTurnManager withTurnManager: aTurnManager 
 ]
 
 { #category : 'initialization' }
@@ -66,21 +69,31 @@ CardEnforcer >> findShip: aShipName [
 ]
 
 { #category : 'initialization' }
-CardEnforcer >> initializeWithShips: someShips withBoard: aBoard [
-
+CardEnforcer >> initializeWithShips: someShips withBoard: aBoard withTurnManager: aTurnManager [
 	ships := someShips.
 	board := aBoard.
-	activeCards := OrderedCollection new
+	turnManager := aTurnManager.
+	activeCards := OrderedCollection new.
+	lastCard := NullCard new.
 ]
 
 { #category : 'initialization' }
-CardEnforcer >> playCard: aCard from: aShipNamed target: aTargetNamed [
+CardEnforcer >> playCard: aCard from: aShip target: aTarget [ 
+	nextShip := turnManager currentTurnsShip.
+	aCard verifyCanBePlayedBy: aShip with: turnManager.
+	aCard use: self from: aShip target: aTarget.
+	aShip useCard: aCard.
+	lastCard := aCard
 
-	"nextPlayer := turnManager nextPlayer."
-	"aCard verifyCanBePlayedBy: aShipNamed with: turnManager."
-	aCard use: self from: aShipNamed target: aTargetNamed.
-	aShipNamed useCard: aCard.
-	"lastUsedCard := aCard lastUsedCard: lastUsedCard"
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> redoLastCardFrom: aSpaceship target: aTarget [ 
+	
+	nextShip := turnManager currentTurnShip.
+	lastCard verifyCanBePlayedBy: aSpaceship with: turnManager.
+	lastCard use: self from: aSpaceship target: aTarget.
+
 ]
 
 { #category : 'initialization' }

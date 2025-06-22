@@ -97,10 +97,6 @@ CardTest >> test003OverloadAffectsOnlyTargetShip [
 	overloadCard := shipA findCardOfClass: Overload.
 	self assert: overloadCard notNil.
 
-	game playTurn.
-	positions := game positions.
-	self assert: (positions at: 'shipA') equals: 5.
-
 	game playCard: overloadCard from: 'shipA' to: 'shipB'.
 
 	self assert: shipA diceAdjustment equals: 0.
@@ -108,7 +104,11 @@ CardTest >> test003OverloadAffectsOnlyTargetShip [
 
 	game playTurn.
 	positions := game positions.
-	self assert: (positions at: 'shipB') equals: 3. 
+	self assert: (positions at: 'shipA') equals: 5.
+
+	game playTurn.
+	positions := game positions.
+	self assert: (positions at: 'shipB') equals: 3.
 ]
 
 { #category : 'tests' }
@@ -135,12 +135,14 @@ CardTest >> test004CancellationRemovesOverloadEffect [
 	self assert: overloadCard notNil.
 	self assert: cancellationCard notNil.
 
-	game playTurn.
+	game playTurn. "Turno de shipA"
 	positions := game positions.
 	self assert: (positions at: 'shipA') equals: 5.
 
 	game playCard: overloadCard from: 'shipA' to: 'shipB'.
 	self assert: shipB diceAdjustment equals: -2.
+
+	game playTurn. "Avanza turno a shipB"
 
 	game playCard: cancellationCard from: 'shipB' to: overloadCard.
 	self assert: shipB diceAdjustment equals: 0.
