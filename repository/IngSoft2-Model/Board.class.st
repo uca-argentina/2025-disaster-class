@@ -10,13 +10,6 @@ Class {
 }
 
 { #category : 'instance creation' }
-Board class >> withCells: someCells [
-
-	^ self new
-		  initializeWith: someCells 
-]
-
-{ #category : 'instance creation' }
 Board class >> withCells: someCells andShips: someShips [
     ^ self new initializeWith: someCells andShips: someShips
 
