@@ -22,20 +22,32 @@ GameTests >> test001GameIsCreatedThenAllShipsAreAtCell1 [
 	| aDie aGame someDice positions aFixedCellGenerator |
 	aDie := Die with: 2.
 	someDice := OrderedCollection with: aDie.
-	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount: 20.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 2
+		         and: 4
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: {  }
+		         andDeck: {  }.
+
+	"
 		         createdWith: aFixedCellGenerator
 					withWormholesAt: 2
 		         and: 4
 		         forLaps: 1
 		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' 'Orion' ).
+		         andShipsNamed: #( 'Apollo' 'Orion' )."
 
 	positions := aGame positions.
 
 	self assert: (positions values allSatisfy: [ :pos | pos = 1 ])
-
 ]
 
 { #category : 'tests' }
@@ -47,12 +59,16 @@ GameTests >> test002PlayTurnMovesShipOneSpace [
 		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' 'Orion' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	positionsBefore := aGame positions.
 
@@ -76,12 +92,16 @@ GameTests >> test003PlayTurnTwiceMovesSecondShip [
 		                       20.
 
 	game := SpaceShipGame
+		        withShipsNamed: #( 'Apollo' 'Orion' )
+		        playedWith: someDice
 		        createdWith: aFixedCellGenerator
 		        withWormholesAt: 2
 		        and: 4
+		        onABoardSized: 20
+		        whichToParsecsIs: 100
 		        forLaps: 1
-		        withDice: someDice
-		        andShipsNamed: #( 'Apollo' 'Orion' ).
+		        withRewards: {  }
+		        andDeck: {  }.
 
 	self assert: (game positions at: 'Apollo') equals: 1.
 	self assert: (game positions at: 'Orion') equals: 1.
@@ -104,12 +124,16 @@ GameTests >> test004ShipFallsIntoWormholeThenIsTransportedToOtherEnd [
 		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 2
 		         and: 4
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aGame playTurn.
 
@@ -127,12 +151,16 @@ GameTests >> test005RollDiceMovesShipAccordingly [
 		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: (someDice)
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	positionsBefore := aGame positions.
 
@@ -154,12 +182,16 @@ GameTests >> test006GameIsOverWhenShipCompletesTheRequiredLaps [
 		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	self deny: aGame isOver.
 
@@ -171,45 +203,49 @@ GameTests >> test006GameIsOverWhenShipCompletesTheRequiredLaps [
 { #category : 'tests' }
 GameTests >> test007ShipReachesLastCellAndBecomesWinner [
 
-
 	| someDice aFixedCellGenerator aGame |
 	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
 	aGame := SpaceShipGame
-		        createdWith: aFixedCellGenerator
-		        withWormholesAt: 10
-		        and: 18
-		        forLaps: 1
-		        withDice: someDice
-		        andShipsNamed: #( 'Apollo' ).
-
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 10
+		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	self assert: aGame winner isNil.
 
 	aGame playTurn.
 
-
 	self assert: aGame winner name equals: 'Apollo'
-
 ]
 
 { #category : 'tests' }
 GameTests >> test008GameIsOverWhenThereIsAWinner [
 
-
 	| someDice aFixedCellGenerator aGame |
 	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
+
 	aGame := SpaceShipGame
-		        createdWith: aFixedCellGenerator
-		        withWormholesAt: 10
-		        and: 18
-		        forLaps: 1
-		        withDice: someDice
-		        andShipsNamed: #( 'Apollo' ).
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 10
+		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	self deny: aGame isOver.
 	self assert: aGame winner isNil.
@@ -228,15 +264,18 @@ GameTests >> test009NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
-
-
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
+
 	aShip := aGame ships first.
 
 	aGame playTurn.
@@ -245,6 +284,7 @@ GameTests >> test009NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 		should: [ aGame playTurn ]
 		raise: Error
 		withMessageText: 'game is over!'.
+
 	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
 ]
 
@@ -260,12 +300,16 @@ GameTests >> test010CanPlayWithMultipleDieConsecutively [
 		                       20.
 
 	aGame := SpaceShipGame
-		         createdWith: aFixedCellGenerator 
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aGame playTurn.
 	self deny: aGame isOver.
@@ -292,12 +336,16 @@ GameTests >> test011WhenGameEndsPlayTurnDoesNothing [
 		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: (OrderedCollection with: aDie)
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 18
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: (OrderedCollection with: aDie)
-		         andShipsNamed: #( 'Apollo' 'Orion' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aGame playTurn.
 	self assert: aGame isOver.
@@ -317,16 +365,19 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 
 	| someDice aFixedCellGenerator aGame aShip |
 	someDice := TestDie withRolls: #( 6 ).
-	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
-		                       20.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount: 20.
 
 	aGame := SpaceShipGame
-		         createdWith: aFixedCellGenerator
-		         withWormholesAt: 3
-		         and: 7
-		         forLaps: 1
-		         withDice: (OrderedCollection with: someDice)
-		         andShipsNamed: #( 'Apollo' ).
+		withShipsNamed: #( 'Apollo' )
+		playedWith: (OrderedCollection with: someDice)
+		createdWith: aFixedCellGenerator
+		withWormholesAt: 3
+		and: 7
+		onABoardSized: 20
+		whichToParsecsIs: 100
+		forLaps: 1
+		withRewards: { }
+		andDeck: { }.
 
 	aShip := aGame ships first.
 	aShip consumeFuel: 12.
@@ -334,6 +385,7 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Apollo') equals: 1
+
 ]
 
 { #category : 'tests' }
@@ -345,16 +397,20 @@ GameTests >> test013ShipRunsOutOfFuelThenLosesTwoTurns [
 		                       20.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 18
 		         and: 19
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aShip := aGame ships first.
 	aShip consumeFuel: 11.
-	
+
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
 	aGame playTurn.
@@ -373,12 +429,16 @@ GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 		                       100.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDie
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 98
 		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDie
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aShip := aGame ships first.
 	aShip consumeFuel: 5.
@@ -390,55 +450,61 @@ GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 
 { #category : 'tests' }
 GameTests >> test015AtomicBombCellMovesAllShipsToStart [
-    | ship1 ship2 board bombCell cells |
 
-    ship1 := Ship withName: 'Apollo' and: 10.
-    ship2 := Ship withName: 'Orion' and: 10.
+	| someDie aFixedCellGenerator aGame someCells |
+	someDie := OrderedCollection with: (TestDie withRolls: #( 3 3 1000 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 7 put: AtomicBombCell new.
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    bombCell := AtomicBombCell new.
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDie
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: {  }
+		         andDeck: {  }.
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 5 put: bombCell.
-
-    board := Board withCells: cells andShips: { ship1. ship2 } asOrderedCollection.
-    board placeAllShipsAtStart: { ship1. ship2 } asOrderedCollection.
-
-    board moveShip: ship1 steps: 4. 
-    board moveShip: ship2 steps: 6.
-
-    (board cellAt: 5) applyEffectTo: ship1 in: board.
-
-    self assert: (board indexOfCellContaining: ship1) equals: 1.
-    self assert: (board indexOfCellContaining: ship2) equals: 1.
+	aGame playTurn.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Apollo') equals: 1
 ]
 
 { #category : 'tests' }
 GameTests >> test016AtomicBombCellMovesAllShipsToStart [
 
-	| someDie aFixedCellGenerator aGame someCells anAtomicBombCell |
+	| someDie aFixedCellGenerator aGame someCells |
 	someDie := OrderedCollection with: (TestDie withRolls: #( 9 19 15 )).
-	anAtomicBombCell := AtomicBombCell new.
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
-	someCells at: 25 put: anAtomicBombCell.
+	someCells at: 25 put: AtomicBombCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: someDie
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 98
 		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDie
-		         andShipsNamed: #( 'Apollo' 'Orion' ).
+		         withRewards: {  }
+		         andDeck: {  }.
+
 	aGame playTurn.
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Apollo') equals: 10.
 	self assert: (aGame positions at: 'Orion') equals: 20.
-	
+
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Apollo') equals: 1.
-	self assert: (aGame positions at: 'Orion') equals: 1.
+	self assert: (aGame positions at: 'Orion') equals: 1
 ]
 
 { #category : 'tests' }
@@ -453,13 +519,16 @@ GameTests >> test017AtomicBombCellDoesNotResetLaps [
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: someDie
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 8
 		         and: 9
+		         onABoardSized: 10
+		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withDice: someDie
-		         andShipsNamed: #( 'Apollo' 'Orion' ).
-
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -473,8 +542,7 @@ GameTests >> test017AtomicBombCellDoesNotResetLaps [
 	self assert: (aGame positions at: 'Orion') equals: 1.
 
 	aGame playTurn.
-	self assert: (aGame winner name) equals: 'Orion'
-	"si se hubieran reseteado las laps no ganaria con un 10"
+	self assert: aGame winner name equals: 'Orion'
 ]
 
 { #category : 'tests' }
@@ -488,20 +556,24 @@ GameTests >> test018BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
-		         createdWith: aFixedCellGenerator
-		         withWormholesAt: 98
-		         and: 99
-		         forLaps: 1
-		         withDice: someDie
-		         andShipsNamed: #( 'Apollo' ).
+		withShipsNamed: #( 'Apollo' )
+		playedWith: someDie
+		createdWith: aFixedCellGenerator
+		withWormholesAt: 98
+		and: 99
+		onABoardSized: 100
+		whichToParsecsIs: 100
+		forLaps: 1
+		withRewards: { }
+		andDeck: { }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 5.
 	aGame playTurn.
-	"Cae en el Black Hole y se aplica la penalty aunque solo se movio por dado 9 pasos"
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
-	self assert: (aGame positions at: 'Apollo') equals: 1.
+	self assert: (aGame positions at: 'Apollo') equals: 1
+
 ]
 
 { #category : 'tests' }
@@ -515,46 +587,52 @@ GameTests >> test019BlackHoleCellWrapsAroundWhenMovingBackwards [
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDie
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 10
 		         and: 11
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withDice: someDie
-		         andShipsNamed: #( 'Apollo' ).
-	
+		         withRewards: {  }
+		         andDeck: {  }.
+
 	aGame playTurn.
-	self assert: (aGame positions at: 'Apollo') equals: 18.
+	self assert: (aGame positions at: 'Apollo') equals: 18
 ]
 
 { #category : 'tests' }
 GameTests >> test020BlackHoleCellPenalizesIfNotEnoughFuelBeforeGoingBackALap [
 
 	| someDice someCells aFixedCellGenerator aGame |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 9 10 1 1 1 )).
+	someDice := OrderedCollection with:
+		            (TestDie withRolls: #( 9 10 1 1 1 )).
 	someCells := (1 to: 18) collect: [ :i | RegularCell new ].
-	someCells at: 2 put: (BlackHoleCell new).
+	someCells at: 2 put: BlackHoleCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 12
 		         and: 13
+		         onABoardSized: 18
+		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withDice: someDice
-		         andShipsNamed: #( 'Apollo' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aGame playTurn.
 	aGame playTurn.
-	"Cae en el Black Hole y se aplica la penalty primero antes de volver una lap"
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 1.
-	"Pierde dos turnos"
 	aGame playTurn.
-	"Cae en el Blackhole, vuelve atras una lap y cae en 16"
-	self assert: (aGame positions at: 'Apollo') equals: 16.
+	self assert: (aGame positions at: 'Apollo') equals: 16
 ]
 
 { #category : 'tests' }
@@ -568,29 +646,30 @@ GameTests >> test021MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed:
+		         #( 'Apollo' 'Orion' 'Helado de menta granizada' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 98
 		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withDice: someDice
-		         andShipsNamed:
-		         #( 'Apollo' 'Orion' 'Helado de menta granizada' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
-	"Se juega un turno"
 	aGame playTurn.
 	aGame playTurn.
 	aGame playTurn.
-	"En el segundo turno Helado cae en moonWalk"
 	aGame playTurn.
 	aGame playTurn.
 	aGame playTurn.
 
-	"Apollo vuelve 4, Orion se queda sin nafta y helado no se mueve"
 	self
 		assert: (aGame positions at: 'Helado de menta granizada')
 		equals: 11.
 	self assert: (aGame positions at: 'Apollo') equals: 2.
-	self assert: (aGame positions at: 'Orion') equals: 1.
+	self assert: (aGame positions at: 'Orion') equals: 1
 ]
 
 { #category : 'tests' }
@@ -604,12 +683,16 @@ GameTests >> test022MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Pancho' 'Hernan' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 8
 		         and: 19
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withDice: someDice
-		         andShipsNamed: #( 'Pancho' 'Hernan' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Pancho') equals: 9.
@@ -632,20 +715,21 @@ GameTests >> test023HyperGravityBlocksShipIfRolllsBelowThreshold [
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' )
+		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
 		         withWormholesAt: 8
 		         and: 19
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withDice: someDice
-		         andShipsNamed: #( 'Gon' ).
+		         withRewards: {  }
+		         andDeck: {  }.
 
-	"Falls in hyperGravity"
 	aGame playTurn.
 	self assert: (aGame positions at: 'Gon') equals: 2.
-	"Juega y se queda en el mismo lugar"
 	aGame playTurn.
 	self assert: (aGame positions at: 'Gon') equals: 2.
-	"Juega y se puede mover porque tiro mas alto que 4"
 	aGame playTurn.
 	self assert: (aGame positions at: 'Gon') equals: 7
 ]

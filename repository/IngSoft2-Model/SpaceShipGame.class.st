@@ -15,19 +15,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-SpaceShipGame class >> createdWith: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation forLaps: aLapCount withDice: someDice andShipsNamed: someShipNames [
-
-	^ self new
-		  initializeWith: aCellGenerator
-		  withWormholesAt: aFirstWormholeLocation
-		  and: aSecondWormholeLocation
-		  withDice: someDice
-		  shipNames: someShipNames
-		  andLaps: aLapCount
-
-]
-
-{ #category : 'as yet unclassified' }
 SpaceShipGame class >> onABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation forLaps: aLapCount withDice: someDice andShipsNamed: someShipNames [
 
 	^ self new
@@ -38,6 +25,22 @@ SpaceShipGame class >> onABoardSized: aBoardSize withWormholesAt: aFirstWormhole
 		  shipNames: someShipNames
 		  andLaps: aLapCount
 
+]
+
+{ #category : 'as yet unclassified' }
+SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice createdWith: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation onABoardSized: aBoardSize whichToParsecsIs: anAmountOfParsecs forLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
+
+	^ self new
+		  initializeWith: someShipNames
+		  withDice: someDice
+		  withGenerator: aCellGenerator
+		  withWormholesAt: aFirstWormholeLocation
+		  and: aSecondWormholeLocation
+		  withBoardSize: aBoardSize
+		  withParsecs: anAmountOfParsecs
+		  withLaps: aLapCount
+		  withRewards: someRewards
+		  andDeck: aDeckOfCards
 ]
 
 { #category : 'accessing' }
@@ -100,22 +103,25 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 ]
 
 { #category : 'initialization' }
-SpaceShipGame >> initializeWith: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation withDice: someDice shipNames: someShipNames andLaps: aLapCount [
+SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation withBoardSize: aBoardSize withParsecs: anAmountOfParsecs withLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
 
-	| cells|
+	| cells |
 	dice := someDice.
 
 	ships := someShipNames collect: [ :eachName |
 		         Ship withName: eachName and: 2 * self maxDiceRoll ].
 
 	cells := aCellGenerator generate.
-	WormholeCell newPairIn: cells at: aFirstWormholeLocation and: aSecondWormholeLocation.
+	WormholeCell
+		newPairIn: cells
+		at: aFirstWormholeLocation
+		and: aSecondWormholeLocation.
 
 	board := Board withCells: cells andShips: ships.
 	board placeAllShipsAtStart: ships.
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
-	
+
 	self initializeCardsAndCardEnforcer
 ]
 
