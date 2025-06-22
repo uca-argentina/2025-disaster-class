@@ -129,11 +129,12 @@ Ship >> name [
 
 { #category : 'as yet unclassified' }
 Ship >> playTurnIn: aBoard withDiceResult: aDiceResult [
-
+	|actualResult|
+	actualResult  := aDiceResult +diceAdjustment.
 	lostTurns > 0 ifTrue: [ ^ self lostATurn ].
-	aDiceResult < requiredRoll ifTrue: [ ^ self ].
+	actualResult < requiredRoll ifTrue: [ ^ self ].
 	requiredRoll := 0.
-	self handleTurnMovementFor: aDiceResult in: aBoard
+	self handleTurnMovementFor: actualResult in: aBoard
 ]
 
 { #category : 'as yet unclassified' }
@@ -146,4 +147,9 @@ Ship >> refuel [
 Ship >> removeCard: aCard [ 
 	cards remove: aCard ifAbsent: [ Error signal: 'Card not found' ]
 
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> resetTotalThrowModifier [
+	diceAdjustment := 0.
 ]

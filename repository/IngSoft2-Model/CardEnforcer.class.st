@@ -16,9 +16,9 @@ CardEnforcer class >> withShips: someShips withBoard: aBoard [
 ]
 
 { #category : 'initialization' }
-CardEnforcer >> addActiveCardEffect: aCard [ [
+CardEnforcer >> addActiveCardEffect: aCard [ 
 	activeCards add: aCard
-]
+
 
 ]
 
@@ -39,15 +39,28 @@ CardEnforcer >> apply: aCard from: aShipName to: aTargetName [
 ]
 
 { #category : 'initialization' }
-CardEnforcer >> applyAccelerationEffect [ 
-	ships do: [ :ship |
-		ship changeTotalThrowBy: 1 ]
+CardEnforcer >> applyAccelerationEffect [
+
+	ships do: [ :ship | ship changeTotalThrowBy: 1 ]
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> disableCardEffect: aCard [ 
+	activeCards remove: aCard ifAbsent: [ Error signal: 'This card is not active' ].
+	aCard removeEffectsWith: self.
 
 ]
 
 { #category : 'initialization' }
 CardEnforcer >> initializeWithShips: someShips withBoard: aBoard [
+
 	ships := someShips.
 	board := aBoard.
-	activeCards := OrderedCollection new.
+	activeCards := OrderedCollection new
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> removeAccelerationEffect [
+	ships do: [ :ship | ship resetTotalThrowModifier ].
+
 ]

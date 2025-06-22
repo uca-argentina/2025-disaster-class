@@ -40,6 +40,7 @@ Board >> cellAt: aPosition [
 Board >> cellContaining: aShip [
 
 	^ map detect: [ :each | each includes: aShip ]
+		ifNone: [ self error: 'Ship not found on board' ].
 ]
 
 { #category : 'as yet unclassified' }
