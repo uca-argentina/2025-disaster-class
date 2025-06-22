@@ -7,7 +7,8 @@ Class {
 		'activeCards',
 		'turnManager',
 		'nextShip',
-		'lastCard'
+		'lastCard',
+		'lastUsedCardTarget'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -44,12 +45,12 @@ CardEnforcer >> apply: aCard from: aShipName to: aTargetName [
 { #category : 'initialization' }
 CardEnforcer >> applyAccelerationEffect [
 
-	ships do: [ :ship | ship changeTotalThrowBy: 1 ]
+	ships do: [ :ship | ship changeDiceAdjustmentBy: 1 ]
 ]
 
 { #category : 'initialization' }
 CardEnforcer >> applyOverloadEffectTo: affectedSpaceship [
-	affectedSpaceship changeTotalThrowBy: -2.
+	affectedSpaceship changeDiceAdjustmentBy: -2.
 ]
 
 { #category : 'initialization' }
@@ -83,21 +84,28 @@ CardEnforcer >> playCard: aCard from: aShip target: aTarget [
 	aCard verifyCanBePlayedBy: aShip with: turnManager.
 	aCard use: self from: aShip target: aTarget.
 	aShip useCard: aCard.
-	lastCard := aCard
+	lastCard := aCard lastUsedCard: lastCard.
+	lastUsedCardTarget := aTarget.
 
 ]
 
 { #category : 'initialization' }
 CardEnforcer >> redoLastCardFrom: aSpaceship target: aTarget [ 
 	
-	nextShip := turnManager currentTurnShip.
+	nextShip := turnManager currentTurnsShip.
 	lastCard verifyCanBePlayedBy: aSpaceship with: turnManager.
-	lastCard use: self from: aSpaceship target: aTarget.
+	lastCard use: self from: aSpaceship target: lastUsedCardTarget .
 
 ]
 
 { #category : 'initialization' }
 CardEnforcer >> removeAccelerationEffect [
 	ships do: [ :ship | ship resetTotalThrowModifier ].
+
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> turnManager [ 
+	^turnManager 
 
 ]

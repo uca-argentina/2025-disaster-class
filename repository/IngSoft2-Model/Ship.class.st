@@ -53,14 +53,14 @@ Ship >> canPlayATurn [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> changeRequiredRollTo: aRequiredRoll [
-
-	requiredRoll := aRequiredRoll
+Ship >> changeDiceAdjustmentBy: anAmount [
+	diceAdjustment := diceAdjustment + anAmount.
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> changeTotalThrowBy: anAmount [
-	diceAdjustment := diceAdjustment + anAmount.
+Ship >> changeRequiredRollTo: aRequiredRoll [
+
+	requiredRoll := aRequiredRoll
 ]
 
 { #category : 'accessing' }

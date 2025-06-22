@@ -77,11 +77,14 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 		add: Acceleration new;
 		add: Cancellation new;
 		add: Overload new;
+		add: Redo new;
 		add: Acceleration new;
 		add: Overload new;
+		add: Redo new;
 		add: Cancellation new.
 
 	ships do: [ :ship |
+		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst ].
@@ -235,6 +238,11 @@ SpaceShipGame >> skipTurn [
 	ship := self currentTurnsShip.
 	ship refuel.
 	turnManager advanceToNextPlayer 
+]
+
+{ #category : 'testing' }
+SpaceShipGame >> turnManager [
+	^turnManager 
 ]
 
 { #category : 'as yet unclassified' }

@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+Card >> lastUsedCard: aCard [ 
+
+	^ self
+]
+
+{ #category : 'as yet unclassified' }
 Card >> use: aCardManager from: cardThrower target: aTarget [ 
 	self subclassResponsibility
 ]

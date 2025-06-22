@@ -10,7 +10,7 @@ Class {
 
 { #category : 'as yet unclassified' }
 Overload >> removeEffectsWith: aCardEnforcer [
-	overloadedShip changeTotalThrowBy: 2
+	overloadedShip changeDiceAdjustmentBy: 2
 
 ]
 
