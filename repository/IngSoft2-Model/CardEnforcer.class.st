@@ -45,9 +45,23 @@ CardEnforcer >> applyAccelerationEffect [
 ]
 
 { #category : 'initialization' }
-CardEnforcer >> disableCardEffect: aCard [ 
-	activeCards remove: aCard ifAbsent: [ Error signal: 'This card is not active' ].
-	aCard removeEffectsWith: self.
+CardEnforcer >> applyOverloadEffectTo: affectedSpaceship [
+	affectedSpaceship changeTotalThrowBy: -2.
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> disableCardEffect: aCard [
+
+	activeCards
+		remove: aCard
+		ifAbsent: [ Error signal: 'There is no such active card' ].
+	aCard removeEffectsWith: self
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> findShip: aShipName [
+	^ships detect: [ :ship | ship name = aShipName ]
+		ifNone: [ Error signal: 'No ship name found' ]
 
 ]
 
@@ -57,6 +71,16 @@ CardEnforcer >> initializeWithShips: someShips withBoard: aBoard [
 	ships := someShips.
 	board := aBoard.
 	activeCards := OrderedCollection new
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> playCard: aCard from: aShipNamed target: aTargetNamed [
+
+	"nextPlayer := turnManager nextPlayer."
+	"aCard verifyCanBePlayedBy: aShipNamed with: turnManager."
+	aCard use: self from: aShipNamed target: aTargetNamed.
+	aShipNamed useCard: aCard.
+	"lastUsedCard := aCard lastUsedCard: lastUsedCard"
 ]
 
 { #category : 'initialization' }

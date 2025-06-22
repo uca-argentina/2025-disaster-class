@@ -70,15 +70,25 @@ SpaceShipGame >> diceRollResult [
 ]
 
 { #category : 'testing' }
+SpaceShipGame >> findShip: aShipName [
+	^ships detect: [ :ship | ship name = aShipName ]
+		ifNone: [ Error signal: 'No ship name found' ]
+]
+
+{ #category : 'testing' }
 SpaceShipGame >> initializeCardsAndCardEnforcer [
 
-	availableCards := OrderedCollection
-		                  with: Overload new
-		                  with: Acceleration new
-		                  with: Overload new
-		                  with: Acceleration new.
+	availableCards := OrderedCollection new.
+	availableCards
+		add: Acceleration new;
+		add: Cancellation new;
+		add: Overload new;
+		add: Acceleration new;
+		add: Overload new;
+		add: Cancellation new.
 
 	ships do: [ :ship |
+		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst ].
 
@@ -184,12 +194,11 @@ SpaceShipGame >> maxDiceRoll [
 ]
 
 { #category : 'testing' }
-SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [ [
-	| ship |
-	ship := ships detect: [ :s | s name = aShipNamed ] ifNone: [ Error signal: 'No such ship' ].
-	cardEnforcer apply: aCard from: aShipNamed to: aTargetNamed.
-	ship removeCard: aCard
-]
+SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [ 
+	|  aShip  |
+	self verifyIsNotOver .
+	aShip := self findShip: aShipNamed.
+	cardEnforcer playCard: aCard from: aShip target: aTargetNamed 
 ]
 
 { #category : 'as yet unclassified' }

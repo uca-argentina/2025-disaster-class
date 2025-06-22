@@ -153,3 +153,12 @@ Ship >> removeCard: aCard [
 Ship >> resetTotalThrowModifier [
 	diceAdjustment := 0.
 ]
+
+{ #category : 'as yet unclassified' }
+Ship >> useCard: aCard [ 
+
+	cards
+		remove: aCard
+		ifAbsent: [
+		Error signal: self name , ' does not have a ' , aCard class name, ' card' ]
+]

@@ -24,13 +24,12 @@ CardTest >> test001UsingAccelerationIncreasesDiceAdjustmentOfAllShips [
 	accelerationCard := shipA findCardOfClass: Acceleration.
 	self assert: accelerationCard notNil.
 
-
 	game playTurn.
 
 	positions := game positions.
 	self assert: (positions at: 'shipA') equals: 5.
 
-	accelerationCard use: game cardEnforcer from: shipA target: nil.
+	game playCard: accelerationCard from: 'shipA' to: nil.
 
 	game playTurn.
 
@@ -55,28 +54,98 @@ CardTest >> test002CancellationRemovesAccelerationEffect [
 
 	shipA := game ships first.
 	accelerationCard := shipA findCardOfClass: Acceleration.
+	cancellationCard := shipA findCardOfClass: Cancellation.
+
 	self assert: accelerationCard notNil.
+	self assert: cancellationCard notNil.
 
-	
 	game playTurn.
 	positions := game positions.
-	self assert: (positions at: 'shipA') equals: 5. "1 + 4"
+	self assert: (positions at: 'shipA') equals: 5.
 
-	
-	accelerationCard use: game cardEnforcer from: shipA target: nil.
+	game playCard: accelerationCard from: 'shipA' to: nil.
 
-	
 	game playTurn.
 	positions := game positions.
-	self assert: (positions at: 'shipA') equals: 10. "5 + (4 + 1)"
+	self assert: (positions at: 'shipA') equals: 10. 
 
-	
-	cancellationCard := Cancellation new.
-	cancellationCard use: game cardEnforcer from: shipA target: accelerationCard.
+	game playCard: cancellationCard from: 'shipA' to: accelerationCard.
 
-	
 	game playTurn.
 	positions := game positions.
-	self assert: (positions at: 'shipA') equals: 14. "10 + 4 (sin el +1)"
+	self assert: (positions at: 'shipA') equals: 14. 
+]
 
+{ #category : 'tests' }
+CardTest >> test003OverloadAffectsOnlyTargetShip [
+
+| die game shipA shipB overloadCard generator boardSize positions |
+	boardSize := 10.
+	die := TestDie withRolls: #(4 4 100).
+	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
+
+	game := SpaceShipGame
+		createdWith: generator
+		withWormholesAt: 1 and: 2
+		forLaps: 1
+		withDice: (OrderedCollection with: die)
+		andShipsNamed: #('shipA' 'shipB').
+
+	shipA := game ships first.
+	shipB := game ships second.
+
+	overloadCard := shipA findCardOfClass: Overload.
+	self assert: overloadCard notNil.
+
+	game playTurn.
+	positions := game positions.
+	self assert: (positions at: 'shipA') equals: 5.
+
+	game playCard: overloadCard from: 'shipA' to: 'shipB'.
+
+	self assert: shipA diceAdjustment equals: 0.
+	self assert: shipB diceAdjustment equals: -2.
+
+	game playTurn.
+	positions := game positions.
+	self assert: (positions at: 'shipB') equals: 3. 
+]
+
+{ #category : 'tests' }
+CardTest >> test004CancellationRemovesOverloadEffect [
+
+	| die game shipA shipB overloadCard cancellationCard generator boardSize positions |
+	boardSize := 10.
+	die := TestDie withRolls: #(4 4 100).
+	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
+
+	game := SpaceShipGame
+		createdWith: generator
+		withWormholesAt: 1 and: 2
+		forLaps: 1
+		withDice: (OrderedCollection with: die)
+		andShipsNamed: #('shipA' 'shipB').
+
+	shipA := game ships first.
+	shipB := game ships second.
+
+	overloadCard := shipA findCardOfClass: Overload.
+	cancellationCard := shipB findCardOfClass: Cancellation.
+
+	self assert: overloadCard notNil.
+	self assert: cancellationCard notNil.
+
+	game playTurn.
+	positions := game positions.
+	self assert: (positions at: 'shipA') equals: 5.
+
+	game playCard: overloadCard from: 'shipA' to: 'shipB'.
+	self assert: shipB diceAdjustment equals: -2.
+
+	game playCard: cancellationCard from: 'shipB' to: overloadCard.
+	self assert: shipB diceAdjustment equals: 0.
+
+	game playTurn.
+	positions := game positions.
+	self assert: (positions at: 'shipB') equals: 5.
 ]

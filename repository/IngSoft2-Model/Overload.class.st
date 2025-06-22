@@ -15,9 +15,9 @@ Overload >> removeEffectsWith: aCardEnforcer [
 ]
 
 { #category : 'as yet unclassified' }
-Overload >> use: aCardManager from: cardThrower target: aTarget [ 
-	overloadedShip := aCardManager shipNamed: aTarget.
-	aCardManager applyOverloadEffectTo: overloadedShip.
-	aCardManager addActiveCard: self
+Overload >> use: aCardEnforcer from: cardThrower target: aTarget [ 
+	overloadedShip := aCardEnforcer findShip: aTarget.
+	aCardEnforcer applyOverloadEffectTo: overloadedShip.
+	aCardEnforcer addActiveCardEffect: self
 
 ]
