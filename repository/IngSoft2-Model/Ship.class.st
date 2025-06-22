@@ -7,7 +7,8 @@ Class {
 		'fuelCapacity',
 		'lostTurns',
 		'diceAdjustment',
-		'cards'
+		'cards',
+		'requiredRoll'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -25,20 +26,21 @@ Ship >> addCard: aCard [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> applyPenalty [
+Ship >> applyPenaltyIn: aBoard [
 
 	self refuel.
 	self loseTurn.
-	self loseTurn
+	self loseTurn.
+	aBoard moveShipToStart: self
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> canMove: aDiceResult [
+Ship >> canMove: anAmountOfCellsToMove in: aBoard [
 
-	fuel < aDiceResult abs ifTrue: [
-		self applyPenalty.
+	fuel < anAmountOfCellsToMove abs ifTrue: [
+		self applyPenaltyIn: aBoard.
 		^ false ].
-	self consumeFuel: aDiceResult.
+	self consumeFuel: anAmountOfCellsToMove.
 	^ true
 ]
 
@@ -48,6 +50,12 @@ Ship >> canPlayATurn [
 	lostTurns <= 0 ifTrue: [ ^ true ].
 	self lostATurn.
 	^ false
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> changeRequiredRollTo: aRequiredRoll [
+
+	requiredRoll := aRequiredRoll
 ]
 
 { #category : 'as yet unclassified' }
@@ -76,6 +84,20 @@ Ship >> findCardOfClass: aCardClass [
 ]
 
 { #category : 'as yet unclassified' }
+Ship >> handleEffectMovementFor: anAmountOfCells in: aBoard [
+
+	(self canMove: anAmountOfCells in: aBoard) ifTrue: [
+		aBoard moveShip: self steps: anAmountOfCells ]
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> handleTurnMovementFor: aDiceResult in: aBoard [
+
+	(self canMove: aDiceResult in: aBoard) ifTrue: [
+		aBoard handleMovementOf: self thatRolled: aDiceResult ]
+]
+
+{ #category : 'as yet unclassified' }
 Ship >> initializeWith: aName and: aFuelAmount [
 
 	name := aName.
@@ -84,6 +106,7 @@ Ship >> initializeWith: aName and: aFuelAmount [
 	lostTurns := 0.
 	cards := OrderedCollection new.
 	diceAdjustment := 0.
+	requiredRoll := 0.
 ]
 
 { #category : 'as yet unclassified' }
@@ -102,6 +125,15 @@ Ship >> lostATurn [
 Ship >> name [
 
 	^ name
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> playTurnIn: aBoard withDiceResult: aDiceResult [
+
+	lostTurns > 0 ifTrue: [ ^ self lostATurn ].
+	aDiceResult < requiredRoll ifTrue: [ ^ self ].
+	requiredRoll := 0.
+	self handleTurnMovementFor: aDiceResult in: aBoard
 ]
 
 { #category : 'as yet unclassified' }

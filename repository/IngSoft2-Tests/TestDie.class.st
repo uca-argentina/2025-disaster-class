@@ -11,18 +11,17 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-TestDie class >> withRolls: aCollection [ 
+TestDie class >> withRolls: aCollection [
 
 	^ self new initializeWithRolls: aCollection
 ]
 
 { #category : 'initialization' }
-TestDie >> initializeWithRolls: aCollection [ 
+TestDie >> initializeWithRolls: aCollection [
 
 	
 	forcedRolls := aCollection.
 	index := 1 
-
 ]
 
 { #category : 'initialization' }
@@ -39,15 +38,12 @@ TestDie >> rollDice [
 
 	Error signal:
 		'TestDie requires either a forced roll or a list of rolls.'
-
 ]
 
 { #category : 'initialization' }
-TestDie >> sides [ 
+TestDie >> sides [
 
 	^ forcedRolls
 		  ifNotNil: [ forcedRolls max ]
 		  ifNil: [ forcedRoll ifNotNil: [ forcedRoll ] ifNil: [ 0 ] ]
-
-
 ]

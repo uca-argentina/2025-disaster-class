@@ -530,7 +530,7 @@ GameTests >> test019BlackHoleCellWrapsAroundWhenMovingBackwards [
 GameTests >> test020BlackHoleCellPenalizesIfNotEnoughFuelBeforeGoingBackALap [
 
 	| someDice someCells aFixedCellGenerator aGame |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 9 10 1 )).
+	someDice := OrderedCollection with: (TestDie withRolls: #( 9 10 1 1 1 )).
 	someCells := (1 to: 18) collect: [ :i | RegularCell new ].
 	someCells at: 2 put: (BlackHoleCell new).
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -548,7 +548,9 @@ GameTests >> test020BlackHoleCellPenalizesIfNotEnoughFuelBeforeGoingBackALap [
 	"Cae en el Black Hole y se aplica la penalty primero antes de volver una lap"
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
+	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
+	self assert: (aGame positions at: 'Apollo') equals: 1.
 	"Pierde dos turnos"
 	aGame playTurn.
 	"Cae en el Blackhole, vuelve atras una lap y cae en 16"
@@ -618,6 +620,34 @@ GameTests >> test022MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 	aGame playTurn.
 	self assert: (aGame positions at: 'Hernan') equals: 11.
 	self assert: (aGame positions at: 'Pancho') equals: 18
+]
+
+{ #category : 'tests' }
+GameTests >> test023HyperGravityBlocksShipIfRolllsBelowThreshold [
+
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with: (TestDie withRolls: #( 1 1 5 )).
+	someCells := (1 to: 20) collect: [ :i | RegularCell new ].
+	someCells at: 2 put: (HyperGravityCell requiringMinimumRoll: 4).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
+
+	aGame := SpaceShipGame
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 8
+		         and: 19
+		         forLaps: 2
+		         withDice: someDice
+		         andShipsNamed: #( 'Gon' ).
+
+	"Falls in hyperGravity"
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 2.
+	"Juega y se queda en el mismo lugar"
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 2.
+	"Juega y se puede mover porque tiro mas alto que 4"
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 7
 ]
 
 { #category : 'tests' }
@@ -783,37 +813,6 @@ GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
 	(board cellAt: 5) applyEffectTo: ship in: board withRoll: 3.
 
 	self assert: (board indexOfCellContaining: ship) equals: 5
-]
-
-{ #category : 'tests' }
-GameTests >> test039HyperGravityLetsShipAdvanceIfRollIsSufficient [
-    | ship board gravityCell cells die game maxRoll |
-
-    ship := Ship withName: 'Apollo' and: 10.
-    die := TestDie withRolls: #(6).  
-    maxRoll := 6.
-
-    gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
-
-    cells := (1 to: 10) collect: [:i | RegularCell new ].
-    cells at: 5 put: gravityCell.
-
-    board := Board withCells: cells andShips: { ship } asOrderedCollection.
-    board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-    game := SpaceShipGame new.
-    game instVarNamed: 'board' put: board.
-    game instVarNamed: 'dice' put: { die } asOrderedCollection.
-    game instVarNamed: 'ships' put: { ship } asOrderedCollection.
-    game instVarNamed: 'shipTurnIndex' put: 1.
-    game instVarNamed: 'numberOfLaps' put: 1.
-
-    board moveShip: ship steps: 4.  
-
-    (board cellAt: 5) applyEffectTo: ship in: board withRoll: 6.
-
-    self assert: (board indexOfCellContaining: ship) equals: 1.
-
 ]
 
 { #category : 'tests' }

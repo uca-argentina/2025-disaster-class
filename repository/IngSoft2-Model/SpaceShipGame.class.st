@@ -196,10 +196,9 @@ SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [ [
 SpaceShipGame >> playTurn [
 
 	self verifyIsNotOver.
-	self currentTurnsShip canPlayATurn ifTrue: [
-		board
-			handleMovementOf: self currentTurnsShip
-			thatRolled: self diceRollResult ].
+	self currentTurnsShip
+		playTurnIn: board
+		withDiceResult: self diceRollResult.
 	self advanceToNextPlayer
 ]
 
