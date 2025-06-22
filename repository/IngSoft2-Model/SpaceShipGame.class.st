@@ -6,7 +6,9 @@ Class {
 		'dice',
 		'ships',
 		'shipTurnIndex',
-		'numberOfLaps'
+		'numberOfLaps',
+		'cardEnforcer',
+		'availableCards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -50,6 +52,11 @@ SpaceShipGame >> board [
 	^ board
 ]
 
+{ #category : 'testing' }
+SpaceShipGame >> cardEnforcer [
+	^cardEnforcer 
+]
+
 { #category : 'as yet unclassified' }
 SpaceShipGame >> currentTurnsShip [
 
@@ -59,7 +66,23 @@ SpaceShipGame >> currentTurnsShip [
 { #category : 'as yet unclassified' }
 SpaceShipGame >> diceRollResult [
 
-	^ (dice collect: [ :d | d rollDice ]) sum
+	^ (dice collect: [ :d | d rollDice ]) sum 
+]
+
+{ #category : 'testing' }
+SpaceShipGame >> initializeCardsAndCardEnforcer [
+
+	availableCards := OrderedCollection
+		                  with: Overload new
+		                  with: Acceleration new
+		                  with: Overload new
+		                  with: Acceleration new.
+
+	ships do: [ :ship |
+		ship addCard: availableCards removeFirst.
+		ship addCard: availableCards removeFirst ].
+
+	cardEnforcer := CardEnforcer withShips: ships withBoard: board
 ]
 
 { #category : 'initialization' }
@@ -78,7 +101,9 @@ SpaceShipGame >> initializeWith: aCellGenerator withWormholesAt: aFirstWormholeL
 	board placeAllShipsAtStart: ships.
 
 	shipTurnIndex := 1.
-	numberOfLaps := aLapCount
+	numberOfLaps := aLapCount.
+	
+	self initializeCardsAndCardEnforcer
 ]
 
 { #category : 'initialization' }
@@ -125,8 +150,13 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 	board := Board withCells: cells andShips: ships.
 	board placeAllShipsAtStart: ships.
 
+
 	shipTurnIndex := 1.
-	numberOfLaps := aLapCount
+	numberOfLaps := aLapCount.
+	
+	self initializeCardsAndCardEnforcer
+	
+	
 ]
 
 { #category : 'testing' }
@@ -151,6 +181,15 @@ SpaceShipGame >> maxDiceRoll [
 			ifFalse: [ 0 ] ].
 
 	^ sidesList sum.
+]
+
+{ #category : 'testing' }
+SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [ [
+	| ship |
+	ship := ships detect: [ :s | s name = aShipNamed ] ifNone: [ Error signal: 'No such ship' ].
+	cardEnforcer apply: aCard from: aShipNamed to: aTargetNamed.
+	ship removeCard: aCard
+]
 ]
 
 { #category : 'as yet unclassified' }

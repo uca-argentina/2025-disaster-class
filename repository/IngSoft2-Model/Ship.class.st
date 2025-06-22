@@ -5,7 +5,9 @@ Class {
 		'name',
 		'fuel',
 		'fuelCapacity',
-		'lostTurns'
+		'lostTurns',
+		'diceAdjustment',
+		'cards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -15,6 +17,11 @@ Class {
 Ship class >> withName: aName and: aFuelAmount [
 
 	^ self new initializeWith: aName and: aFuelAmount
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> addCard: aCard [
+	cards add: aCard.
 ]
 
 { #category : 'as yet unclassified' }
@@ -43,6 +50,11 @@ Ship >> canPlayATurn [
 	^ false
 ]
 
+{ #category : 'as yet unclassified' }
+Ship >> changeTotalThrowBy: anAmount [
+	diceAdjustment := diceAdjustment + anAmount.
+]
+
 { #category : 'accessing' }
 Ship >> consumeFuel: steps [
 
@@ -54,12 +66,24 @@ Ship >> consumeFuel: steps [
 ]
 
 { #category : 'as yet unclassified' }
+Ship >> diceAdjustment [
+	^diceAdjustment 
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> findCardOfClass: aCardClass [
+	^ cards detect: [ :c | c class = aCardClass ] ifNone: [ nil ]
+]
+
+{ #category : 'as yet unclassified' }
 Ship >> initializeWith: aName and: aFuelAmount [
 
 	name := aName.
 	fuel := aFuelAmount.
 	fuelCapacity := aFuelAmount.
 	lostTurns := 0.
+	cards := OrderedCollection new.
+	diceAdjustment := 0.
 ]
 
 { #category : 'as yet unclassified' }
@@ -84,4 +108,10 @@ Ship >> name [
 Ship >> refuel [
 
 	fuel := fuelCapacity 
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> removeCard: aCard [ 
+	cards remove: aCard ifAbsent: [ Error signal: 'Card not found' ]
+
 ]
