@@ -23,14 +23,14 @@ Ship class >> withName: aName and: aFuelAmount [
 
 { #category : 'as yet unclassified' }
 Ship >> addCard: aCard [
-	cards add: aCard.
+
+	cards add: aCard
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> allyWith: aSpaceship [ 
+Ship >> allyWith: aSpaceship [
 
 	ally := aSpaceship
-
 ]
 
 { #category : 'as yet unclassified' }
@@ -52,7 +52,8 @@ Ship >> canPlayATurn [
 
 { #category : 'as yet unclassified' }
 Ship >> changeDiceAdjustmentBy: anAmount [
-	diceAdjustment := diceAdjustment + anAmount.
+
+	diceAdjustment := diceAdjustment + anAmount
 ]
 
 { #category : 'as yet unclassified' }
@@ -80,14 +81,15 @@ Ship >> consumeFuel: steps [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> decreaseCurrentFuelBy: anAmount [ 
-	fuel := fuel - anAmount
+Ship >> decreaseCurrentFuelBy: anAmount [
 
+	fuel := fuel - anAmount
 ]
 
 { #category : 'as yet unclassified' }
 Ship >> diceAdjustment [
-	^diceAdjustment 
+
+	^ diceAdjustment
 ]
 
 { #category : 'as yet unclassified' }

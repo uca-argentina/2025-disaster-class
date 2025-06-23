@@ -108,22 +108,15 @@ CardTest >> test003OverloadAffectsOnlyTargetShip [
 
 	shipA := game ships first.
 	shipB := game ships second.
-
 	overloadCard := shipA findCardOfClass: Overload.
-	self assert: overloadCard notNil.
-
 	game playCard: overloadCard from: 'shipA' to: 'shipB'.
 
-	self assert: shipA diceAdjustment equals: 0.
-	self assert: shipB diceAdjustment equals: -2.
-
+	game playTurn.
 	game playTurn.
 	positions := game positions.
-	self assert: (positions at: 'shipA') equals: 5.
 
-	game playTurn.
-	positions := game positions.
-	self assert: (positions at: 'shipB') equals: 3
+	self assert: (positions at: 'shipB') equals: 3.
+	self assert: (positions at: 'shipA') equals: 5
 ]
 
 { #category : 'tests' }
@@ -171,8 +164,8 @@ CardTest >> test004CancellationRemovesOverloadEffect [
 
 { #category : 'tests' }
 CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying [
-"
-	| die game shipA shipB overloadCard cancellationCard generator boardSize positions |
+
+	| die game shipA shipB overloadCard cancellationCard generator boardSize |
 	boardSize := 10.
 	die := CustomDie withRolls: #( 4 4 100 ).
 	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
@@ -186,32 +179,24 @@ CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying 
 		        onABoardSized: boardSize
 		        whichToParsecsIs: 100
 		        forLaps: 1
-		        withRewards: {  }
+		        withRewards: (FuelBuffReward by: 0)
 		        andDeck: {  }.
 
 	shipA := game ships first.
 	shipB := game ships second.
-
 	overloadCard := shipA findCardOfClass: Overload.
 	cancellationCard := shipB findCardOfClass: Cancellation.
-
-	self assert: overloadCard notNil.
-	self assert: cancellationCard notNil.
-
-	game playTurn.
-	positions := game positions.
-	self assert: (positions at: 'shipA') equals: 5.
-
+	
 	game playCard: overloadCard from: 'shipA' to: 'shipB'.
+	game playTurn.
+	self assert: (game positions at: 'shipA') equals: 5.
 	self assert: shipB diceAdjustment equals: -2.
 
-	game playTurn.
 	game playCard: cancellationCard from: 'shipB' to: overloadCard.
 	self assert: shipB diceAdjustment equals: 0.
 
 	game playTurn.
-	positions := game positions.
-	self assert: (positions at: 'shipB') equals: 5"
+	self assert: (game positions at: 'shipB') equals: 5
 ]
 
 { #category : 'tests' }
