@@ -30,14 +30,14 @@ Die >> initializeWith: numberOfSides [
 	aNumberOfSides := numberOfSides
 ]
 
-{ #category : 'accessing' }
-Die >> rollDice [
-
-	^ (1 to: aNumberOfSides) atRandom
-]
-
 { #category : 'as yet unclassified' }
-Die >> sides [
+Die >> maxThrow [
 
 	^ aNumberOfSides
+]
+
+{ #category : 'accessing' }
+Die >> throw [
+
+	^ aNumberOfSides atRandom
 ]

@@ -147,6 +147,12 @@ Board >> moveShipToStart: aShip [
 
 ]
 
+{ #category : 'initialization' }
+Board >> parsecsPerCell [
+
+	^ lengthInParsecs // map size
+]
+
 { #category : 'as yet unclassified' }
 Board >> placeAllShipsAtStart: someShips [
 

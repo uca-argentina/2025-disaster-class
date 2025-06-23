@@ -10,7 +10,7 @@ CardTest >> test001UsingAccelerationIncreasesDiceAdjustmentOfAllShips [
 
 	| die game shipA accelerationCard generator boardSize positions |
 	boardSize := 10.
-	die := TestDie withRolls: #( 4 4 100 ).
+	die := CustomDie withRolls: #( 4 4 100 ).
 	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
 
 	game := SpaceShipGame
@@ -47,7 +47,7 @@ CardTest >> test002CancellationRemovesAccelerationEffect [
 
 	| die game shipA accelerationCard cancellationCard generator boardSize positions |
 	boardSize := 14.
-	die := TestDie withRolls: #( 4 4 4 100 ).
+	die := CustomDie withRolls: #( 4 4 4 100 ).
 	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
 
 	game := SpaceShipGame
@@ -91,7 +91,7 @@ CardTest >> test003OverloadAffectsOnlyTargetShip [
 
 	| die game shipA shipB overloadCard generator boardSize positions |
 	boardSize := 10.
-	die := TestDie withRolls: #( 4 4 100 ).
+	die := CustomDie withRolls: #( 4 4 100 ).
 	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
 
 	game := SpaceShipGame
@@ -131,7 +131,7 @@ CardTest >> test004CancellationRemovesOverloadEffect [
 
 	| die game ship overloadCard cancellationCard generator boardSize positions |
 	boardSize := 10.
-	die := TestDie withRolls: #( 4 4 100 ).
+	die := CustomDie withRolls: #( 4 4 100 ).
 	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
 
 	game := SpaceShipGame
@@ -174,7 +174,7 @@ CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying 
 
 	| die game shipA shipB overloadCard cancellationCard generator boardSize positions |
 	boardSize := 10.
-	die := TestDie withRolls: #( 4 4 100 ).
+	die := CustomDie withRolls: #( 4 4 100 ).
 	generator := FixedCellGenerator withAllRegularCellAmount: boardSize.
 
 	game := SpaceShipGame
@@ -218,7 +218,7 @@ CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying 
 CardTest >> test006RedoReappliesLastPermanentEffect [
 
 	| die game ship overloadCard redoCard |
-	die := TestDie withRolls: #( 1 1 1 ).
+	die := CustomDie withRolls: #( 1 1 1 ).
 
 	game := SpaceShipGame
 		        withShipsNamed: #( 'Apollo' )

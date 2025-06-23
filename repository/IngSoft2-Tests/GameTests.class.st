@@ -54,7 +54,7 @@ GameTests >> test001GameIsCreatedThenAllShipsAreAtCell1 [
 GameTests >> test002PlayTurnMovesShipOneSpace [
 
 	| someDice aGame aFixedCellGenerator positionsBefore positionsAfter |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 1 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 1 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -87,7 +87,7 @@ GameTests >> test002PlayTurnMovesShipOneSpace [
 GameTests >> test003PlayTurnTwiceMovesSecondShip [
 
 	| someDice aFixedCellGenerator game positionsAfterTurn2 |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 2 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 2 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -119,7 +119,7 @@ GameTests >> test003PlayTurnTwiceMovesSecondShip [
 GameTests >> test004ShipFallsIntoWormholeThenIsTransportedToOtherEnd [
 
 	| someDice aFixedCellGenerator aGame positionsAfter |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 1 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 1 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -146,7 +146,7 @@ GameTests >> test004ShipFallsIntoWormholeThenIsTransportedToOtherEnd [
 GameTests >> test005RollDiceMovesShipAccordingly [
 
 	| someDice aFixedCellGenerator aGame positionsBefore positionsAfter |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 3 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 3 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -177,7 +177,7 @@ GameTests >> test005RollDiceMovesShipAccordingly [
 GameTests >> test006GameIsOverWhenShipCompletesTheRequiredLaps [
 
 	| someDice aFixedCellGenerator aGame |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 20 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -204,7 +204,7 @@ GameTests >> test006GameIsOverWhenShipCompletesTheRequiredLaps [
 GameTests >> test007ShipReachesLastCellAndBecomesWinner [
 
 	| someDice aFixedCellGenerator aGame |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 20 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -231,7 +231,7 @@ GameTests >> test007ShipReachesLastCellAndBecomesWinner [
 GameTests >> test008GameIsOverWhenThereIsAWinner [
 
 	| someDice aFixedCellGenerator aGame |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 20 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -260,7 +260,7 @@ GameTests >> test008GameIsOverWhenThereIsAWinner [
 GameTests >> test009NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 
 	| someDice aFixedCellGenerator aGame aShip |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 20 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 20 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -292,8 +292,8 @@ GameTests >> test009NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 GameTests >> test010CanPlayWithMultipleDieConsecutively [
 
 	| aDie anotherDie someDice aFixedCellGenerator aGame somePositions aShip |
-	aDie := TestDie withRolls: #( 6 4 ).
-	anotherDie := TestDie withRolls: #( 5 5 ).
+	aDie := CustomDie withRolls: #( 6 4 ).
+	anotherDie := CustomDie withRolls: #( 5 5 ).
 	someDice := OrderedCollection with: aDie with: anotherDie.
 
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
@@ -331,7 +331,7 @@ GameTests >> test010CanPlayWithMultipleDieConsecutively [
 GameTests >> test011WhenGameEndsPlayTurnDoesNothing [
 
 	| aDie aFixedCellGenerator aGame somePositionsBeforePlayturn |
-	aDie := TestDie withRolls: #( 21 ).
+	aDie := CustomDie withRolls: #( 21 ).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -364,7 +364,7 @@ GameTests >> test011WhenGameEndsPlayTurnDoesNothing [
 GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 
 	| someDice aFixedCellGenerator aGame aShip |
-	someDice := TestDie withRolls: #( 6 ).
+	someDice := CustomDie withRolls: #( 6 ).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount: 20.
 
 	aGame := SpaceShipGame
@@ -392,7 +392,7 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 GameTests >> test013ShipRunsOutOfFuelThenLosesTwoTurns [
 
 	| someDice aFixedCellGenerator aGame aShip |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 6 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 6 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       20.
 
@@ -424,7 +424,7 @@ GameTests >> test013ShipRunsOutOfFuelThenLosesTwoTurns [
 GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 
 	| someDie aFixedCellGenerator aGame aShip |
-	someDie := OrderedCollection with: (TestDie withRolls: #( 3 )).
+	someDie := OrderedCollection with: (CustomDie withRolls: #( 3 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
 		                       100.
 
@@ -452,7 +452,7 @@ GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 GameTests >> test015AtomicBombCellMovesAllShipsToStart [
 
 	| someDie aFixedCellGenerator aGame someCells |
-	someDie := OrderedCollection with: (TestDie withRolls: #( 3 3 1000 )).
+	someDie := OrderedCollection with: (CustomDie withRolls: #( 3 3 1000 )).
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 7 put: AtomicBombCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -478,7 +478,7 @@ GameTests >> test015AtomicBombCellMovesAllShipsToStart [
 GameTests >> test016AtomicBombCellMovesAllShipsToStart [
 
 	| someDie aFixedCellGenerator aGame someCells |
-	someDie := OrderedCollection with: (TestDie withRolls: #( 9 19 15 )).
+	someDie := OrderedCollection with: (CustomDie withRolls: #( 9 19 15 )).
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 25 put: AtomicBombCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -512,7 +512,7 @@ GameTests >> test017AtomicBombCellDoesNotResetLaps [
 
 	| someDie anAtomicBombCell someCells aFixedCellGenerator aGame |
 	someDie := OrderedCollection with:
-		           (TestDie withRolls: #( 10 14 1 10 )).
+		           (CustomDie withRolls: #( 10 14 1 10 )).
 	anAtomicBombCell := AtomicBombCell new.
 	someCells := (1 to: 10) collect: [ :i | RegularCell new ].
 	someCells at: 2 put: anAtomicBombCell.
@@ -549,7 +549,7 @@ GameTests >> test017AtomicBombCellDoesNotResetLaps [
 GameTests >> test018BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 
 	| someDie blackHoleCell someCells aFixedCellGenerator aGame |
-	someDie := OrderedCollection with: (TestDie withRolls: #( 4 5)).
+	someDie := OrderedCollection with: (CustomDie withRolls: #( 4 5)).
 	blackHoleCell := BlackHoleCell new.
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 10 put: blackHoleCell.
@@ -580,7 +580,7 @@ GameTests >> test018BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 GameTests >> test019BlackHoleCellWrapsAroundWhenMovingBackwards [
 
 	| someDie blackHoleCell someCells aFixedCellGenerator aGame |
-	someDie := OrderedCollection with: (TestDie withRolls: #( 21 )).
+	someDie := OrderedCollection with: (CustomDie withRolls: #( 21 )).
 	blackHoleCell := BlackHoleCell new.
 	someCells := (1 to: 20) collect: [ :i | RegularCell new ].
 	someCells at: 2 put: blackHoleCell.
@@ -607,7 +607,7 @@ GameTests >> test020BlackHoleCellPenalizesIfNotEnoughFuelBeforeGoingBackALap [
 
 	| someDice someCells aFixedCellGenerator aGame |
 	someDice := OrderedCollection with:
-		            (TestDie withRolls: #( 9 10 1 1 1 )).
+		            (CustomDie withRolls: #( 9 10 1 1 1 )).
 	someCells := (1 to: 18) collect: [ :i | RegularCell new ].
 	someCells at: 2 put: BlackHoleCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -640,7 +640,7 @@ GameTests >> test021MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
 
 	| someDice someCells aFixedCellGenerator aGame |
 	someDice := OrderedCollection with:
-		            (TestDie withRolls: #( 5 5 5 0 4 5 )).
+		            (CustomDie withRolls: #( 5 5 5 0 4 5 )).
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 11 put: (MoonWalkCell withSteps: 4).
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -677,7 +677,7 @@ GameTests >> test022MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 
 	| someDice someCells aFixedCellGenerator aGame |
 	someDice := OrderedCollection with:
-		            (TestDie withRolls: #( 8 5 13 5 )).
+		            (CustomDie withRolls: #( 8 5 13 5 )).
 	someCells := (1 to: 20) collect: [ :i | RegularCell new ].
 	someCells at: 11 put: (MoonWalkCell withSteps: 4).
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -709,7 +709,7 @@ GameTests >> test022MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 GameTests >> test023HyperGravityBlocksShipIfRolllsBelowThreshold [
 
 	| someDice someCells aFixedCellGenerator aGame |
-	someDice := OrderedCollection with: (TestDie withRolls: #( 1 1 5 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 1 1 5 )).
 	someCells := (1 to: 20) collect: [ :i | RegularCell new ].
 	someCells at: 2 put: (HyperGravityCell requiringMinimumRoll: 4).
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -874,7 +874,7 @@ GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
 
 	| ship board gravityCell cells die game maxRoll |
 	ship := Ship withName: 'Apollo' and: 10.
-	die := TestDie withRolls: #( 3 ). 
+	die := CustomDie withRolls: #( 3 ). 
 	maxRoll := 6. 
 
 	gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
@@ -923,4 +923,66 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 
 	self assert: game isOver.
 	self assert: winner isNotNil"
+]
+
+{ #category : 'tests' }
+GameTests >> test041WhenSpaceshipThrowsMaxThrowThenItsCurrentFuelItsDecrementedByOne [
+
+	| someDice aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 10 5 5 )).
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       100.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Agus' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 8
+		         and: 19
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
+		         forLaps: 2
+		         withRewards: (FuelDebuffReward by: 1)
+		         andDeck: {  }.
+
+
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+
+	self assert: (aGame positions at: 'Agus') equals: 1
+]
+
+{ #category : 'tests' }
+GameTests >> test042WhenSpaceshipThrowsMaxThrowThenItsFuelCapacityItsIncrementedByOne [
+
+	| someDice aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 10 5 5 5 5 1 )).
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       100.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Agus' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 8
+		         and: 19
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
+		         forLaps: 2
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {  }.
+
+
+	aGame playTurn.
+	aGame skipTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+
+	self assert: (aGame positions at: 'Agus') equals: 32
 ]

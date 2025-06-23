@@ -8,7 +8,8 @@ Class {
 		'numberOfLaps',
 		'cardEnforcer',
 		'availableCards',
-		'turnManager'
+		'turnManager',
+		'rewards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -51,7 +52,8 @@ SpaceShipGame >> board [
 
 { #category : 'testing' }
 SpaceShipGame >> cardEnforcer [
-	^cardEnforcer 
+
+	^ cardEnforcer
 ]
 
 { #category : 'as yet unclassified' }
@@ -60,16 +62,12 @@ SpaceShipGame >> currentTurnsShip [
 	^  turnManager currentTurnsShip 
 ]
 
-{ #category : 'as yet unclassified' }
-SpaceShipGame >> diceRollResult [
-
-	^ (dice collect: [ :d | d rollDice ]) sum 
-]
-
 { #category : 'testing' }
 SpaceShipGame >> findShip: aShipName [
-	^ships detect: [ :ship | ship name = aShipName ]
-		ifNone: [ Error signal: 'No ship name found' ]
+
+	^ ships
+		  detect: [ :ship | ship name = aShipName ]
+		  ifNone: [ Error signal: 'No ship name found' ]
 ]
 
 { #category : 'testing' }
@@ -105,7 +103,7 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 { #category : 'initialization' }
 SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator: aCellGenerator withWormholesAt: aWormholeStartLocation and: aWormholeEndLocation withBoardSize: aBoardSize withParsecs: aLengthInParsecs withLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
 
-	dice := someDice.
+	dice := Dice with: someDice.
 	ships := someShipNames collect: [ :eachName |
 		         Ship withName: eachName and: 2 * self maxDiceRoll ].
 	board := Board
@@ -117,6 +115,7 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
+	rewards := someRewards.
 
 	self initializeCardsAndCardEnforcer
 ]
@@ -177,9 +176,7 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 { #category : 'testing' }
 SpaceShipGame >> isOver [
 
-
-	^ board ships anySatisfy: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
-
+	^ board anyShipCompletedAllLaps
 ]
 
 { #category : 'accessing' }
@@ -191,8 +188,8 @@ SpaceShipGame >> maxDiceRoll [
 		ifFalse: [ Array with: dice ].
 
 	sidesList := allDice collect: [ :die |
-		(die respondsTo: #sides)
-			ifTrue: [ die sides ]
+		(die respondsTo: #maxThrow)
+			ifTrue: [ die maxThrow ]
 			ifFalse: [ 0 ] ].
 
 	^ sidesList sum.
@@ -209,12 +206,14 @@ SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [
 { #category : 'as yet unclassified' }
 SpaceShipGame >> playTurn [
 
+	| spaceshipToPlay diceThrow |
 	self verifyIsNotOver.
-	turnManager currentTurnsShip 
-		playTurnIn: board
-		withDiceResult: self diceRollResult.
-	board applyEffectTo: turnManager currentTurnsShip.
-	turnManager advanceToNextPlayer 
+	spaceshipToPlay := turnManager currentTurnsShip.
+	diceThrow := dice throw.
+	diceThrow = dice maxThrow ifTrue: [ rewards applyTo: spaceshipToPlay ].
+	spaceshipToPlay playTurnIn: board withDiceResult: diceThrow.
+	board applyEffectTo: spaceshipToPlay.
+	turnManager advanceToNextPlayer
 ]
 
 { #category : 'as yet unclassified' }
