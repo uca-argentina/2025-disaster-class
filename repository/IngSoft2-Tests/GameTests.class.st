@@ -35,7 +35,9 @@ GameTests >> test001GameIsCreatedThenAllShipsAreAtCell1 [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	positions := aGame positions.
 
@@ -60,7 +62,7 @@ GameTests >> test002PlayTurnMovesShipOneSpace [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {  NullCard new. NullCard new. }.
 
 	positionsBefore := aGame positions.
 
@@ -93,7 +95,9 @@ GameTests >> test003PlayTurnTwiceMovesSecondShip [
 		        whichToParsecsIs: 100
 		        forLaps: 1
 		        withRewards: (FuelBuffReward by: 1)
-		        andDeck: {  }.
+		        andDeck: {
+				        NullCard new.
+				        NullCard new }.
 
 	self assert: (game positions at: 'Apollo') equals: 1.
 	self assert: (game positions at: 'Orion') equals: 1.
@@ -125,7 +129,9 @@ GameTests >> test004ShipFallsIntoWormholeThenIsTransportedToOtherEnd [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 
@@ -152,7 +158,9 @@ GameTests >> test005RollDiceMovesShipAccordingly [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	positionsBefore := aGame positions.
 
@@ -183,7 +191,9 @@ GameTests >> test006GameIsOverWhenShipCompletesTheRequiredLaps [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	self deny: aGame isOver.
 
@@ -209,8 +219,10 @@ GameTests >> test007ShipReachesLastCellAndBecomesWinner [
 		         onABoardSized: 20
 		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withRewards:(FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	self assert: aGame winner isNil.
 
@@ -237,7 +249,9 @@ GameTests >> test008GameIsOverWhenThereIsAWinner [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	self deny: aGame isOver.
 	self assert: aGame winner isNil.
@@ -266,7 +280,9 @@ GameTests >> test009NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aShip := aGame ships first.
 
@@ -301,7 +317,9 @@ GameTests >> test010CanPlayWithMultipleDieConsecutively [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self deny: aGame isOver.
@@ -337,7 +355,9 @@ GameTests >> test011WhenGameEndsPlayTurnDoesNothing [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self assert: aGame isOver.
@@ -357,19 +377,22 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 
 	| someDice aFixedCellGenerator aGame aShip |
 	someDice := CustomDie withRolls: #( 6 ).
-	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount: 20.
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       20.
 
 	aGame := SpaceShipGame
-		withShipsNamed: #( 'Apollo' )
-		playedWith: (OrderedCollection with: someDice)
-		createdWith: aFixedCellGenerator
-		withWormholesAt: 3
-		and: 7
-		onABoardSized: 20
-		whichToParsecsIs: 100
-		forLaps: 1
-		withRewards: (FuelBuffReward by: 1)
-		andDeck: { }.
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: (OrderedCollection with: someDice)
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 3
+		         and: 7
+		         onABoardSized: 20
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aShip := aGame ships first.
 	aShip consumeFuel: 12.
@@ -377,7 +400,6 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Apollo') equals: 1
-
 ]
 
 { #category : 'tests' }
@@ -398,7 +420,9 @@ GameTests >> test013ShipRunsOutOfFuelThenLosesTwoTurns [
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aShip := aGame ships first.
 	aShip consumeFuel: 11.
@@ -429,8 +453,10 @@ GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 		         onABoardSized: 100
 		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aShip := aGame ships first.
 	aShip consumeFuel: 5.
@@ -444,7 +470,8 @@ GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 GameTests >> test015AtomicBombCellMovesAllShipsToStart [
 
 	| someDie aFixedCellGenerator aGame someCells |
-	someDie := OrderedCollection with: (CustomDie withRolls: #( 3 3 1000 )).
+	someDie := OrderedCollection with:
+		           (CustomDie withRolls: #( 3 3 1000 )).
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 7 put: AtomicBombCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -458,8 +485,10 @@ GameTests >> test015AtomicBombCellMovesAllShipsToStart [
 		         onABoardSized: 100
 		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withRewards: {  }
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -470,7 +499,8 @@ GameTests >> test015AtomicBombCellMovesAllShipsToStart [
 GameTests >> test016AtomicBombCellMovesAllShipsToStart [
 
 	| someDie aFixedCellGenerator aGame someCells |
-	someDie := OrderedCollection with: (CustomDie withRolls: #( 9 19 15 )).
+	someDie := OrderedCollection with:
+		           (CustomDie withRolls: #( 9 19 15 )).
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 25 put: AtomicBombCell new.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
@@ -484,8 +514,10 @@ GameTests >> test016AtomicBombCellMovesAllShipsToStart [
 		         onABoardSized: 100
 		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -519,8 +551,10 @@ GameTests >> test017AtomicBombCellDoesNotResetLaps [
 		         onABoardSized: 10
 		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -541,23 +575,25 @@ GameTests >> test017AtomicBombCellDoesNotResetLaps [
 GameTests >> test018BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 
 	| someDie blackHoleCell someCells aFixedCellGenerator aGame |
-	someDie := OrderedCollection with: (CustomDie withRolls: #( 4 5)).
+	someDie := OrderedCollection with: (CustomDie withRolls: #( 4 5 )).
 	blackHoleCell := BlackHoleCell new.
 	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
 	someCells at: 10 put: blackHoleCell.
 	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
 	aGame := SpaceShipGame
-		withShipsNamed: #( 'Apollo' )
-		playedWith: someDie
-		createdWith: aFixedCellGenerator
-		withWormholesAt: 98
-		and: 99
-		onABoardSized: 100
-		whichToParsecsIs: 100
-		forLaps: 1
-		withRewards: (FuelBuffReward by: 1)
-		andDeck: { }.
+		         withShipsNamed: #( 'Apollo' )
+		         playedWith: someDie
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 5.
@@ -565,7 +601,6 @@ GameTests >> test018BlackHoleCellMovesShipBackwardsAndConsumesFuel [
 	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 1
-
 ]
 
 { #category : 'tests' }
@@ -587,8 +622,10 @@ GameTests >> test019BlackHoleCellWrapsAroundWhenMovingBackwards [
 		         onABoardSized: 20
 		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 18
@@ -613,8 +650,10 @@ GameTests >> test020BlackHoleCellPenalizesIfNotEnoughFuelBeforeGoingBackALap [
 		         onABoardSized: 18
 		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -647,8 +686,10 @@ GameTests >> test021MoonWalkCellMovesAllOtherShipsBackwardsAndConsumesFuel [
 		         onABoardSized: 100
 		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -683,8 +724,10 @@ GameTests >> test022MoonWalkCellWrapsAroundWhenMovingOthersBackwards [
 		         onABoardSized: 20
 		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Pancho') equals: 9.
@@ -715,8 +758,10 @@ GameTests >> test023HyperGravityBlocksShipIfRolllsBelowThreshold [
 		         onABoardSized: 20
 		         whichToParsecsIs: 100
 		         forLaps: 2
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Gon') equals: 2.
@@ -748,8 +793,10 @@ GameTests >> test024HyperJumpCellAdvancesShipByParsecAmount [
 		         onABoardSized: 100
 		         whichToParsecsIs: 10
 		         forLaps: 999
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	self assert: (aGame positions at: 'Gon') equals: 30
@@ -777,8 +824,10 @@ GameTests >> test025HyperJumpCellCyclesThroughParsecList [
 		         onABoardSized: 100
 		         whichToParsecsIs: 10
 		         forLaps: 999
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -812,8 +861,10 @@ GameTests >> test026HyperJumpCellGoesInCircle [
 		         onABoardSized: 100
 		         whichToParsecsIs: 10
 		         forLaps: 999
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
 	aGame playTurn.
@@ -847,11 +898,13 @@ GameTests >> test027HyperJumpCellPenalizesShipIfNotEnoughFuel [
 		         onABoardSized: 100
 		         whichToParsecsIs: 10
 		         forLaps: 999
-		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 	aGame playTurn.
-	self assert: (aGame positions at: 'Gon') equals: 1.
+	self assert: (aGame positions at: 'Gon') equals: 1
 ]
 
 { #category : 'tests' }
@@ -897,7 +950,9 @@ GameTests >> test029WhenSpaceshipThrowsMaxThrowThenItsCurrentFuelItsDecrementedB
 		         whichToParsecsIs: 100
 		         forLaps: 2
 		         withRewards: (FuelDebuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 
 	aGame playTurn.
@@ -926,7 +981,9 @@ GameTests >> test030WhenSpaceshipThrowsMaxThrowThenItsFuelCapacityItsIncremented
 		         whichToParsecsIs: 100
 		         forLaps: 2
 		         withRewards: (FuelBuffReward by: 1)
-		         andDeck: {  }.
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
 
 
 	aGame playTurn.
