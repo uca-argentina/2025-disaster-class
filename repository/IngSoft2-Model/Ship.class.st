@@ -48,6 +48,14 @@ Ship >> changeDiceAdjustmentBy: anAmount [
 ]
 
 { #category : 'as yet unclassified' }
+Ship >> changeFuelCapacityBy: anAmount [ 
+
+	fuelCapacity := fuelCapacity + anAmount.
+	fuel := fuelCapacity min: fuel
+
+]
+
+{ #category : 'as yet unclassified' }
 Ship >> changeRequiredRollTo: aRequiredRoll [
 
 	requiredRoll := aRequiredRoll
@@ -61,6 +69,12 @@ Ship >> consumeFuel: steps [
 	cost > fuel ifTrue: [
 		Error signal: 'Cannot consume more fuel than available.' ].
 	fuel := fuel - cost
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> decreaseCurrentFuelBy: anAmount [ 
+	fuel := fuel - anAmount
+
 ]
 
 { #category : 'as yet unclassified' }
