@@ -26,22 +26,6 @@ CardEnforcer >> addActiveCardEffect: aCard [
 
 ]
 
-{ #category : 'as yet unclassified' }
-CardEnforcer >> apply: aCard from: aShipName to: aTargetName [
-
-	| sourceShip |
-	sourceShip := ships
-		              detect: [ :ship | ship name = aShipName ]
-		              ifNone: [
-		              Error signal:
-			              'No ship found with name: ' , aShipName asString ].
-
-
-	aCard applyEffectFrom: sourceShip to: aTargetName inShips: ships.
-
-	(aCard isKindOf: Permanent) ifTrue: [ activeCards add: aCard ]
-]
-
 { #category : 'initialization' }
 CardEnforcer >> applyAccelerationEffect [
 
@@ -79,11 +63,12 @@ CardEnforcer >> findShip: aShipName [
 
 { #category : 'initialization' }
 CardEnforcer >> initializeWithShips: someShips withBoard: aBoard withTurnManager: aTurnManager [
+
 	ships := someShips.
 	board := aBoard.
 	turnManager := aTurnManager.
 	activeCards := OrderedCollection new.
-	lastCard := NullCard new.
+	lastCard := NullCard new
 ]
 
 { #category : 'initialization' }

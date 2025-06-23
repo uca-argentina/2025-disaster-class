@@ -68,14 +68,17 @@ CellGeneratorTests >> test003CustomDistributionGeneratesExpectedCellCounts [
 		                 with: {
 				                 0.08.
 				                 [
-				                 HyperJumpCell
-					                 withParsecList: #( 100 50 20 )
-					                 totalParsecs: 100 ] }
+				                 HyperJumpCell withLengths: {
+						                 2 parsecs.
+						                 5 parsecs.
+						                 7 parsecs } ] }
 		                 with: {
 				                 0.02.
 				                 [ AtomicBombCell new ] }.
 
-	aGenerator := CellGenerator withCellCount: 1000 andDistribution: aDistribution.
+	aGenerator := CellGenerator
+		              withCellCount: 1000
+		              andDistribution: aDistribution.
 
 	cells := aGenerator generate.
 

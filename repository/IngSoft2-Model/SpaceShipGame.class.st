@@ -102,7 +102,7 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst.
 		ship addCard: availableCards removeFirst.
-		ship addCard: availableCards removeFirst ].
+		ship addCard: availableCards removeFirst. ].
 
 	cardEnforcer := CardEnforcer
 		                withShips: ships
