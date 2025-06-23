@@ -22,8 +22,10 @@ CardTest >> test001UsingAccelerationIncreasesDiceAdjustmentOfAllShips [
 		        onABoardSized: boardSize
 		        whichToParsecsIs: 100
 		        forLaps: 1
-		        withRewards: {  }
-		        andDeck: {  }.
+		        withRewards: (FuelBuffReward by: 0)
+		        andDeck: {
+				        Acceleration new.
+				        NullCard new }.
 
 	shipA := game ships first.
 	accelerationCard := shipA findCardOfClass: Acceleration.
@@ -59,8 +61,10 @@ CardTest >> test002CancellationRemovesAccelerationEffect [
 		        onABoardSized: boardSize
 		        whichToParsecsIs: 100
 		        forLaps: 1
-		        withRewards: {  }
-		        andDeck: {  }.
+		        withRewards: (FuelBuffReward by: 0)
+		        andDeck: {
+				        Acceleration new.
+				        Cancellation new }.
 
 	shipA := game ships first.
 	accelerationCard := shipA findCardOfClass: Acceleration.
@@ -103,8 +107,10 @@ CardTest >> test003OverloadAffectsOnlyTargetShip [
 		        onABoardSized: boardSize
 		        whichToParsecsIs: 100
 		        forLaps: 1
-		        withRewards: {  }
-		        andDeck: {  }.
+		        withRewards: (FuelBuffReward by: 0)
+		        andDeck: {
+				        Overload new.
+				        NullCard new }.
 
 	shipA := game ships first.
 	shipB := game ships second.
@@ -136,20 +142,17 @@ CardTest >> test004CancellationRemovesOverloadEffect [
 		        onABoardSized: boardSize
 		        whichToParsecsIs: 100
 		        forLaps: 1
-		        withRewards: {  }
-		        andDeck: {  }.
+		        withRewards: (FuelBuffReward by: 0)
+		        andDeck: {
+				        Overload new.
+				        Cancellation new }.
 
 	ship := game ships first.
-
 	overloadCard := ship findCardOfClass: Overload.
 	cancellationCard := ship findCardOfClass: Cancellation.
 
-	self assert: overloadCard notNil.
-	self assert: cancellationCard notNil.
-
 	game playTurn.
-	positions := game positions.
-	self assert: (positions at: 'ship') equals: 5.
+	self assert: (game positions at: 'ship') equals: 5.
 
 	game playCard: overloadCard from: 'ship' to: 'ship'.
 	self assert: ship diceAdjustment equals: -2.
@@ -180,13 +183,15 @@ CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying 
 		        whichToParsecsIs: 100
 		        forLaps: 1
 		        withRewards: (FuelBuffReward by: 0)
-		        andDeck: {  }.
+		        andDeck: {
+				        Overload new.
+				        Cancellation new }.
 
 	shipA := game ships first.
 	shipB := game ships second.
 	overloadCard := shipA findCardOfClass: Overload.
 	cancellationCard := shipB findCardOfClass: Cancellation.
-	
+
 	game playCard: overloadCard from: 'shipA' to: 'shipB'.
 	game playTurn.
 	self assert: (game positions at: 'shipA') equals: 5.
@@ -216,16 +221,13 @@ CardTest >> test006RedoReappliesLastPermanentEffect [
 		        whichToParsecsIs: 100
 		        forLaps: 1
 		        withRewards: (FuelBuffReward by: 0)
-		        andDeck: {  }.
-
-	game initializeCardsAndCardEnforcer.
+		        andDeck: {
+				        Overload new.
+				        Redo new }.
 
 	ship := game ships first.
 	overloadCard := ship findCardOfClass: Overload.
 	redoCard := ship findCardOfClass: Redo.
-
-	self assert: overloadCard notNil.
-	self assert: redoCard notNil.
 
 	game playTurn.
 

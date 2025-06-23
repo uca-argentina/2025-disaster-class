@@ -70,52 +70,17 @@ SpaceShipGame >> findShip: aShipName [
 		  ifNone: [ Error signal: 'No ship name found' ]
 ]
 
-{ #category : 'testing' }
-SpaceShipGame >> initializeCardsAndCardEnforcer [
-
-	availableCards := OrderedCollection new.
-	availableCards
-		add: Acceleration new;
-		add: Cancellation new;
-		add: Overload new;
-		add: Redo new;
-		add: Acceleration new;
-		add: Overload new;
-		add: Redo new;
-		add: Cancellation new;
-		add: Acceleration new;
-		add: Cancellation new;
-		add: Acceleration new;
-		add: Overload new;
-		add: Redo new;
-		add: Cancellation new;
-		add: Acceleration new;
-		add: Acceleration new;
-		add: Overload new;
-		add: Redo new;
-		add: Cancellation new;
-		add: Acceleration new;
-		add: Overload new;
-		add: Redo new.
-
-	ships do: [ :ship |
-		ship addCard: availableCards removeFirst.
-		ship addCard: availableCards removeFirst.
-		ship addCard: availableCards removeFirst.
-		ship addCard: availableCards removeFirst. ].
-
-	cardEnforcer := CardEnforcer
-		                withShips: ships
-		                withBoard: board
-		                withTurnManager: turnManager
-]
-
 { #category : 'initialization' }
 SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator: aCellGenerator withWormholesAt: aWormholeStartLocation and: aWormholeEndLocation withBoardSize: aBoardSize withParsecs: aLengthInParsecs withLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
 
 	dice := Dice with: someDice.
 	ships := someShipNames collect: [ :eachName |
 		         Ship withName: eachName and: 2 * self maxDiceRoll ].
+	ships do: [ :player |
+		player
+			giveCard: aDeckOfCards first;
+			giveCard: aDeckOfCards second ].
+
 	board := Board
 		         withShips: ships
 		         lengthInParsecs: aLengthInParsecs
@@ -125,9 +90,11 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
-	rewards := someRewards. 
-
-	self initializeCardsAndCardEnforcer
+	rewards := someRewards.
+	cardEnforcer := CardEnforcer
+		                withShips: ships
+		                withBoard: board
+		                withTurnManager: turnManager
 ]
 
 { #category : 'initialization' }
@@ -156,9 +123,10 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 		                        with: {
 				                        0.08.
 				                        [
-				                        HyperJumpCell
-					                        withParsecList: #( 100 50 20 )
-					                        totalParsecs: 100 ] }
+				                        HyperJumpCell withLengths: {
+						                        2 parsecs.
+						                        5 parsecs.
+						                        7 parsecs } ] }
 		                        with: {
 				                        0.02.
 				                        [ AtomicBombCell new ] }.
@@ -177,10 +145,8 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
-	
+
 	self initializeCardsAndCardEnforcer
-	
-	
 ]
 
 { #category : 'testing' }

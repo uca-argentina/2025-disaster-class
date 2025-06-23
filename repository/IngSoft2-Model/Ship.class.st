@@ -94,6 +94,7 @@ Ship >> diceAdjustment [
 
 { #category : 'as yet unclassified' }
 Ship >> findCardOfClass: aCardClass [
+
 	^ cards detect: [ :c | c class = aCardClass ] ifNone: [ nil ]
 ]
 
@@ -106,20 +107,6 @@ Ship >> fuel [
 Ship >> giveCard: aCard [ 
 
 	cards add: aCard
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> handleEffectMovementFor: anAmountOfCells in: aBoard [
-
-	(self canMove: anAmountOfCells in: aBoard) ifTrue: [
-		aBoard moveShip: self by: anAmountOfCells ]
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> handleTurnMovementFor: aDiceResult in: aBoard [
-
-	(self canMove: aDiceResult in: aBoard) ifTrue: [
-		aBoard handleMovementOf: self thatRolled: aDiceResult ]
 ]
 
 { #category : 'as yet unclassified' }
