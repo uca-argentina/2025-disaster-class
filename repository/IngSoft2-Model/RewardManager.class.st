@@ -15,18 +15,17 @@ RewardManager class >> with: aCollection [
 ]
 
 { #category : 'initialization' }
-RewardManager >> applyTo: aShip [ 
-	(rewards atRandom) applyTo: aShip
+RewardManager >> applyTo: aShip [
 
+	rewards atRandom applyTo: aShip
 ]
 
 { #category : 'initialization' }
-RewardManager >> initializeWith: rewardsCollection [ 
+RewardManager >> initializeWith: rewardsCollection [
+
 	rewards := rewardsCollection collect: [ :each |
-		OrderedCollection
-			new: (each value * 100) asInteger
-			withAll: each key ].
-	rewards := rewards flattened.
-	
-	
+		           OrderedCollection
+			           new: (each value * 100) asInteger
+			           withAll: each key ].
+	rewards := rewards flattened
 ]

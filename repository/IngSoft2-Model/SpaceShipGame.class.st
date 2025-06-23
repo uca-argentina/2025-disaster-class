@@ -103,22 +103,18 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 ]
 
 { #category : 'initialization' }
-SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation withBoardSize: aBoardSize withParsecs: anAmountOfParsecs withLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
+SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator: aCellGenerator withWormholesAt: aWormholeStartLocation and: aWormholeEndLocation withBoardSize: aBoardSize withParsecs: aLengthInParsecs withLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
 
-	| cells |
 	dice := someDice.
-
 	ships := someShipNames collect: [ :eachName |
 		         Ship withName: eachName and: 2 * self maxDiceRoll ].
-
-	cells := aCellGenerator generate.
-	WormholeCell
-		newPairIn: cells
-		at: aFirstWormholeLocation
-		and: aSecondWormholeLocation.
-
-	board := Board withCells: cells andShips: ships.
-	board placeAllShipsAtStart: ships.
+	board := Board
+		         withShips: ships
+		         lengthInParsecs: aLengthInParsecs
+		         lapsToWin: aLapCount
+		         wormholeStart: aWormholeStartLocation
+		         wormholeEnd: aWormholeEndLocation
+		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
 

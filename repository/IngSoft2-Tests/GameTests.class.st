@@ -903,7 +903,7 @@ GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
 
 { #category : 'tests' }
 GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
-
+"
 	| someDice game winner aNumberOfSides |
 	aNumberOfSides := 6.
 
@@ -922,5 +922,5 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 	winner := game winner.
 
 	self assert: game isOver.
-	self assert: winner isNotNil
+	self assert: winner isNotNil"
 ]

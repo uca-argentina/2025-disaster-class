@@ -3,16 +3,32 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'map',
-		'laps'
+		'ships',
+		'lapsToWin',
+		'lengthInParsecs',
+		'lapsPerShip'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'instance creation' }
-Board class >> withCells: someCells andShips: someShips [
-    ^ self new initializeWith: someCells andShips: someShips
+Board class >> withShips: someShips lengthInParsecs: aLengthInParsecs lapsToWin: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation cellGenerator: aCellGenerator [
 
+	^ self new
+		  initializeWith: someShips
+		  lengthInParsecs: aLengthInParsecs
+		  laps: aLapCount
+		  wormholeStart: aWormholeStartLocation
+		  wormholeEnd: aWormholeEndLocation
+		  andCellGenerator: aCellGenerator
+]
+
+{ #category : 'removing' }
+Board >> anyShipCompletedAllLaps [
+
+	^ lapsPerShip anySatisfy: [ :lapsByEachShip |
+		  lapsByEachShip >= lapsToWin ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -47,7 +63,7 @@ Board >> handleMovementOf: aShip thatRolled: aDiceResult [
 { #category : 'initialization' }
 Board >> incrementLapsFor: aShip [
 
-	laps at: aShip put: (self lapsCompletedOf: aShip) + 1
+	lapsPerShip at: aShip put: (self lapsCompletedOf: aShip) + 1
 ]
 
 { #category : 'as yet unclassified' }
@@ -57,10 +73,20 @@ Board >> indexOfCellContaining: aShip [
 ]
 
 { #category : 'initialization' }
-Board >> initializeWith: someCells andShips: someShips [
+Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation andCellGenerator: aCellGenerator [
 
-	map := someCells.
-	laps := Dictionary newFromKeys: someShips andValues: (someShips collect: [ :_ | 0 ]).
+	ships := someShips.
+	lapsToWin := aLapCount.
+	lengthInParsecs := aLengthInParsecs.
+	lapsPerShip := Dictionary
+		               newFromKeys: ships
+		               andValues: (someShips collect: [ :_ | 0 ]).
+	map := aCellGenerator generate.
+	WormholeCell
+		newPairIn: map
+		at: aWormholeStartLocation
+		and: aWormholeEndLocation.
+	self placeAllShipsAtStart: ships
 ]
 
 { #category : 'removing' }
@@ -74,7 +100,7 @@ Board >> insertShip: aShip at: newIndex [
 { #category : 'initialization' }
 Board >> lapsCompletedOf: aShip [
 
-	^ laps at: aShip ifAbsent: [ 0 ]
+	^ lapsPerShip at: aShip ifAbsent: [ 0 ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -138,5 +164,5 @@ Board >> remove: aShip at: someIndex [
 { #category : 'initialization' }
 Board >> ships [
 
-	^ laps keys
+	^ ships
 ]

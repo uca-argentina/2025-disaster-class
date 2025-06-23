@@ -15,7 +15,8 @@ FuelBuffReward class >> by: anAmount [
 ]
 
 { #category : 'initialization' }
-FuelBuffReward >> applyTo: aSpaceship [ 
+FuelBuffReward >> applyTo: aSpaceship [
+
 	aSpaceship changeFuelCapacityBy: buff
 ]
 
