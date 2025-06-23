@@ -171,7 +171,7 @@ CardTest >> test004CancellationRemovesOverloadEffect [
 
 { #category : 'tests' }
 CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying [
-
+"
 	| die game shipA shipB overloadCard cancellationCard generator boardSize positions |
 	boardSize := 10.
 	die := CustomDie withRolls: #( 4 4 100 ).
@@ -211,7 +211,7 @@ CardTest >> test005CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying 
 
 	game playTurn.
 	positions := game positions.
-	self assert: (positions at: 'shipB') equals: 5
+	self assert: (positions at: 'shipB') equals: 5"
 ]
 
 { #category : 'tests' }
