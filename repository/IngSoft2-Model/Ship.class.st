@@ -8,7 +8,8 @@ Class {
 		'lostTurns',
 		'diceAdjustment',
 		'cards',
-		'requiredRoll'
+		'requiredRoll',
+		'ally'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -23,6 +24,13 @@ Ship class >> withName: aName and: aFuelAmount [
 { #category : 'as yet unclassified' }
 Ship >> addCard: aCard [
 	cards add: aCard.
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> allyWith: aSpaceship [ 
+
+	ally := aSpaceship
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -88,6 +96,17 @@ Ship >> findCardOfClass: aCardClass [
 ]
 
 { #category : 'as yet unclassified' }
+Ship >> fuel [
+	^fuel
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> giveCard: aCard [ 
+
+	cards add: aCard
+]
+
+{ #category : 'as yet unclassified' }
 Ship >> handleEffectMovementFor: anAmountOfCells in: aBoard [
 
 	(self canMove: anAmountOfCells in: aBoard) ifTrue: [
@@ -111,6 +130,7 @@ Ship >> initializeWith: aName and: aFuelAmount [
 	cards := OrderedCollection new.
 	diceAdjustment := 0.
 	requiredRoll := 0.
+	ally := NullShip new.
 ]
 
 { #category : 'as yet unclassified' }
@@ -127,7 +147,8 @@ Ship >> lostATurn [
 
 { #category : 'as yet unclassified' }
 Ship >> move: anAmount in: aBoard [
-
+	
+	self useAllyFuelIfNecessary: anAmount in: aBoard. 
 	fuel < anAmount abs ifTrue: [ ^self applyPenaltyIn: aBoard ].
 	self consumeFuel: anAmount.
 	aBoard moveShip: self by: anAmount
@@ -165,6 +186,35 @@ Ship >> removeCard: aCard [
 { #category : 'as yet unclassified' }
 Ship >> resetTotalThrowModifier [
 	diceAdjustment := 0.
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> takeFuel: anAmountOfFuel [ 
+
+	anAmountOfFuel > fuel ifTrue: [ ^ 0 ].
+
+	fuel := fuel - anAmountOfFuel.
+
+	^ anAmountOfFuel
+
+
+
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> useAllyFuelIfNecessary: amountOfSteps in: aBoard [ 
+
+	| allyFuel |
+	fuel <= amountOfSteps abs ifFalse: [ ^ self ].
+
+	allyFuel := ally takeFuel: (amountOfSteps abs - fuel).
+
+	fuel := fuel + allyFuel.
+
+	fuel <= amountOfSteps abs ifTrue: [
+		ally applyPenaltyIn: aBoard ]
+
+
 ]
 
 { #category : 'as yet unclassified' }

@@ -125,7 +125,7 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
-	rewards := someRewards.
+	rewards := someRewards. 
 
 	self initializeCardsAndCardEnforcer
 ]

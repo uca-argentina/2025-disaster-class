@@ -250,3 +250,53 @@ CardTest >> test006RedoReappliesLastPermanentEffect [
 	game playCard: redoCard from: 'Apollo' to: overloadCard.
 	self assert: ship diceAdjustment equals: -4
 ]
+
+{ #category : 'tests' }
+CardTest >> test07ShipBorrowsFuelFromAllyWhenRunningLow [
+	| dice generator game apollo orion allyCard |
+
+	dice := OrderedCollection with: (CustomDie withRolls: #(5 1)). "Apollo tira 5, Orion se saltea con 1"
+	generator := FixedCellGenerator withAllRegularCellAmount: 20.
+
+	game := SpaceShipGame
+		withShipsNamed: #( 'Apollo' 'Orion' )
+		playedWith: dice
+		createdWith: generator
+		withWormholesAt: 8
+		and: 19
+		onABoardSized: 20
+		whichToParsecsIs: 100
+		forLaps: 1
+		withRewards: (FuelBuffReward by: 0)
+		andDeck: { }.
+
+	apollo := game findShip: 'Apollo'.
+	orion := game findShip: 'Orion'.
+
+	"Preparamos el estado inicial de combustible"
+	apollo decreaseCurrentFuelBy: 5. "Apollo queda con 5"
+	orion decreaseCurrentFuelBy: 9. "Orion queda con 1"
+	self assert: apollo fuel equals: 5.
+	self assert: orion fuel equals: 1.
+
+	"Formamos la alianza"
+	allyCard := Ally new.
+	apollo giveCard: allyCard.
+	game playCard: allyCard from: 'Apollo' to: 'Orion'.
+
+	"Orion se saltea su turno y se recupera"
+	self assert: game turnManager currentTurnsShip name equals: 'Apollo'.
+
+	game skipTurn. "Apollo saltea Recupera fuel → vuelve a 10"
+	self assert: apollo fuel equals: 10.
+	self assert: orion fuel equals: 1.
+	"Apollo juega normalmente y pide fuel prestado"
+	game playTurn. "Orion se mueve"
+
+	"Verificamos estado final"
+	self assert: (game positions at: 'Orion') equals: 6.
+	self assert: orion fuel equals: 6. "Prestó 4"
+	self assert: apollo fuel equals: 0. "Usó 1 propio y 4 de Orion"
+	self assert: (game positions at: 'Apollo') equals: 1. "Se salteó su turno"
+	self assert: orion fuel equals: 6. "Prestó 4"
+]

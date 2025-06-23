@@ -53,6 +53,14 @@ CardEnforcer >> applyOverloadEffectTo: affectedSpaceship [
 	affectedSpaceship changeDiceAdjustmentBy: -2.
 ]
 
+{ #category : 'as yet unclassified' }
+CardEnforcer >> createAlliance: aSpaceship [ 
+
+	nextShip allyWith: aSpaceship.
+	aSpaceship allyWith: nextShip
+
+]
+
 { #category : 'initialization' }
 CardEnforcer >> disableCardEffect: aCard [
 
