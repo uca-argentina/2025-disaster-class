@@ -91,7 +91,7 @@ Ship >> findCardOfClass: aCardClass [
 Ship >> handleEffectMovementFor: anAmountOfCells in: aBoard [
 
 	(self canMove: anAmountOfCells in: aBoard) ifTrue: [
-		aBoard moveShip: self steps: anAmountOfCells ]
+		aBoard moveShip: self by: anAmountOfCells ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -130,7 +130,7 @@ Ship >> move: anAmount in: aBoard [
 
 	fuel < anAmount abs ifTrue: [ ^self applyPenaltyIn: aBoard ].
 	self consumeFuel: anAmount.
-	aBoard moveShip: self steps: anAmount
+	aBoard moveShip: self by: anAmount
 ]
 
 { #category : 'accessing' }

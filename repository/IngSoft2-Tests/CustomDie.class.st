@@ -2,9 +2,6 @@ Class {
 	#name : 'CustomDie',
 	#superclass : 'Object',
 	#instVars : [
-		'forcedRoll',
-		'forcedRolls',
-		'index',
 		'sequence'
 	],
 	#category : 'IngSoft2-Tests',

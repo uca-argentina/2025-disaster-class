@@ -55,7 +55,7 @@ Board >> cellContaining: aShip [
 { #category : 'as yet unclassified' }
 Board >> handleMovementOf: aShip thatRolled: aDiceResult [
 
-	self moveShip: aShip steps: aDiceResult.
+	self moveShip: aShip by: aDiceResult.
 	self applyEffectTo: aShip
 	
 ]
@@ -122,9 +122,9 @@ Board >> moveAllToStart [
 ]
 
 { #category : 'as yet unclassified' }
-Board >> moveShip: aShip steps: someSteps [
+Board >> moveShip: aShip by: someSteps [
 
-	| previousIndex newIndex boardSize |
+		| previousIndex newIndex boardSize |
 	previousIndex := self indexOfCellContaining: aShip.
 	boardSize := map size.
 	newIndex := previousIndex + someSteps - 1 \\ boardSize + 1.
