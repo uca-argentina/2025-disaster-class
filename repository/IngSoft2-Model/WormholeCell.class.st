@@ -27,7 +27,7 @@ WormholeCell >> applyEffectTo: aShip in: aBoard [
 
 	| currentCell |
 
-	currentCell := aBoard cellContaining: aShip.
+	currentCell := aBoard whereIs: aShip.
 
 	currentCell leaves: aShip.
 	linkedCell enters: aShip

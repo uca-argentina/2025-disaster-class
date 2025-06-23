@@ -23,5 +23,5 @@ Parsecs >> initializeWith: anAmount [
 { #category : 'accessing' }
 Parsecs >> toCellsOf: aBoard [
 
-	^ amount // aBoard parsecsPerCell
+	^ amount * aBoard parsecsPerCell
 ]

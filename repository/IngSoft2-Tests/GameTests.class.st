@@ -727,174 +727,135 @@ GameTests >> test023HyperGravityBlocksShipIfRolllsBelowThreshold [
 ]
 
 { #category : 'tests' }
-GameTests >> test033HyperJumpCellAdvancesShipByParsecAmount [
+GameTests >> test024HyperJumpCellAdvancesShipByParsecAmount [
 
-	
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 9 10 1000000000 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 10 put: (HyperJumpCell withLengths: {
+				 2 parsecs.
+				 10 parsecs.
+				 20 parsecs } asOrderedCollection).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-	"| ship board hyperCell cells parsecList initialFuel |
-	ship := Ship withName: 'Apollo' and: 10.
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 10
+		         forLaps: 999
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {  }.
 
-	parsecList := #( 20 10 ).
-	hyperCell := HyperJumpCell
-		             withParsecList: parsecList
-		             totalParsecs: 100.
-
-	cells := (1 to: 10) collect: [ :i | RegularCell new ].
-	cells at: 4 put: hyperCell.
-
-	board := Board
-		         withCells: cells
-		         andShips: { ship } asOrderedCollection.
-	board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-	board moveShip: ship steps: 3.
-	initialFuel := ship currentFuel.
-
-	(board cellAt: 4) applyEffectTo: ship in: board.
-
-	self assert: (board indexOfCellContaining: ship) equals: 6.
-	self assert: ship currentFuel < initialFuel"
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 30
 ]
 
 { #category : 'tests' }
-GameTests >> test034HyperJumpCellCyclesThroughParsecList [
-    | apollo orion board hyperCell cells parsecList |
+GameTests >> test025HyperJumpCellCyclesThroughParsecList [
 
-    apollo := Ship withName: 'Apollo' and: 10.
-    orion := Ship withName: 'Orion' and: 10.
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 9 9 9 9 1000000000 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 10 put: (HyperJumpCell withLengths: {
+				 2 parsecs.
+				 5 parsecs.
+				 7 parsecs } asOrderedCollection).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    parsecList := #(20 10). 
-    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' 'Jorge' 'Fran' 'Hernan' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 10
+		         forLaps: 999
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {  }.
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 4 put: hyperCell.
-
-    board := Board withCells: cells andShips: { apollo. orion } asOrderedCollection.
-    board placeAllShipsAtStart: { apollo. orion } asOrderedCollection.
-
-    board moveShip: apollo by: 3.  
-    (board cellAt: 4) applyEffectTo: apollo in: board.
-
-    board moveShip: orion by: 3.  
-    (board cellAt: 4) applyEffectTo: orion in: board.
-
-    self assert: (board indexOfCellContaining: apollo) equals: 6.  
-    self assert: (board indexOfCellContaining: orion) equals: 5.  
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 30.
+	self assert: (aGame positions at: 'Jorge') equals: 60.
+	self assert: (aGame positions at: 'Fran') equals: 80.
+	self assert: (aGame positions at: 'Hernan') equals: 30
 ]
 
 { #category : 'tests' }
-GameTests >> test035HyperJumpCellResetsTheParsecListAfterAllParsecValuesUsed [
-    | ship1 ship2 ship3 board hyperCell cells parsecList |
+GameTests >> test026HyperJumpCellGoesInCircle [
 
-    ship1 := Ship withName: 'Apollo' and: 10.
-    ship2 := Ship withName: 'Orion' and: 10.
-    ship3 := Ship withName: 'Artemis' and: 10.
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 9 9 9 9 1000000000 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 10 put: (HyperJumpCell withLengths: {
+				 2 parsecs.
+				 10 parsecs.
+				 20 parsecs } asOrderedCollection).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    parsecList := #(20 10).  
-    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' 'Jorge' 'Fran' 'Hernan' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 10
+		         forLaps: 999
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {  }.
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 3 put: hyperCell.
-
-    board := Board withCells: cells andShips: { ship1. ship2. ship3 } asOrderedCollection.
-    board placeAllShipsAtStart: { ship1. ship2. ship3 } asOrderedCollection.
-
-    
-    board moveShip: ship1 by: 2.  
-    (board cellAt: 3) applyEffectTo: ship1 in: board.
-
-  
-    board moveShip: ship2 by: 2.
-    (board cellAt: 3) applyEffectTo: ship2 in: board.
-
-    
-    board moveShip: ship3 by: 2.
-    (board cellAt: 3) applyEffectTo: ship3 in: board.
-
-    self assert: (board indexOfCellContaining: ship1) equals: 5. 
-    self assert: (board indexOfCellContaining: ship2) equals: 4.  
-    self assert: (board indexOfCellContaining: ship3) equals: 5. 
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 30.
+	self assert: (aGame positions at: 'Jorge') equals: 10.
+	self assert: (aGame positions at: 'Fran') equals: 10.
+	self assert: (aGame positions at: 'Hernan') equals: 30
 ]
 
 { #category : 'tests' }
-GameTests >> test036HyperJumpCellGoesInCircle [
-    | ship board hyperCell cells parsecList |
+GameTests >> test027HyperJumpCellPenalizesShipIfNotEnoughFuel [
 
-    ship := Ship withName: 'Apollo' and: 10.
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 9 9 9 9 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 10 put: (HyperJumpCell withLengths: {
+				 10 parsecs.
+				 15 parsecs.
+				 20 parsecs } asOrderedCollection).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
 
-    parsecList := #(30).
-    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 10
+		         forLaps: 999
+		         withRewards: (FuelBuffReward by: 1)
+		         andDeck: {  }.
 
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 10 put: hyperCell.
-
-    board := Board withCells: cells andShips: { ship } asOrderedCollection.
-    board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-    board moveShipDirectly: ship steps: 9.  
-    (board cellAt: 10) applyEffectTo: ship in: board.
-
-    self assert: (board indexOfCellContaining: ship) equals: 3. 
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 1.
 ]
 
 { #category : 'tests' }
-GameTests >> test037HyperJumpCellPenalizesShipIfNotEnoughFuel [
-    | ship board hyperCell cells parsecList |
-
-   
-    ship := Ship withName: 'Apollo' and: 2.
-
-    parsecList := #(30). 
-    hyperCell := HyperJumpCell withParsecList: parsecList totalParsecs: 100.
-
-    cells := (1 to: 10) collect: [:i | RegularCell new].
-    cells at: 5 put: hyperCell.
-
-    board := Board withCells: cells andShips: { ship } asOrderedCollection.
-    board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-    board moveShip: ship by: 4. 
-    (board cellAt: 5) applyEffectTo: ship in: board.
-
-    self assert: (board indexOfCellContaining: ship) equals: 1. 
-    self assert: ship currentFuel equals: ship fuelCapacity. 
-    self assert: ship canPlay not.  
-]
-
-{ #category : 'tests' }
-GameTests >> test038HyperGravityBlocksShipIfRollTooLow [
-
-	| ship board gravityCell cells die game maxRoll |
-	ship := Ship withName: 'Apollo' and: 10.
-	die := CustomDie withRolls: #( 3 ). 
-	maxRoll := 6. 
-
-	gravityCell := HyperGravityCell requiringMinimumRoll: maxRoll.
-
-	cells := (1 to: 10) collect: [ :i | RegularCell new ].
-	cells at: 5 put: gravityCell. 
-
-	board := Board
-		         withCells: cells
-		         andShips: { ship } asOrderedCollection.
-	board placeAllShipsAtStart: { ship } asOrderedCollection.
-
-	game := SpaceShipGame new.
-	game instVarNamed: 'board' put: board.
-	game instVarNamed: 'dice' put: { die } asOrderedCollection.
-	game instVarNamed: 'ships' put: { ship } asOrderedCollection.
-	game instVarNamed: 'shipTurnIndex' put: 1.
-	game instVarNamed: 'numberOfLaps' put: 1.
-
-	board moveShip: ship by: 4.
-
-	(board cellAt: 5) applyEffectTo: ship in: board withRoll: 3.
-
-	self assert: (board indexOfCellContaining: ship) equals: 5
-]
-
-{ #category : 'tests' }
-GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
+GameTests >> test028AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 "
 	| someDice game winner aNumberOfSides |
 	aNumberOfSides := 6.
@@ -918,7 +879,7 @@ GameTests >> test040AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 ]
 
 { #category : 'tests' }
-GameTests >> test041WhenSpaceshipThrowsMaxThrowThenItsCurrentFuelItsDecrementedByOne [
+GameTests >> test029WhenSpaceshipThrowsMaxThrowThenItsCurrentFuelItsDecrementedByOne [
 
 	| someDice aFixedCellGenerator aGame |
 	someDice := OrderedCollection with:
@@ -947,7 +908,7 @@ GameTests >> test041WhenSpaceshipThrowsMaxThrowThenItsCurrentFuelItsDecrementedB
 ]
 
 { #category : 'tests' }
-GameTests >> test042WhenSpaceshipThrowsMaxThrowThenItsFuelCapacityItsIncrementedByOne [
+GameTests >> test030WhenSpaceshipThrowsMaxThrowThenItsFuelCapacityItsIncrementedByOne [
 
 	| someDice aFixedCellGenerator aGame |
 	someDice := OrderedCollection with:
@@ -977,13 +938,4 @@ GameTests >> test042WhenSpaceshipThrowsMaxThrowThenItsFuelCapacityItsIncremented
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Agus') equals: 32
-]
-
-{ #category : 'tests' }
-GameTests >> test043 [
-
-	| anAmount |
-	anAmount := 1.
-	anAmount parsecs.
-	self assert: false.
 ]

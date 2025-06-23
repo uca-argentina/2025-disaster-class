@@ -35,7 +35,7 @@ Board >> anyShipCompletedAllLaps [
 Board >> applyEffectTo: aShip [
 
 	| cell |
-	cell := self cellContaining: aShip.
+	cell := self whereIs: aShip.
 	cell applyEffectTo: aShip in: self
 ]
 
@@ -43,21 +43,6 @@ Board >> applyEffectTo: aShip [
 Board >> cellAt: aPosition [
 
 	^ map at: aPosition
-]
-
-{ #category : 'as yet unclassified' }
-Board >> cellContaining: aShip [
-
-	^ map detect: [ :each | each includes: aShip ]
-		ifNone: [ self error: 'Ship not found on board' ].
-]
-
-{ #category : 'as yet unclassified' }
-Board >> handleMovementOf: aShip thatRolled: aDiceResult [
-
-	self moveShip: aShip by: aDiceResult.
-	self applyEffectTo: aShip
-	
 ]
 
 { #category : 'initialization' }
@@ -69,7 +54,7 @@ Board >> incrementLapsFor: aShip [
 { #category : 'as yet unclassified' }
 Board >> indexOfCellContaining: aShip [
 
-	^ map indexOf: (self cellContaining: aShip)
+	^ map indexOf: (self whereIs: aShip)
 ]
 
 { #category : 'initialization' }
@@ -122,17 +107,18 @@ Board >> moveAllToStart [
 ]
 
 { #category : 'as yet unclassified' }
-Board >> moveShip: aShip by: someSteps [
+Board >> moveShip: aShip by: anAmount [
 
-		| previousIndex newIndex boardSize |
+	| previousIndex newIndex boardSize cellsToMove |
+	cellsToMove := anAmount toCellsOf: self.
 	previousIndex := self indexOfCellContaining: aShip.
 	boardSize := map size.
-	newIndex := previousIndex + someSteps - 1 \\ boardSize + 1.
+	newIndex := previousIndex + cellsToMove - 1 \\ boardSize + 1.
 
 	self remove: aShip at: previousIndex.
 	self insertShip: aShip at: newIndex.
 
-	previousIndex + someSteps - 1 // boardSize
+	previousIndex + cellsToMove - 1 // boardSize
 	> (previousIndex - 1 // boardSize) ifTrue: [
 		self incrementLapsFor: aShip ]
 ]
@@ -140,17 +126,14 @@ Board >> moveShip: aShip by: someSteps [
 { #category : 'as yet unclassified' }
 Board >> moveShipToStart: aShip [
 
-	| index |
-	index := self indexOfCellContaining: aShip.
-	(map at: index) leaves: aShip.
+	(self whereIs: aShip) leaves: aShip.
 	(map at: 1) enters: aShip
-
 ]
 
 { #category : 'initialization' }
 Board >> parsecsPerCell [
 
-	^ lengthInParsecs // map size
+	^ map size // lengthInParsecs
 ]
 
 { #category : 'as yet unclassified' }
@@ -171,4 +154,11 @@ Board >> remove: aShip at: someIndex [
 Board >> ships [
 
 	^ ships
+]
+
+{ #category : 'as yet unclassified' }
+Board >> whereIs: aShip [
+
+	^ map detect: [ :each | each includes: aShip ]
+		ifNone: [ self error: 'Ship not found on board' ].
 ]

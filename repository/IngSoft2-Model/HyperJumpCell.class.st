@@ -21,7 +21,8 @@ HyperJumpCell >> applyEffectTo: aShip in: aBoard [
 	anAmountToMove := lengths first.
 	lengths removeFirst.
 	lengths addLast: anAmountToMove.
-	aBoard move: aShip by: anAmountToMove
+
+	aShip move: (anAmountToMove toCellsOf: aBoard) in: aBoard
 ]
 
 { #category : 'initialization' }

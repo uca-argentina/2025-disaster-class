@@ -85,6 +85,16 @@ SpaceShipGame >> initializeCardsAndCardEnforcer [
 		add: Cancellation new;
 		add: Acceleration new;
 		add: Cancellation new;
+		add: Acceleration new;
+		add: Overload new;
+		add: Redo new;
+		add: Cancellation new;
+		add: Acceleration new;
+		add: Acceleration new;
+		add: Overload new;
+		add: Redo new;
+		add: Cancellation new;
+		add: Acceleration new;
 		add: Overload new;
 		add: Redo new.
 
