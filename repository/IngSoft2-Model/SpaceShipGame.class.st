@@ -84,8 +84,8 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 		         Ship withName: eachName and: 2 * self maxDiceRoll ].
 	ships do: [ :player |
 		player
-			giveCard: aDeckOfCards first;
-			giveCard: aDeckOfCards second ].
+			giveCard: aDeckOfCards first deepCopy;
+			giveCard: aDeckOfCards second deepCopy].
 
 	board := Board
 		         withShips: ships

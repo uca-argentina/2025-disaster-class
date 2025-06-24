@@ -331,7 +331,7 @@ CardTest >> test009WhenShipsAreAlliedAndNeitherHasEnoughFuelBothArePenalized [
 		        playedWith: dice
 		        createdWith: generator
 		        withWormholesAt: 2
-		        and: 4
+		        and: 8
 		        onABoardSized: 13
 		        whichToParsecsIs: 100
 		        forLaps: 1
@@ -348,20 +348,20 @@ CardTest >> test009WhenShipsAreAlliedAndNeitherHasEnoughFuelBothArePenalized [
 	allyCard := (game deckOf: 'Apollo') first.
 	game playCard: allyCard from: 'Apollo' to: 'Orion'.
 
-	game playTurn. "A 5"
-	game playTurn. "O 5"
-	game playTurn. "C 2"
-	game playTurn. "A 5"
-	game playTurn. "O 5"
-	game playTurn. "C 2"
-	game playTurn. "A 5"
-	game playTurn. "O 2"
-	game playTurn. "C 2"
+	game playTurn. "A 5 pos 6 fuel 7"
+	game playTurn. "O 5 pos 6 fuel 7"
+	game playTurn. "C 2 pos 3 fuel 10"
+	game playTurn. "A 5 pos 11 fuel 2"
+	game playTurn. "O 5 pos 11 fuel 2"
+	game playTurn. "C 2 pos 5 fuel 8"
+	game playTurn. "A 5 pos 4 not enough"	
+	game playTurn. "O 2 pos 1 llega?"
+	game playTurn. "C 2 pos 7 fuel 6"
 
 
 
 	self assert: (game positionOfShip: apollo) equals: 1.
 	self assert: (game positionOfShip: orion) equals: 1.
-	self assert: (game positionOfShip: andromeda) equals: 9.
+	self assert: (game positionOfShip: andromeda) equals: 7.
 
 ]
