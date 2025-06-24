@@ -16,19 +16,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-SpaceShipGame class >> onABoardSized: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation forLaps: aLapCount withDice: someDice andShipsNamed: someShipNames [
-
-	^ self new
-		  initializeWithBoardSize: aBoardSize
-		  withWormholesAt: aFirstWormholeLocation
-		  and: aSecondWormholeLocation
-		  withDice: someDice
-		  shipNames: someShipNames
-		  andLaps: aLapCount
-
-]
-
-{ #category : 'as yet unclassified' }
 SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice createdWith: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation onABoardSized: aBoardSize whichToParsecsIs: anAmountOfParsecs forLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
 
 	^ self new
@@ -42,6 +29,19 @@ SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice create
 		  withLaps: aLapCount
 		  withRewards: someRewards
 		  andDeck: aDeckOfCards
+]
+
+{ #category : 'as yet unclassified' }
+SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice onABoardSized: aBoardSize whichToParsecsIs: aLengthInParsecs forLaps: aLapCount withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation [
+
+	^ self new
+		  initializeWithShipNames: someShipNames
+		  dice: someDice
+		  boardSize: aBoardSize
+		  lengthInParsecs: aLengthInParsecs
+		  laps: aLapCount
+		  wormholesAt: aFirstWormholeLocation
+		  and: aSecondWormholeLocation
 ]
 
 { #category : 'accessing' }
@@ -81,11 +81,11 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 
 	dice := Dice with: someDice.
 	ships := someShipNames collect: [ :eachName |
-		         Ship withName: eachName and: 2 * self maxDiceRoll ].
+		         Ship withName: eachName and: 2 * dice maxThrow ].
 	ships do: [ :player |
 		player
 			giveCard: aDeckOfCards first deepCopy;
-			giveCard: aDeckOfCards second deepCopy].
+			giveCard: aDeckOfCards second deepCopy ].
 
 	board := Board
 		         withShips: ships
@@ -104,13 +104,12 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 ]
 
 { #category : 'initialization' }
-SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation withDice: someDice shipNames: someShipNames andLaps: aLapCount [
+SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize: aBoardSize lengthInParsecs: aLengthInParsecs laps: aLapCount wormholesAt: aWormholeStartLocation and: aWormholeEndLocation [
 
-	| cells aDefaultDistribution aCellGenerator |
-	dice := someDice.
-
+	| aDefaultDistribution aCellGenerator |
+	dice := Dice with: someDice.
 	ships := someShipNames collect: [ :eachName |
-		         Ship withName: eachName and: 2 * self maxDiceRoll ].
+		         Ship withName: eachName and: 2 * dice maxThrow ].
 
 	aDefaultDistribution := OrderedCollection
 		                        with: {
@@ -139,42 +138,22 @@ SpaceShipGame >> initializeWithBoardSize: aBoardSize withWormholesAt: aFirstWorm
 	aCellGenerator := CellGenerator
 		                  withCellCount: aBoardSize
 		                  andDistribution: aDefaultDistribution.
-	cells := aCellGenerator generate.
-	WormholeCell
-		newPairIn: cells
-		at: aFirstWormholeLocation
-		and: aSecondWormholeLocation.
-
-	board := Board withCells: cells andShips: ships.
-	board placeAllShipsAtStart: ships.
-
-
+	board := Board
+		         withShips: ships
+		         lengthInParsecs: aLengthInParsecs
+		         lapsToWin: aLapCount
+		         wormholeStart: aWormholeStartLocation
+		         wormholeEnd: aWormholeEndLocation
+		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
 	numberOfLaps := aLapCount.
-
-	self initializeCardsAndCardEnforcer
+	board placeAllShipsAtStart: ships
 ]
 
 { #category : 'testing' }
 SpaceShipGame >> isOver [
 
 	^ board anyShipCompletedAllLaps
-]
-
-{ #category : 'accessing' }
-SpaceShipGame >> maxDiceRoll [
-	| allDice sidesList |
-	
-	allDice := dice isCollection
-		ifTrue: [ dice ]
-		ifFalse: [ Array with: dice ].
-
-	sidesList := allDice collect: [ :die |
-		(die respondsTo: #maxThrow)
-			ifTrue: [ die maxThrow ]
-			ifFalse: [ 0 ] ].
-
-	^ sidesList sum.
 ]
 
 { #category : 'testing' }
@@ -230,7 +209,8 @@ SpaceShipGame >> skipTurn [
 
 { #category : 'testing' }
 SpaceShipGame >> turnManager [
-	^turnManager 
+
+	^ turnManager
 ]
 
 { #category : 'as yet unclassified' }
