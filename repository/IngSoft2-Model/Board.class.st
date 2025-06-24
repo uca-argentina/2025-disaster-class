@@ -150,6 +150,14 @@ Board >> remove: aShip at: someIndex [
 	oldCell leaves: aShip
 ]
 
+{ #category : 'removing' }
+Board >> shipThatCompletedAllLaps [
+
+	^ ships
+		  detect: [ :ship | (self lapsCompletedOf: ship) >= lapsToWin ]
+		  ifNone: [ nil ]
+]
+
 { #category : 'initialization' }
 Board >> ships [
 

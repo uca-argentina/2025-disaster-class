@@ -5,7 +5,6 @@ Class {
 		'board',
 		'dice',
 		'ships',
-		'numberOfLaps',
 		'cardEnforcer',
 		'availableCards',
 		'turnManager',
@@ -95,7 +94,6 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 		         wormholeEnd: aWormholeEndLocation
 		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
-	numberOfLaps := aLapCount.
 	rewards := someRewards.
 	cardEnforcer := CardEnforcer
 		                withShips: ships
@@ -107,10 +105,6 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize: aBoardSize lengthInParsecs: aLengthInParsecs laps: aLapCount wormholesAt: aWormholeStartLocation and: aWormholeEndLocation [
 
 	| aDefaultDistribution aCellGenerator |
-	dice := Dice with: someDice.
-	ships := someShipNames collect: [ :eachName |
-		         Ship withName: eachName and: 2 * dice maxThrow ].
-
 	aDefaultDistribution := OrderedCollection
 		                        with: {
 				                        0.4.
@@ -121,7 +115,8 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 		                        with: {
 				                        0.2.
 				                        [
-				                        HyperGravityCell requiringMinimumRoll: 2 ] }
+				                        HyperGravityCell requiringMinimumRoll:
+					                        dice maxThrow atRandom ] }
 		                        with: {
 				                        0.1.
 				                        [ MoonWalkCell withSteps: 3 ] }
@@ -130,7 +125,7 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 				                        [
 				                        HyperJumpCell withLengths: {
 						                        2 parsecs.
-						                        5 parsecs.
+						                        5 lightYears.
 						                        7 parsecs } ] }
 		                        with: {
 				                        0.02.
@@ -138,6 +133,24 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 	aCellGenerator := CellGenerator
 		                  withCellCount: aBoardSize
 		                  andDistribution: aDefaultDistribution.
+	rewards := RewardManager with: {
+			           ((FuelBuffReward by: 1) -> 0.2).
+			           ((FuelDebuffReward by: 1) -> 0.8) }.
+	availableCards := {
+		                  Cancellation new.
+		                  Repeat new.
+		                  Acceleration new.
+		                  Ally new.
+		                  Overload new.
+		                  Redo new }.
+	dice := Dice with: someDice.
+	ships := someShipNames collect: [ :eachName |
+		         Ship withName: eachName and: 2 * dice maxThrow ].
+	ships do: [ :player |
+		player
+			giveCard: availableCards atRandom;
+			giveCard: availableCards atRandom ].
+
 	board := Board
 		         withShips: ships
 		         lengthInParsecs: aLengthInParsecs
@@ -146,7 +159,6 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 		         wormholeEnd: aWormholeEndLocation
 		         cellGenerator: aCellGenerator.
 	turnManager := TurnManager withShips: ships.
-	numberOfLaps := aLapCount.
 	board placeAllShipsAtStart: ships
 ]
 
@@ -222,7 +234,5 @@ SpaceShipGame >> verifyIsNotOver [
 { #category : 'testing' }
 SpaceShipGame >> winner [
 
-	^ board ships
-		  detect: [ :ship | (board lapsCompletedOf: ship) >= numberOfLaps ]
-		  ifNone: [ nil ]
+	^ board shipThatCompletedAllLaps
 ]
