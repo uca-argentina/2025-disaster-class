@@ -63,6 +63,12 @@ SpaceShipGame >> currentTurnsShip [
 ]
 
 { #category : 'testing' }
+SpaceShipGame >> deckOf: aSpaceshipName [ 
+
+^ (self findShip: aSpaceshipName) cards.
+]
+
+{ #category : 'testing' }
 SpaceShipGame >> findShip: aShipName [
 
 	^ ships

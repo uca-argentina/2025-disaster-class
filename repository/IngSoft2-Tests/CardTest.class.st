@@ -239,9 +239,9 @@ CardTest >> test006RedoReappliesLastPermanentEffect [
 ]
 
 { #category : 'tests' }
-CardTest >> test07ShipBorrowsFuelFromAllyWhenRunningLow [
-"
-	| dice generator game apollo orion allyCard |
+CardTest >> test007ShipBorrowsFuelFromAllyWhenRunningLow [
+
+	| dice generator game apollo orion |
 	dice := OrderedCollection with:
 		        (CustomDie withRolls: #( 5 2 5 2 4 6 )).
 	generator := FixedCellGenerator withAllRegularCellAmount: 20.
@@ -256,32 +256,112 @@ CardTest >> test07ShipBorrowsFuelFromAllyWhenRunningLow [
 		        whichToParsecsIs: 100
 		        forLaps: 1
 		        withRewards: (FuelBuffReward by: 0)
-		        andDeck: {  }.
+		        andDeck: {
+				        Ally new.
+				        Overload new }.
 
 	apollo := game findShip: 'Apollo'.
 	orion := game findShip: 'Orion'.
 
-	""Preparamos el estado inicial de combustible""
-	apollo decreaseCurrentFuelBy: 5. ""Apollo queda con 5""
-	orion decreaseCurrentFuelBy: 9. ""Orion queda con 1""
-	self assert: apollo fuel equals: 5.
-	self assert: orion fuel equals: 1.
+	game
+		playCard: (apollo findCardOfClass: Ally)
+		from: 'Apollo'
+		to: 'Orion'.
+	game playTurn."A 5"
+	game playTurn."O 2"
+	game playTurn."A 5"
+	game playTurn.	"O 2"
+	game playTurn."A 4"
+	
+	self assert: (game positions at: 'Apollo') equals: 15.
+]
 
-	""Formamos la alianza""
-	allyCard := Ally new.
-	apollo giveCard: allyCard.
+{ #category : 'tests' }
+CardTest >> test008WhenCancellationCardIsUsedOnAllyCardThenShipsNoLongerShareTheirFuel [
+
+	| dice generator allyCard cancellationCard game apollo orion |
+	dice := OrderedCollection with:
+		        (CustomDie withRolls: #( 5 2 5 2 4 6 )).
+	generator := FixedCellGenerator withAllRegularCellAmount: 20.
+
+	game := SpaceShipGame
+		        withShipsNamed: #( 'Apollo' 'Orion' )
+		        playedWith: dice
+		        createdWith: generator
+		        withWormholesAt: 8
+		        and: 19
+		        onABoardSized: 20
+		        whichToParsecsIs: 100
+		        forLaps: 1
+		        withRewards: (FuelBuffReward by: 0)
+		        andDeck: {
+				        Ally new.
+				        Cancellation new }.
+
+	apollo := game findShip: 'Apollo'.
+	orion := game findShip: 'Orion'.
+
+	allyCard := (game deckOf: 'Apollo') first.
+	cancellationCard := (game deckOf: 'Apollo') second.
+
+	game playCard: allyCard from: 'Apollo' to: 'Orion'.
+	game playCard: cancellationCard from: 'Apollo' to: allyCard.
+
+	game playTurn."A 5"
+	game playTurn."O 2"
+	game playTurn."A 5"
+	game playTurn."O 2"
+	game playTurn."A 4"
+	
+
+
+	self assert: (game positionOfShip: apollo) equals: 1
+]
+
+{ #category : 'tests' }
+CardTest >> test009WhenShipsAreAlliedAndNeitherHasEnoughFuelBothArePenalized [
+
+	| dice generator allyCard game apollo orion andromeda |
+	dice := OrderedCollection with:
+		        (CustomDie withRolls: #( 5 5 2 5 5 2 5 2 2 6 )).
+	generator := FixedCellGenerator withAllRegularCellAmount: 13.
+
+	game := SpaceShipGame
+		        withShipsNamed: #( 'Apollo' 'Orion' 'Andromeda')
+		        playedWith: dice
+		        createdWith: generator
+		        withWormholesAt: 2
+		        and: 4
+		        onABoardSized: 13
+		        whichToParsecsIs: 100
+		        forLaps: 1
+		        withRewards: (FuelBuffReward by: 0)
+		        andDeck: {
+				        Ally new.
+				        Cancellation new }.
+
+	apollo := game findShip: 'Apollo'.
+	orion := game findShip: 'Orion'.
+	andromeda := game findShip: 'Andromeda'.
+
+
+	allyCard := (game deckOf: 'Apollo') first.
 	game playCard: allyCard from: 'Apollo' to: 'Orion'.
 
-	game skipTurn. ""Apollo saltea Recupera fuel → vuelve a 10""
-	self assert: apollo fuel equals: 10.
-	self assert: orion fuel equals: 1.
-	""Apollo juega normalmente y pide fuel prestado""
-	game playTurn. ""Orion se mueve""
+	game playTurn. "A 5"
+	game playTurn. "O 5"
+	game playTurn. "C 2"
+	game playTurn. "A 5"
+	game playTurn. "O 5"
+	game playTurn. "C 2"
+	game playTurn. "A 5"
+	game playTurn. "O 2"
+	game playTurn. "C 2"
 
-	""Verificamos estado final""
-	self assert: (game positions at: 'Orion') equals: 6.
-	self assert: orion fuel equals: 6. ""Prestó 4""
-	self assert: apollo fuel equals: 0. ""Usó 1 propio y 4 de Orion""
-	self assert: (game positions at: 'Apollo') equals: 1. ""Se salteó su turno""
-	self assert: orion fuel equals: 6 ""Prestó 4"""
+
+
+	self assert: (game positionOfShip: apollo) equals: 1.
+	self assert: (game positionOfShip: orion) equals: 1.
+	self assert: (game positionOfShip: andromeda) equals: 9.
+
 ]

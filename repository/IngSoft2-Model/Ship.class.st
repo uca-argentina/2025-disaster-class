@@ -50,6 +50,11 @@ Ship >> canPlayATurn [
 	^ false
 ]
 
+{ #category : 'accessing' }
+Ship >> cards [
+	^cards
+]
+
 { #category : 'as yet unclassified' }
 Ship >> changeDiceAdjustmentBy: anAmount [
 
@@ -196,7 +201,7 @@ Ship >> useAllyFuelIfNecessary: amountOfSteps in: aBoard [
 	| allyFuel |
 	fuel <= amountOfSteps abs ifFalse: [ ^ self ].
 
-	allyFuel := ally takeFuel: (amountOfSteps abs - fuel).
+	allyFuel := ally takeFuel: amountOfSteps - fuel + 1.
 
 	fuel := fuel + allyFuel.
 

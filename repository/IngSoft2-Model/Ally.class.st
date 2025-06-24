@@ -17,11 +17,11 @@ Ally >> initialize [
 ]
 
 { #category : 'initialization' }
-Ally >> removeEffectsWith: aCardEnforcer [ [
+Ally >> removeEffectsWith: aCardEnforcer [ 
 
 	primaryAlly allyWith: NullShip new.
 	secondaryAlly allyWith: NullShip new.
-]
+
 
 ]
 
