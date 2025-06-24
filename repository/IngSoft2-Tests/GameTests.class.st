@@ -1058,3 +1058,38 @@ GameTests >> test032CardGivingCellGivesOneMoreCardToAShip [
 	aGame playTurn.
 	self assert: (aGame deckOf: 'Gon') size equals: 3
 ]
+
+{ #category : 'tests' }
+GameTests >> test033WhenGameFinishesGivesTheRankingOfTheSpaceships [
+
+	| someDice aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 15 12 10 10 16 7 5 50 )).
+	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
+		                       15.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Max' 'Tom' 'Franco' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 5
+		         and: 6
+		         onABoardSized: 15
+		         whichToParsecsIs: 15
+		         forLaps: 2
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+
+	self
+		assert: aGame rankings
+		equals: #( 'Max' 'Tom' 'Franco' ) asOrderedCollection
+]

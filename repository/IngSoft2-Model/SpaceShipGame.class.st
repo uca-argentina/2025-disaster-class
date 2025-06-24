@@ -106,31 +106,34 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize: aBoardSize lengthInParsecs: aLengthInParsecs laps: aLapCount wormholesAt: aWormholeStartLocation and: aWormholeEndLocation [
 
 	| aDefaultDistribution aCellGenerator |
-	aDefaultDistribution := OrderedCollection
-		                        with: {
-				                        0.4.
-				                        [ RegularCell new ] }
-		                        with: {
-				                        0.2.
-				                        [ BlackHoleCell new ] }
-		                        with: {
-				                        0.2.
-				                        [
-				                        HyperGravityCell requiringMinimumRoll:
-					                        dice maxThrow atRandom ] }
-		                        with: {
-				                        0.1.
-				                        [ MoonWalkCell withSteps: 3 ] }
-		                        with: {
-				                        0.08.
-				                        [
-				                        HyperJumpCell withLengths: {
-						                        2 parsecs.
-						                        5 lightYears.
-						                        7 parsecs } asOrderedCollection ] }
-		                        with: {
-				                        0.02.
-				                        [ AtomicBombCell new ] }.
+	aDefaultDistribution := OrderedCollection new.
+	aDefaultDistribution
+		add: {
+				0.3.
+				[ RegularCell new ] };
+		add: {
+				0.1.
+				[ CardCell new ] };
+		add: {
+				0.2.
+				[ BlackHoleCell new ] };
+		add: {
+				0.2.
+				[ HyperGravityCell requiringMinimumRoll: dice maxThrow atRandom ] };
+		add: {
+				0.1.
+				[ MoonWalkCell withSteps: 3 ] };
+		add: {
+				0.08.
+				[
+				HyperJumpCell withLengths: {
+							2 parsecs.
+							5 lightYears.
+							7 parsecs } asOrderedCollection ] };
+		add: {
+				0.02.
+				[ AtomicBombCell new ] }.
+
 	aCellGenerator := CellGenerator
 		                  withCellCount: aBoardSize
 		                  andDistribution: aDefaultDistribution.
@@ -204,6 +207,13 @@ SpaceShipGame >> positions [
 		  (ships collect: [ :ship |
 			   ship name -> (self positionOfShip: ship) ])
 
+]
+
+{ #category : 'testing' }
+SpaceShipGame >> rankings [
+
+	self isOver ifFalse: [ Error signal: 'Game is not over' ].
+	^(RankingTable forPlayers: ships withGameboard: board) rankings
 ]
 
 { #category : 'accessing' }
