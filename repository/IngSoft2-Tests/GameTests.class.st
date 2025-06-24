@@ -910,10 +910,9 @@ GameTests >> test027HyperJumpCellPenalizesShipIfNotEnoughFuel [
 { #category : 'tests' }
 GameTests >> test028AFullGameIsPlayedUntilItsOverAndTheresAWinner [
 
-	| someDice game winner aNumberOfSides |
-	aNumberOfSides := 6.
+	| someDice game winner |
 
-	someDice := OrderedCollection with: (Die with: aNumberOfSides).
+	someDice := OrderedCollection with: (Die with: 6).
 
 	game := SpaceShipGame
 		        withShipsNamed: #( 'Apollo' 'Orion' )
@@ -1092,4 +1091,129 @@ GameTests >> test033WhenGameFinishesGivesTheRankingOfTheSpaceships [
 	self
 		assert: aGame rankings
 		equals: #( 'Max' 'Tom' 'Franco' ) asOrderedCollection
+]
+
+{ #category : 'tests' }
+GameTests >> test034ErrorWhenBoardSizeIsZeroOrNegative [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #( 'Apollo' 'Orion' )
+				playedWith: (OrderedCollection with: (Die with: 6))
+				onABoardSized: 0
+				whichToParsecsIs: 3
+				forLaps: 10
+				withWormholesAt: 10
+				and: 15 ]
+		raise: Error
+		withMessageText: 'Board size must be positive'
+]
+
+{ #category : 'tests' }
+GameTests >> test035ErrorWhenLapCountIsZeroOrNegative [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #( 'Apollo' 'Orion' )
+				playedWith: (OrderedCollection with: (Die with: 6))
+				onABoardSized: 20
+				whichToParsecsIs: 3
+				forLaps: 0
+				withWormholesAt: 10
+				and: 15 ]
+		raise: Error
+		withMessageText: 'The lap count must be positive'
+
+]
+
+{ #category : 'tests' }
+GameTests >> test036ErrorWhenLengthInParsecsIsZeroOrNegative [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #( 'Apollo' 'Orion' )
+				playedWith: (OrderedCollection with: (Die with: 6))
+				onABoardSized: 20
+				whichToParsecsIs: 0
+				forLaps: 3
+				withWormholesAt: 10
+				and: 15 ]
+		raise: Error
+		withMessageText: 'Length in parsecs must be positive'
+
+]
+
+{ #category : 'tests' }
+GameTests >> test037ErrorWhenWormholeStartPositionIsOutOfBounds [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #( 'Apollo' 'Orion' )
+				playedWith: (OrderedCollection with: (Die with: 6))
+				onABoardSized: 20
+				whichToParsecsIs: 3
+				forLaps: 3
+				withWormholesAt: 0
+				and: 15 ]
+		raise: Error
+		withMessageText: 'Wormhole start position is out of bounds'
+
+]
+
+{ #category : 'tests' }
+GameTests >> test038ErrorWhenWormholeEndPositionIsOutOfBounds [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #( 'Apollo' 'Orion' )
+				playedWith: (OrderedCollection with: (Die with: 6))
+				onABoardSized: 20
+				whichToParsecsIs: 3
+				forLaps: 3
+				withWormholesAt: 10
+				and: 21 ]
+		raise: Error
+		withMessageText: 'Wormhole end position is out of bounds'
+
+]
+
+{ #category : 'tests' }
+GameTests >> test039ErrorWhenShipNamesIsEmpty [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #()
+				playedWith: (OrderedCollection with: (Die with: 6))
+				onABoardSized: 20
+				whichToParsecsIs: 3
+				forLaps: 3
+				withWormholesAt: 10
+				and: 15 ]
+		raise: Error
+		withMessageText: 'Must have at least one ship'
+
+]
+
+{ #category : 'tests' }
+GameTests >> test040ErrorWhenDiceCollectionIsEmpty [
+
+	self
+		should: [
+			SpaceShipGame
+				withShipsNamed: #( 'Apollo' )
+				playedWith: OrderedCollection new
+				onABoardSized: 20
+				whichToParsecsIs: 3
+				forLaps: 3
+				withWormholesAt: 10
+				and: 15 ]
+		raise: Error
+		withMessageText: 'Dice collection cannot be empty'
+
 ]

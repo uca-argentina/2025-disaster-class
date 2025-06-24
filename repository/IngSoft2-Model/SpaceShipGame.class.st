@@ -15,6 +15,16 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+SpaceShipGame class >> validateShips: shipNames andDice: someDice [
+
+	shipNames isEmpty ifTrue: [
+		Error signal: 'Must have at least one ship' ].
+
+	someDice isEmpty ifTrue: [
+		Error signal: 'Dice collection cannot be empty' ]
+]
+
+{ #category : 'as yet unclassified' }
 SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice createdWith: aCellGenerator withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation onABoardSized: aBoardSize whichToParsecsIs: anAmountOfParsecs forLaps: aLapCount withRewards: someRewards andDeck: aDeckOfCards [
 
 	^ self new
@@ -31,16 +41,25 @@ SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice create
 ]
 
 { #category : 'as yet unclassified' }
-SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice onABoardSized: aBoardSize whichToParsecsIs: aLengthInParsecs forLaps: aLapCount withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation [
+SpaceShipGame class >> withShipsNamed: someShipNames
+playedWith: someDice
+onABoardSized: aBoardSize
+whichToParsecsIs: aLengthInParsecs
+forLaps: aLapCount
+withWormholesAt: aFirstWormholeLocation
+and: aSecondWormholeLocation [
+
+	self validateShips: someShipNames andDice: someDice.
 
 	^ self new
-		  initializeWithShipNames: someShipNames
-		  dice: someDice
-		  boardSize: aBoardSize
-		  lengthInParsecs: aLengthInParsecs
-		  laps: aLapCount
-		  wormholesAt: aFirstWormholeLocation
-		  and: aSecondWormholeLocation
+		initializeWithShipNames: someShipNames
+		dice: someDice
+		boardSize: aBoardSize
+		lengthInParsecs: aLengthInParsecs
+		laps: aLapCount
+		wormholesAt: aFirstWormholeLocation
+		and: aSecondWormholeLocation
+
 ]
 
 { #category : 'accessing' }
@@ -88,6 +107,7 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 
 	board := Board
 		         withShips: ships
+					boardSize: aBoardSize 
 		         lengthInParsecs: aLengthInParsecs
 		         lapsToWin: aLapCount
 		         wormholeStart: aWormholeStartLocation
@@ -154,9 +174,9 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 		player
 			giveCard: availableCards atRandom;
 			giveCard: availableCards atRandom ].
-
 	board := Board
 		         withShips: ships
+		         boardSize: aBoardSize
 		         lengthInParsecs: aLengthInParsecs
 		         lapsToWin: aLapCount
 		         wormholeStart: aWormholeStartLocation

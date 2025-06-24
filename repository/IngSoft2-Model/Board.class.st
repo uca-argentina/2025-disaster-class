@@ -14,7 +14,33 @@ Class {
 }
 
 { #category : 'instance creation' }
-Board class >> withShips: someShips lengthInParsecs: aLengthInParsecs lapsToWin: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation cellGenerator: aCellGenerator cards: someCards [
+Board class >> validateIsPositive: aLengthInParsecs and: aLapCount andAlsoStart: aStart andEnd: anEnd areInBoundsOf: aBoardSize [
+
+	aLapCount <= 0 ifTrue: [
+		Error signal: 'The lap count must be positive' ].
+
+	aLengthInParsecs <= 0 ifTrue: [
+		Error signal: 'Length in parsecs must be positive' ].
+
+	aBoardSize <= 0 ifTrue: [
+		Error signal: 'Board size must be positive' ].
+
+	(aStart between: 1 and: aBoardSize) ifFalse: [
+		Error signal: 'Wormhole start position is out of bounds' ].
+
+	(anEnd between: 1 and: aBoardSize) ifFalse: [
+		Error signal: 'Wormhole end position is out of bounds' ]
+]
+
+{ #category : 'instance creation' }
+Board class >> withShips: someShips boardSize: aBoardSize lengthInParsecs: aLengthInParsecs lapsToWin: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation cellGenerator: aCellGenerator cards: someCards [
+
+	self
+		validateIsPositive:aLengthInParsecs
+		and: aLapCount
+		andAlsoStart: aWormholeStartLocation
+		andEnd: aWormholeEndLocation
+		areInBoundsOf: aBoardSize.
 
 	^ self new
 		  initializeWith: someShips
