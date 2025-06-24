@@ -1028,3 +1028,33 @@ GameTests >> test031HyperJumpCellAdvancesShipByLightyearsAmount [
 	aGame playTurn.
 	self assert: (aGame positions at: 'Gon') equals: 30
 ]
+
+{ #category : 'tests' }
+GameTests >> test032CardGivingCellGivesOneMoreCardToAShip [
+
+	| someDice someCells aFixedCellGenerator aGame aShip |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 9 10 1000000000 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 10 put: CardCell new.
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 10
+		         forLaps: 999
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
+
+	aShip := aGame ships first.
+	self assert: (aGame deckOf: 'Gon') size equals: 2.
+	aGame playTurn.
+	self assert: (aGame deckOf: 'Gon') size equals: 3
+]

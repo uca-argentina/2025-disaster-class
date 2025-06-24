@@ -6,14 +6,15 @@ Class {
 		'ships',
 		'lapsToWin',
 		'lengthInParsecs',
-		'lapsPerShip'
+		'lapsPerShip',
+		'possibleCards'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'instance creation' }
-Board class >> withShips: someShips lengthInParsecs: aLengthInParsecs lapsToWin: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation cellGenerator: aCellGenerator [
+Board class >> withShips: someShips lengthInParsecs: aLengthInParsecs lapsToWin: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation cellGenerator: aCellGenerator cards: someCards [
 
 	^ self new
 		  initializeWith: someShips
@@ -21,7 +22,8 @@ Board class >> withShips: someShips lengthInParsecs: aLengthInParsecs lapsToWin:
 		  laps: aLapCount
 		  wormholeStart: aWormholeStartLocation
 		  wormholeEnd: aWormholeEndLocation
-		  andCellGenerator: aCellGenerator
+		  CellGenerator: aCellGenerator
+		  andCards: someCards
 ]
 
 { #category : 'removing' }
@@ -55,6 +57,24 @@ Board >> incrementLapsFor: aShip [
 Board >> indexOfCellContaining: aShip [
 
 	^ map indexOf: (self whereIs: aShip)
+]
+
+{ #category : 'initialization' }
+Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation CellGenerator: aCellGenerator andCards: someCards [
+
+	ships := someShips.
+	lapsToWin := aLapCount.
+	lengthInParsecs := aLengthInParsecs.
+	lapsPerShip := Dictionary
+		               newFromKeys: ships
+		               andValues: (someShips collect: [ :_ | 0 ]).
+	possibleCards:= someCards.
+	map := aCellGenerator generate.
+	WormholeCell
+		newPairIn: map
+		at: aWormholeStartLocation
+		and: aWormholeEndLocation.
+	self placeAllShipsAtStart: ships
 ]
 
 { #category : 'initialization' }
@@ -140,6 +160,12 @@ Board >> parsecsPerCell [
 Board >> placeAllShipsAtStart: someShips [
 
 	(map at: 1) entersAll: someShips
+]
+
+{ #category : 'as yet unclassified' }
+Board >> possibleCards [
+
+	^ possibleCards
 ]
 
 { #category : 'removing' }

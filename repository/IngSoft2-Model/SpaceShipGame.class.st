@@ -62,9 +62,9 @@ SpaceShipGame >> currentTurnsShip [
 ]
 
 { #category : 'testing' }
-SpaceShipGame >> deckOf: aSpaceshipName [ 
+SpaceShipGame >> deckOf: aSpaceshipName [
 
-^ (self findShip: aSpaceshipName) cards.
+	^ (self findShip: aSpaceshipName) cards
 ]
 
 { #category : 'testing' }
@@ -92,7 +92,8 @@ SpaceShipGame >> initializeWith: someShipNames withDice: someDice withGenerator:
 		         lapsToWin: aLapCount
 		         wormholeStart: aWormholeStartLocation
 		         wormholeEnd: aWormholeEndLocation
-		         cellGenerator: aCellGenerator.
+		         cellGenerator: aCellGenerator
+		         cards: aDeckOfCards.
 	turnManager := TurnManager withShips: ships.
 	rewards := someRewards.
 	cardEnforcer := CardEnforcer
@@ -157,7 +158,8 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 		         lapsToWin: aLapCount
 		         wormholeStart: aWormholeStartLocation
 		         wormholeEnd: aWormholeEndLocation
-		         cellGenerator: aCellGenerator.
+		         cellGenerator: aCellGenerator
+		         cards: availableCards.
 	turnManager := TurnManager withShips: ships.
 	board placeAllShipsAtStart: ships
 ]
