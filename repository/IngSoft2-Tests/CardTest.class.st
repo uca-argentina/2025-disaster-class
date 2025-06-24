@@ -365,3 +365,41 @@ CardTest >> test009WhenShipsAreAlliedAndNeitherHasEnoughFuelBothArePenalized [
 	self assert: (game positionOfShip: andromeda) equals: 7.
 
 ]
+
+{ #category : 'tests' }
+CardTest >> test010WhenShipFallsOnBlackHoleCellAndARepeatCardIsUsedThenBlackHoleEffectIsAppliedToTheTargetedShip [
+
+	| dice generator aGame apollo orion repeat |
+	dice := OrderedCollection with: (CustomDie withRolls: #( 9 6 15 )).
+	generator := generator := FixedCellGenerator cells:
+		                          ((1 to: 15) collect: [ :i |
+			                           i = 10
+				                           ifTrue: [ BlackHoleCell new ]
+				                           ifFalse: [ RegularCell new ] ]).
+
+
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: dice
+		         createdWith: generator
+		         withWormholesAt: 5
+		         and: 6
+		         onABoardSized: 15
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         Repeat new.
+				         Repeat new }.
+
+	apollo := aGame findShip: 'Apollo'.
+	orion := aGame findShip: 'Orion'.
+	repeat := (aGame deckOf: 'Orion') first.
+	aGame playTurn.
+	aGame playCard: repeat from: 'Orion' to: 'Apollo'.
+	aGame playTurn.
+
+	self assert: (aGame positionOfShip: apollo) equals: 2. "6"
+	self assert: (aGame positionOfShip: orion) equals: 7 "6"
+]

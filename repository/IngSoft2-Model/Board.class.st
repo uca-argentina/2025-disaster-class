@@ -7,7 +7,8 @@ Class {
 		'lapsToWin',
 		'lengthInParsecs',
 		'lapsPerShip',
-		'possibleCards'
+		'possibleCards',
+		'lastCellLanded'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -64,7 +65,14 @@ Board >> applyEffectTo: aShip [
 
 	| cell |
 	cell := self whereIs: aShip.
-	cell applyEffectTo: aShip in: self
+	cell applyEffectTo: aShip in: self.
+	lastCellLanded := cell.
+]
+
+{ #category : 'as yet unclassified' }
+Board >> applyLastCardEffectTo: aShip [ 
+
+	lastCellLanded applyEffectTo: aShip in: self
 ]
 
 { #category : 'as yet unclassified' }
@@ -89,6 +97,7 @@ Board >> indexOfCellContaining: aShip [
 Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation CellGenerator: aCellGenerator andCards: someCards [
 
 	ships := someShips.
+	lastCellLanded := RegularCell initialize.
 	lapsToWin := aLapCount.
 	lengthInParsecs := aLengthInParsecs.
 	lapsPerShip := Dictionary
@@ -107,6 +116,7 @@ Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapC
 Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation andCellGenerator: aCellGenerator [
 
 	ships := someShips.
+	lastCellLanded := RegularCell initialize.
 	lapsToWin := aLapCount.
 	lengthInParsecs := aLengthInParsecs.
 	lapsPerShip := Dictionary

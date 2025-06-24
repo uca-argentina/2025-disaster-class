@@ -8,6 +8,12 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
+{ #category : 'accessing' }
+Cell >> applyEffectTo: aShip in: aBoard [
+
+	self subclassResponsibility 
+]
+
 { #category : 'as yet unclassified' }
 Cell >> enters: aShip [
 

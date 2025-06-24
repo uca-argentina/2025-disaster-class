@@ -16,7 +16,7 @@ Class {
 
 { #category : 'as yet unclassified' }
 CardEnforcer class >> withShips: someShips withBoard: aBoard withTurnManager: aTurnManager [
-	^self new initializeWithShips: someShips withBoard: aTurnManager withTurnManager: aTurnManager 
+	^self new initializeWithShips: someShips withBoard: aBoard withTurnManager: aTurnManager 
 ]
 
 { #category : 'initialization' }
@@ -43,6 +43,12 @@ CardEnforcer >> applyLastCardEffectTo: aShip [
 { #category : 'initialization' }
 CardEnforcer >> applyOverloadEffectTo: affectedSpaceship [
 	affectedSpaceship changeDiceAdjustmentBy: -2.
+]
+
+{ #category : 'initialization' }
+CardEnforcer >> board [
+	^board
+
 ]
 
 { #category : 'as yet unclassified' }
