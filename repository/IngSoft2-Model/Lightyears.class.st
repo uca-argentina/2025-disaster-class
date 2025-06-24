@@ -25,5 +25,5 @@ Lightyears >> toCellsOf: aBoard [
 
 	| amountInParsecs |
 	amountInParsecs := amount // 3.
-	^ amountInParsecs // aBoard parsecsPerCell
+	^ amountInParsecs * aBoard parsecsPerCell
 ]

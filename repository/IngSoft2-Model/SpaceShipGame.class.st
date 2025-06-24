@@ -126,7 +126,7 @@ SpaceShipGame >> initializeWithShipNames: someShipNames dice: someDice boardSize
 				                        HyperJumpCell withLengths: {
 						                        2 parsecs.
 						                        5 lightYears.
-						                        7 parsecs } ] }
+						                        7 parsecs } asOrderedCollection ] }
 		                        with: {
 				                        0.02.
 				                        [ AtomicBombCell new ] }.

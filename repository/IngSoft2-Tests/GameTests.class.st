@@ -909,26 +909,27 @@ GameTests >> test027HyperJumpCellPenalizesShipIfNotEnoughFuel [
 
 { #category : 'tests' }
 GameTests >> test028AFullGameIsPlayedUntilItsOverAndTheresAWinner [
-"
+
 	| someDice game winner aNumberOfSides |
 	aNumberOfSides := 6.
 
 	someDice := OrderedCollection with: (Die with: aNumberOfSides).
 
 	game := SpaceShipGame
+		        withShipsNamed: #( 'Apollo' 'Orion' )
+		        playedWith: someDice
 		        onABoardSized: 30
+		        whichToParsecsIs: 3
+		        forLaps: 10
 		        withWormholesAt: 10
-		        and: 15
-		        forLaps: 1
-		        withDice: someDice
-		        andShipsNamed: #( 'Apollo' 'Orion' ).
+		        and: 15.
 
 
 	[ game isOver ] whileFalse: [ game playTurn ].
 	winner := game winner.
 
 	self assert: game isOver.
-	self assert: winner isNotNil"
+	self assert: winner isNotNil
 ]
 
 { #category : 'tests' }
@@ -995,4 +996,35 @@ GameTests >> test030WhenSpaceshipThrowsMaxThrowThenItsFuelCapacityItsIncremented
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Agus') equals: 32
+]
+
+{ #category : 'tests' }
+GameTests >> test031HyperJumpCellAdvancesShipByLightyearsAmount [
+
+	| someDice someCells aFixedCellGenerator aGame |
+	someDice := OrderedCollection with:
+		            (CustomDie withRolls: #( 9 10 1000000000 )).
+	someCells := (1 to: 100) collect: [ :i | RegularCell new ].
+	someCells at: 10 put: (HyperJumpCell withLengths: {
+				 6 lightYears.
+				 30 lightYears.
+				 60 lightYears } asOrderedCollection).
+	aFixedCellGenerator := FixedCellGenerator cells: someCells.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Gon' )
+		         playedWith: someDice
+		         createdWith: aFixedCellGenerator
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
+		         whichToParsecsIs: 10
+		         forLaps: 999
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         NullCard new.
+				         NullCard new }.
+
+	aGame playTurn.
+	self assert: (aGame positions at: 'Gon') equals: 30
 ]
