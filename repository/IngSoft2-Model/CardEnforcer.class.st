@@ -33,6 +33,14 @@ CardEnforcer >> applyAccelerationEffect [
 ]
 
 { #category : 'initialization' }
+CardEnforcer >> applyLastCardEffectTo: aShip [ 
+
+	board applyLastCardEffectTo: aShip
+
+
+]
+
+{ #category : 'initialization' }
 CardEnforcer >> applyOverloadEffectTo: affectedSpaceship [
 	affectedSpaceship changeDiceAdjustmentBy: -2.
 ]
