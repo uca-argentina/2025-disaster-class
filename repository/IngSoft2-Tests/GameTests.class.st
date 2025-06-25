@@ -288,14 +288,12 @@ GameTests >> test009NoMoreTurnsAfterGameIsOverWhenLapsCompleted [
 		should: [ aGame playTurn ]
 		raise: Error
 		withMessageText: 'game is over!'.
-
-	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
 ]
 
 { #category : 'tests' }
 GameTests >> test010CanPlayWithMultipleDieConsecutively [
 
-	| aDie anotherDie someDice aFixedCellGenerator aGame somePositions aShip |
+	| aDie anotherDie someDice aFixedCellGenerator aGame somePositions |
 	aDie := CustomDie withRolls: #( 6 4 ).
 	anotherDie := CustomDie withRolls: #( 5 5 ).
 	someDice := OrderedCollection with: aDie with: anotherDie.
@@ -327,10 +325,7 @@ GameTests >> test010CanPlayWithMultipleDieConsecutively [
 	self assert: aGame isOver.
 
 	somePositions := aGame positions.
-	self assert: (somePositions at: 'Apollo') equals: 1.
-
-	aShip := aGame ships first.
-	self assert: (aGame board lapsCompletedOf: aShip) equals: 1
+	self assert: (somePositions at: 'Apollo') equals: 1
 ]
 
 { #category : 'tests' }

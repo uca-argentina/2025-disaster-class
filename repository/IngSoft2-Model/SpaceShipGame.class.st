@@ -55,18 +55,6 @@ SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice onABoa
 		  and: aSecondWormholeLocation
 ]
 
-{ #category : 'accessing' }
-SpaceShipGame >> board [
-
-	^ board
-]
-
-{ #category : 'testing' }
-SpaceShipGame >> cardEnforcer [
-
-	^ cardEnforcer
-]
-
 { #category : 'as yet unclassified' }
 SpaceShipGame >> currentTurnsShip [
 
@@ -187,11 +175,12 @@ SpaceShipGame >> isOver [
 ]
 
 { #category : 'testing' }
-SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [ 
-	|  aShip  |
-	self verifyIsNotOver .
+SpaceShipGame >> playCard: aCard from: aShipNamed to: aTargetNamed [
+
+	| aShip |
+	self verifyIsNotOver.
 	aShip := self findShip: aShipNamed.
-	cardEnforcer playCard: aCard from: aShip target: aTargetNamed 
+	cardEnforcer playCard: aCard from: aShip target: aTargetNamed
 ]
 
 { #category : 'as yet unclassified' }
@@ -226,7 +215,7 @@ SpaceShipGame >> positions [
 SpaceShipGame >> rankings [
 
 	self isOver ifFalse: [ Error signal: 'Game is not over' ].
-	^(RankingTable forPlayers: ships withGameboard: board) rankings
+	^ (RankingTable forPlayers: ships withGameboard: board) rankings
 ]
 
 { #category : 'accessing' }
@@ -242,12 +231,6 @@ SpaceShipGame >> skipTurn [
 	ship := self currentTurnsShip.
 	ship refuel.
 	turnManager advanceToNextPlayer 
-]
-
-{ #category : 'testing' }
-SpaceShipGame >> turnManager [
-
-	^ turnManager
 ]
 
 { #category : 'as yet unclassified' }
