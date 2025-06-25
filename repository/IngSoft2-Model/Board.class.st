@@ -66,19 +66,13 @@ Board >> applyEffectTo: aShip [
 	| cell |
 	cell := self whereIs: aShip.
 	cell applyEffectTo: aShip in: self.
-	lastCellLanded := cell.
+	lastCellLanded := cell
 ]
 
 { #category : 'as yet unclassified' }
-Board >> applyLastCardEffectTo: aShip [ 
+Board >> applyLastCardEffectTo: aShip [
 
 	lastCellLanded applyEffectTo: aShip in: self
-]
-
-{ #category : 'as yet unclassified' }
-Board >> cellAt: aPosition [
-
-	^ map at: aPosition
 ]
 
 { #category : 'initialization' }

@@ -11,7 +11,8 @@ Class {
 
 { #category : 'as yet unclassified' }
 TurnManager class >> withShips: someShips [
-	^self new initializeWithShips: someShips 
+
+	^ self new initializeWithShips: someShips
 ]
 
 { #category : 'initialization' }
