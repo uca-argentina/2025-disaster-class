@@ -234,7 +234,7 @@ CardTest >> test006RedoReappliesLastPermanentEffect [
 	game playCard: overloadCard from: 'Apollo' to: 'Apollo'.
 	self assert: ship diceAdjustment equals: -2.
 
-	game playCard: redoCard from: 'Apollo' to: overloadCard.
+	game playCard: redoCard from: 'Apollo' to: 'Apollo'.
 	self assert: ship diceAdjustment equals: -4
 ]
 
@@ -402,4 +402,52 @@ CardTest >> test010WhenShipFallsOnBlackHoleCellAndARepeatCardIsUsedThenBlackHole
 
 	self assert: (aGame positionOfShip: apollo) equals: 2. "6"
 	self assert: (aGame positionOfShip: orion) equals: 7 "6"
+]
+
+{ #category : 'tests' }
+CardTest >> test011WhenRedoCardIsPlayedTwiceTheEffectIsAppliedTwice [
+
+	| dice generator aGame apollo orion overload redo redo2 apollo1 orion1 |
+    dice := OrderedCollection with: (CustomDie withRolls: #( 5 5 6 7 2 10 )).
+    generator := generator := FixedCellGenerator
+                                  withAllRegularCellAmount: 20.
+
+
+
+    aGame := SpaceShipGame
+                 withShipsNamed: #( 'Apollo' 'Orion' )
+                 playedWith: dice
+                 createdWith: generator
+                 withWormholesAt: 2
+                 and: 3
+                 onABoardSized: 20
+                 whichToParsecsIs: 100
+                 forLaps: 1
+                 withRewards: (FuelBuffReward by: 0)
+                 andDeck: {
+                         Overload new.
+                         Redo new }.
+
+    apollo := 'Apollo'.
+    orion := 'Orion'.
+    apollo1 := aGame findShip: 'Apollo'.
+    orion1 := aGame findShip: 'Orion'.
+    overload := (aGame deckOf: apollo) first.
+    redo := (aGame deckOf: apollo) second.
+    redo2 := (aGame deckOf: orion) second.
+
+
+
+    aGame playTurn.
+    aGame playTurn.
+
+    aGame playCard: overload from: apollo to: orion.
+    aGame playCard: redo from: apollo to: orion.
+    aGame playTurn.
+    aGame playCard: redo2 from: orion to: apollo.
+    aGame playTurn.
+    aGame playTurn.
+
+    self assert: (aGame positions at: apollo) equals: 12.
+    self assert: (aGame positions at: orion) equals: 9
 ]

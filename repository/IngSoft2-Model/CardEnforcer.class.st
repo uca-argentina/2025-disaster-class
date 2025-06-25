@@ -92,7 +92,7 @@ CardEnforcer >> playCard: aCard from: aShip target: aTarget [
 	aCard use: self from: aShip target: aTarget.
 	aShip useCard: aCard.
 	lastCard := aCard lastUsedCard: lastCard.
-	lastUsedCardTarget := aTarget.
+	
 
 ]
 
@@ -101,7 +101,7 @@ CardEnforcer >> redoLastCardFrom: aSpaceship target: aTarget [
 	
 	nextShip := turnManager currentTurnsShip.
 	lastCard verifyCanBePlayedBy: aSpaceship with: turnManager.
-	lastCard use: self from: aSpaceship target: lastUsedCardTarget .
+	lastCard use: self from: aSpaceship target: aTarget .
 
 ]
 
