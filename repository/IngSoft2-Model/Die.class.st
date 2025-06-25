@@ -1,6 +1,3 @@
-"
-Represents a dice that returns a numeric value
-"
 Class {
 	#name : 'Die',
 	#superclass : 'Object',

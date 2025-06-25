@@ -140,12 +140,6 @@ Ship >> refuel [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> removeCard: aCard [
-
-	cards remove: aCard ifAbsent: [ Error signal: 'Card not found' ]
-]
-
-{ #category : 'as yet unclassified' }
 Ship >> takeFuel: anAmountOfFuel [ 
 
 	anAmountOfFuel > fuel ifTrue: [ ^ 0 ].

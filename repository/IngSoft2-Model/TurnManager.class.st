@@ -16,16 +16,19 @@ TurnManager class >> withShips: someShips [
 
 { #category : 'initialization' }
 TurnManager >> advanceToNextPlayer [
+
 	shipTurnIndex := shipTurnIndex \\ ships size + 1
 ]
 
 { #category : 'initialization' }
 TurnManager >> currentTurnsShip [
+
 	^ ships at: shipTurnIndex
 ]
 
 { #category : 'initialization' }
 TurnManager >> initializeWithShips: someShips [
+
 	ships := someShips.
 	shipTurnIndex := 1.
 	^ self

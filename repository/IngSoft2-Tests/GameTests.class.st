@@ -369,7 +369,7 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 	| someDice aFixedCellGenerator aGame aShip |
 	someDice := CustomDie withRolls: #( 6 ).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
-		                       20.
+		                       100.
 
 	aGame := SpaceShipGame
 		         withShipsNamed: #( 'Apollo' )
@@ -386,8 +386,9 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 				         NullCard new }.
 
 	aShip := aGame ships first.
-	aShip consumeFuel: 12.
 
+	aGame playTurn.
+	aGame playTurn.
 	aGame playTurn.
 
 	self assert: (aGame positions at: 'Apollo') equals: 1
@@ -397,29 +398,29 @@ GameTests >> test012ShipRunsOutOfFuelThenReturnsToFirstCell [
 GameTests >> test013ShipRunsOutOfFuelThenLosesTwoTurns [
 
 	| someDice aFixedCellGenerator aGame aShip |
-	someDice := OrderedCollection with: (CustomDie withRolls: #( 6 )).
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 6 5 6 6 6 6 )).
 	aFixedCellGenerator := FixedCellGenerator withAllRegularCellAmount:
-		                       20.
+		                       100.
 
 	aGame := SpaceShipGame
 		         withShipsNamed: #( 'Apollo' )
 		         playedWith: someDice
 		         createdWith: aFixedCellGenerator
-		         withWormholesAt: 18
-		         and: 19
-		         onABoardSized: 20
+		         withWormholesAt: 98
+		         and: 99
+		         onABoardSized: 100
 		         whichToParsecsIs: 100
 		         forLaps: 1
-		         withRewards: (FuelBuffReward by: 1)
+		         withRewards: (FuelBuffReward by: 0)
 		         andDeck: {
 				         NullCard new.
 				         NullCard new }.
 
 	aShip := aGame ships first.
-	aShip consumeFuel: 11.
-
-	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
+	aGame playTurn.
+	aGame playTurn.
+	self assert: (aGame positions at: 'Apollo') equals: 1.
 	aGame playTurn.
 	aGame playTurn.
 	self assert: (aGame positions at: 'Apollo') equals: 1.
@@ -450,11 +451,12 @@ GameTests >> test014PlayerSkipsTurnThenFuelIsRestoredToMax [
 				         NullCard new }.
 
 	aShip := aGame ships first.
-	aShip consumeFuel: 5.
+	aGame playTurn.
+	aGame playTurn.
 	aGame skipTurn.
 	aGame playTurn.
 	aGame playTurn.
-	self assert: (aGame positions at: 'Apollo') equals: 7
+	self assert: (aGame positions at: 'Apollo') equals: 13
 ]
 
 { #category : 'tests' }

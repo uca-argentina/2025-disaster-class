@@ -6,13 +6,14 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Acceleration >> removeEffectsWith: aCardEnforcer [ 
-	aCardEnforcer removeAccelerationEffect.
+Acceleration >> removeEffectsWith: aCardEnforcer [
 
+	aCardEnforcer removeAccelerationEffect
 ]
 
 { #category : 'as yet unclassified' }
-Acceleration >> use: aCardEnforcer from: cardThrower target: aTarget [ 
+Acceleration >> use: aCardEnforcer from: cardThrower target: aTarget [
+
 	aCardEnforcer applyAccelerationEffect.
-	aCardEnforcer addActiveCardEffect: self.
+	aCardEnforcer addActiveCardEffect: self
 ]
