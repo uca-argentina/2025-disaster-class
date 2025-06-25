@@ -14,5 +14,5 @@ Permanent >> removeEffectsWith: aCardManager [
 Permanent >> verifyCanBePlayedBy: aSpaceship with: aTurnManager [ 
 
 	aSpaceship = aTurnManager currentTurnsShip ifFalse: [
-		Error signal: 'You can only play this card when it''s your turn' ].
+		Error signal: 'You can only play this card when its your turn' ].
 ]
