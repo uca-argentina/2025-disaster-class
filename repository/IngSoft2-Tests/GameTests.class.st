@@ -1894,10 +1894,10 @@ GameTests >> test058WhenAccelerationCardIsUsedAndThenCancelledNoEffectIsApplied 
 { #category : 'tests' }
 GameTests >> test059WhenCancellationCardIsUsedAndThenRedoneItCancelsTheNewTargetCard [
 
-	| someDice aGenerator aGame aShip anotherShip overload1 overload2 cancellation redo |
+	| someDice aGenerator aGame aShip anotherShip accel1 accel2 cancellation redo apollo1 |
 	someDice := OrderedCollection with:
 		            (CustomDie withRolls: #( 5 5 6 7 10 )).
-	aGenerator := FixedCellGenerator cells: ((1 to: 20) collect: [ :i |
+	aGenerator := FixedCellGenerator cells: ((1 to: 25) collect: [ :i |
 			               i = 6
 				               ifTrue: [ CardCell new ]
 				               ifFalse: [ RegularCell new ] ]).
@@ -1906,42 +1906,42 @@ GameTests >> test059WhenCancellationCardIsUsedAndThenRedoneItCancelsTheNewTarget
 		         withShipsNamed: #( 'Apollo' 'Orion' )
 		         playedWith: someDice
 		         createdWith: aGenerator
-		         withWormholesAt: 1
-		         and: 2
-		         onABoardSized: 20
+		         withWormholesAt: 2
+		         and: 3
+		         onABoardSized: 25
 		         whichToParsecsIs: 100
 		         forLaps: 1
 		         withRewards: (FuelBuffReward by: 0)
 		         andDeck: {
-				         Overload new.
+				         Acceleration new.
 				         Cancellation new.
 				         Redo new }.
 
 	aShip := 'Apollo'.
 	anotherShip := 'Orion'.
-
-	overload1 := (aGame deckOf: aShip) first.
-	overload2 := (aGame deckOf: anotherShip) first.
+	apollo1 := aGame findShip: 'Apollo'.
+	accel1 := (aGame deckOf: aShip) first.
+	accel2 := (aGame deckOf: anotherShip) first.
 	cancellation := (aGame deckOf: anotherShip) second.
-
-	aGame playCard: overload1 from: aShip to: anotherShip.
-
-	aGame playTurn.
-
 	redo := (aGame deckOf: aShip) second.
-
-	aGame playCard: overload2 from: anotherShip to: aShip.
-	aGame playCard: cancellation from: anotherShip to: overload1.
+	aGame playCard: accel1 from: aShip to: anotherShip.
 
 	aGame playTurn.
+	self assert: apollo1 diceAdjustment equals: 1.
 
-	aGame playCard: redo from: aShip to: overload2.
+	aGame playCard: accel2 from: anotherShip to: aShip.
+	self assert: apollo1 diceAdjustment equals: 2.
+	aGame playCard: cancellation from: anotherShip to: accel1.
+	self assert: apollo1 diceAdjustment equals: 1.
+	aGame playTurn.
 
+	aGame playCard: redo from: aShip to: accel2.
+	self assert: apollo1 diceAdjustment equals: 0.
 	aGame playTurn.
 	aGame playTurn.
 
-	self assert: (aGame positions at: aShip) equals: 12.
-	self assert: (aGame positions at: anotherShip) equals: 13
+	self assert: (aGame positions at: aShip) equals: 13.
+	self assert: (aGame positions at: anotherShip) equals: 14
 ]
 
 { #category : 'tests' }

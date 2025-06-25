@@ -22,12 +22,6 @@ Ship class >> withName: aName and: aFuelAmount [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> addCard: aCard [
-
-	cards add: aCard
-]
-
-{ #category : 'as yet unclassified' }
 Ship >> allyWith: aSpaceship [
 
 	ally := aSpaceship
@@ -42,17 +36,10 @@ Ship >> applyPenaltyIn: aBoard [
 	aBoard moveShipToStart: self
 ]
 
-{ #category : 'as yet unclassified' }
-Ship >> canPlayATurn [
-
-	lostTurns <= 0 ifTrue: [ ^ true ].
-	self lostATurn.
-	^ false
-]
-
 { #category : 'accessing' }
 Ship >> cards [
-	^cards
+
+	^ cards
 ]
 
 { #category : 'as yet unclassified' }
@@ -76,19 +63,11 @@ Ship >> changeRequiredRollTo: aRequiredRoll [
 ]
 
 { #category : 'accessing' }
-Ship >> consumeFuel: steps [
+Ship >> consumeFuel: anAmount [
 
 	| cost |
-	cost := steps abs.
-	cost > fuel ifTrue: [
-		Error signal: 'Cannot consume more fuel than available.' ].
+	cost := anAmount abs.
 	fuel := fuel - cost
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> decreaseCurrentFuelBy: anAmount [
-
-	fuel := fuel - anAmount
 ]
 
 { #category : 'as yet unclassified' }
@@ -179,7 +158,8 @@ Ship >> removeCard: aCard [
 
 { #category : 'as yet unclassified' }
 Ship >> resetTotalThrowModifier [
-	diceAdjustment := 0.
+
+	diceAdjustment := diceAdjustment - 1
 ]
 
 { #category : 'as yet unclassified' }

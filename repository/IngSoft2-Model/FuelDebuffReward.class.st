@@ -17,7 +17,7 @@ FuelDebuffReward class >> by: anAmount [
 { #category : 'initialization' }
 FuelDebuffReward >> applyTo: aSpaceship [
 
-	aSpaceship decreaseCurrentFuelBy: debuff
+	aSpaceship consumeFuel: debuff
 ]
 
 { #category : 'initialization' }

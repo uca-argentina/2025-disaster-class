@@ -107,8 +107,8 @@ CardEnforcer >> redoLastCardFrom: aSpaceship target: aTarget [
 
 { #category : 'initialization' }
 CardEnforcer >> removeAccelerationEffect [
-	ships do: [ :ship | ship resetTotalThrowModifier ].
 
+	ships do: [ :ship | ship resetTotalThrowModifier ]
 ]
 
 { #category : 'initialization' }
