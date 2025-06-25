@@ -97,7 +97,7 @@ Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapC
 	lapsPerShip := Dictionary
 		               newFromKeys: ships
 		               andValues: (someShips collect: [ :_ | 0 ]).
-	possibleCards:= someCards.
+	possibleCards := someCards.
 	map := aCellGenerator generate.
 	WormholeCell
 		newPairIn: map
@@ -136,12 +136,6 @@ Board >> insertShip: aShip at: newIndex [
 Board >> lapsCompletedOf: aShip [
 
 	^ lapsPerShip at: aShip ifAbsent: [ 0 ]
-]
-
-{ #category : 'as yet unclassified' }
-Board >> lastCell [
-
-	^ map last
 ]
 
 { #category : 'initialization' }
