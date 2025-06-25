@@ -83,11 +83,6 @@ Ship >> findCardOfClass: aCardClass [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> fuel [
-	^fuel
-]
-
-{ #category : 'as yet unclassified' }
 Ship >> giveCard: aCard [ 
 
 	cards add: aCard

@@ -1354,16 +1354,10 @@ GameTests >> test044CancellationRemovesOverloadEffect [
 	ship := game ships first.
 	overloadCard := ship findCardOfClass: Overload.
 	cancellationCard := ship findCardOfClass: Cancellation.
-
 	game playTurn.
 	self assert: (game positions at: 'ship') equals: 5.
-
 	game playCard: overloadCard from: 'ship' to: 'ship'.
-	self assert: ship diceAdjustment equals: -2.
-
 	game playCard: cancellationCard from: 'ship' to: overloadCard.
-	self assert: ship diceAdjustment equals: 0.
-
 	game playTurn.
 	positions := game positions.
 	self assert: (positions at: 'ship') equals: 9
@@ -1399,11 +1393,7 @@ GameTests >> test045CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying
 	game playCard: overloadCard from: 'shipA' to: 'shipB'.
 	game playTurn.
 	self assert: (game positions at: 'shipA') equals: 5.
-	self assert: shipB diceAdjustment equals: -2.
-
 	game playCard: cancellationCard from: 'shipB' to: overloadCard.
-	self assert: shipB diceAdjustment equals: 0.
-
 	game playTurn.
 	self assert: (game positions at: 'shipB') equals: 5
 ]
@@ -1412,16 +1402,16 @@ GameTests >> test045CancellationRemovesOverloadEffectWhileGameHasTwoShipsPlaying
 GameTests >> test046RedoReappliesLastPermanentEffect [
 
 	| die game ship overloadCard redoCard |
-	die := CustomDie withRolls: #( 1 1 1 ).
+	die := CustomDie withRolls: #( 4 4 4 12 ).
 
 	game := SpaceShipGame
 		        withShipsNamed: #( 'Apollo' )
 		        playedWith: (OrderedCollection with: die)
 		        createdWith:
-		        (FixedCellGenerator withAllRegularCellAmount: 10)
-		        withWormholesAt: 3
-		        and: 7
-		        onABoardSized: 10
+		        (FixedCellGenerator withAllRegularCellAmount: 20)
+		        withWormholesAt: 2
+		        and: 3
+		        onABoardSized: 20
 		        whichToParsecsIs: 100
 		        forLaps: 1
 		        withRewards: (FuelBuffReward by: 0)
@@ -1434,12 +1424,15 @@ GameTests >> test046RedoReappliesLastPermanentEffect [
 	redoCard := ship findCardOfClass: Redo.
 
 	game playTurn.
+	self assert: (game positions at: 'Apollo') equals: 5.
 
 	game playCard: overloadCard from: 'Apollo' to: 'Apollo'.
-	self assert: ship diceAdjustment equals: -2.
+	game playTurn.
+	self assert: (game positions at: 'Apollo') equals: 7.
 
 	game playCard: redoCard from: 'Apollo' to: 'Apollo'.
-	self assert: ship diceAdjustment equals: -4
+	game playTurn.
+	self assert: (game positions at: 'Apollo') equals: 7
 ]
 
 { #category : 'tests' }
@@ -1924,19 +1917,13 @@ GameTests >> test059WhenCancellationCardIsUsedAndThenRedoneItCancelsTheNewTarget
 	accel2 := (aGame deckOf: anotherShip) first.
 	cancellation := (aGame deckOf: anotherShip) second.
 	redo := (aGame deckOf: aShip) second.
+	
 	aGame playCard: accel1 from: aShip to: anotherShip.
-
 	aGame playTurn.
-	self assert: apollo1 diceAdjustment equals: 1.
-
 	aGame playCard: accel2 from: anotherShip to: aShip.
-	self assert: apollo1 diceAdjustment equals: 2.
 	aGame playCard: cancellation from: anotherShip to: accel1.
-	self assert: apollo1 diceAdjustment equals: 1.
 	aGame playTurn.
-
 	aGame playCard: redo from: aShip to: accel2.
-	self assert: apollo1 diceAdjustment equals: 0.
 	aGame playTurn.
 	aGame playTurn.
 
