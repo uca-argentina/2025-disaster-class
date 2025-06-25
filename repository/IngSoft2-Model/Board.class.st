@@ -217,7 +217,7 @@ Board >> shipThatCompletedAllLaps [
 
 	^ ships
 		  detect: [ :ship | (self lapsCompletedOf: ship) >= lapsToWin ]
-		  ifNone: [ nil ]
+		  ifNone: [ Error signal: 'There is no winner yet' ]
 ]
 
 { #category : 'initialization' }

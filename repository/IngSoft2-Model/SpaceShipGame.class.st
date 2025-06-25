@@ -41,25 +41,18 @@ SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice create
 ]
 
 { #category : 'as yet unclassified' }
-SpaceShipGame class >> withShipsNamed: someShipNames
-playedWith: someDice
-onABoardSized: aBoardSize
-whichToParsecsIs: aLengthInParsecs
-forLaps: aLapCount
-withWormholesAt: aFirstWormholeLocation
-and: aSecondWormholeLocation [
+SpaceShipGame class >> withShipsNamed: someShipNames playedWith: someDice onABoardSized: aBoardSize whichToParsecsIs: aLengthInParsecs forLaps: aLapCount withWormholesAt: aFirstWormholeLocation and: aSecondWormholeLocation [
 
 	self validateShips: someShipNames andDice: someDice.
 
 	^ self new
-		initializeWithShipNames: someShipNames
-		dice: someDice
-		boardSize: aBoardSize
-		lengthInParsecs: aLengthInParsecs
-		laps: aLapCount
-		wormholesAt: aFirstWormholeLocation
-		and: aSecondWormholeLocation
-
+		  initializeWithShipNames: someShipNames
+		  dice: someDice
+		  boardSize: aBoardSize
+		  lengthInParsecs: aLengthInParsecs
+		  laps: aLapCount
+		  wormholesAt: aFirstWormholeLocation
+		  and: aSecondWormholeLocation
 ]
 
 { #category : 'accessing' }

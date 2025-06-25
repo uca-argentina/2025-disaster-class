@@ -1664,3 +1664,129 @@ GameTests >> test051WhenRedoCardIsPlayedTwiceTheEffectIsAppliedTwice [
     self assert: (aGame positions at: apollo) equals: 12.
     self assert: (aGame positions at: orion) equals: 9
 ]
+
+{ #category : 'tests' }
+GameTests >> test052CancellationCardCanBeUsedBeforeTurnAndCancelsEffect [
+
+	| someDice aGenerator aGame overloadCard cancellationCard aShip anotherShip |
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 9 7 3 )).
+	aGenerator := FixedCellGenerator withAllRegularCellAmount: 11.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: someDice
+		         createdWith: aGenerator
+		         withWormholesAt: 1
+		         and: 2
+		         onABoardSized: 11
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withRewards: (FuelBuffReward by: 0)
+		         andDeck: {
+				         Overload new.
+				         Cancellation new }.
+
+	aShip := 'Apollo'.
+	anotherShip := 'Orion'.
+
+	overloadCard := (aGame deckOf: aShip) first.
+	cancellationCard := (aGame deckOf: anotherShip) second.
+
+	aGame playCard: overloadCard from: aShip to: anotherShip.
+	aGame playCard: cancellationCard from: anotherShip to: overloadCard.
+
+	aGame playTurn.
+	aGame playTurn.
+
+	self assert: (aGame positions at: aShip) equals: 10.
+	self assert: (aGame positions at: anotherShip) equals: 8
+]
+
+{ #category : 'tests' }
+GameTests >> test053ShipsRecieveTwoRandomCardsAtTheBeginningOfTheGame [
+
+	| someDice aGenerator aGame |
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 1 )).
+	aGenerator := FixedCellGenerator withAllRegularCellAmount: 11.
+
+	aGame := SpaceShipGame
+		         withShipsNamed: #( 'Apollo' 'Orion' )
+		         playedWith: someDice
+		         onABoardSized: 11
+		         whichToParsecsIs: 100
+		         forLaps: 1
+		         withWormholesAt: 1
+		         and: 2.
+
+	self assert: (aGame deckOf: 'Apollo') size equals: 2.
+	self assert: (aGame deckOf: 'Orion') size equals: 2
+]
+
+{ #category : 'tests' }
+GameTests >> test054CancellationCardCannotBeUsedIfTargetCardWasNotPlayed [
+
+	| someDice aGenerator aGame aShip anotherShip overloadCard cancellationCard |
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 9 7 2 3 10 )).
+	aGenerator := FixedCellGenerator withAllRegularCellAmount: 15.
+
+	aGame := SpaceShipGame
+		withShipsNamed: #( 'Apollo' 'Orion' )
+		playedWith: someDice
+		createdWith: aGenerator
+		withWormholesAt: 1
+		and: 2
+		onABoardSized: 15
+		whichToParsecsIs: 100
+		forLaps: 1
+		withRewards: (FuelBuffReward by: 0)
+		andDeck: {
+			Overload new.
+			Cancellation new }.
+
+	aShip := 'Apollo'.
+	anotherShip := 'Orion'.
+
+	aGame playTurn.
+
+	cancellationCard := (aGame deckOf: anotherShip) second.
+	overloadCard := (aGame deckOf: aShip) first.
+
+	self
+		should: [
+			aGame
+				playCard: cancellationCard
+				from: anotherShip
+				to: overloadCard ]
+		raise: Error
+		withMessageText: 'There is no such active card'
+]
+
+{ #category : 'tests' }
+GameTests >> test055ErrorWhenAskedForAWinnerAndThereIsNone [
+
+	| someDice aGenerator aGame aShip someShips |
+	aShip := 'Apollo'.
+	someShips := OrderedCollection with: aShip.
+	someDice := OrderedCollection with: (CustomDie withRolls: #( 4 )).
+	aGenerator := FixedCellGenerator withAllRegularCellAmount: 15.
+
+	aGame := SpaceShipGame
+		withShipsNamed: someShips
+		playedWith: someDice
+		createdWith: aGenerator
+		withWormholesAt: 1
+		and: 2
+		onABoardSized: 15
+		whichToParsecsIs: 100
+		forLaps: 2
+		withRewards: (FuelBuffReward by: 0)
+		andDeck: {
+			NullCard new.
+			NullCard new }.
+
+	self
+		should: [ aGame winner ]
+		raise: Error
+		withMessageText: 'There is no winner yet'
+
+]
