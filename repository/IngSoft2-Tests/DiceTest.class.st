@@ -20,7 +20,7 @@ DiceTest >> should: anErrorBlock raise: anErrorClass withMessageText: errorMessa
 DiceTest >> testIfDiceResultIsIntegerThenIsValid [
 	| aDice |
 	aDice := Die with: 6.
-	self assert: aDice rollDice isInteger. 
+	self assert: aDice throw isInteger. 
 ]
 
 { #category : 'tests' }
@@ -30,7 +30,7 @@ DiceTest >> testIfNumberOfSidesEqualsTheNumberOfSidesTheDieIsInitializedWithThen
 	aNumberOfSides := 5.
 	aDice := Die with: aNumberOfSides.
 	
-	self assert: aDice sides = aNumberOfSides
+	self assert: aDice maxThrow = aNumberOfSides
 ]
 
 { #category : 'tests' }
@@ -48,7 +48,7 @@ DiceTest >> testIfRollIsBetweenTwoNumbersThenIsValid [
 
 	| aDice roll |
 	aDice := Die with: 20.
-	roll := aDice rollDice.
+	roll := aDice throw.
 	self assert: (roll >= 1 and: [ roll <= 20 ])
 ]
 
@@ -58,7 +58,7 @@ DiceTest >> testThatIfRollIsBetween1AndNumberOfSidesThenIsValid [
 	| aDice roll numberOfSides|
 	numberOfSides := 6.
 	aDice := Die with: numberOfSides .
-	roll := aDice rollDice.
+	roll := aDice throw.
 	self assert: (roll >= 1 and: [ roll <= numberOfSides ])
 ]
 
@@ -67,10 +67,10 @@ DiceTest >> testYouCanForceRollSequenceOfDieResults [
 	| die rolls |
 	
 	rolls := #(3 5 2).
-	die := TestDie withRolls: rolls.
+	die := CustomDie withRolls: rolls.
 
-	self assert: die rollDice equals: 3.
-	self assert: die rollDice equals: 5.
-	self assert: die rollDice equals: 2.
+	self assert: die throw equals: 3.
+	self assert: die throw equals: 5.
+	self assert: die throw equals: 2.
 
 ]

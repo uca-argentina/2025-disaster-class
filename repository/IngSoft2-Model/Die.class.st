@@ -1,6 +1,3 @@
-"
-Represents a dice that returns a numeric value
-"
 Class {
 	#name : 'Die',
 	#superclass : 'Object',
@@ -30,13 +27,14 @@ Die >> initializeWith: numberOfSides [
 	aNumberOfSides := numberOfSides
 ]
 
-{ #category : 'accessing' }
-Die >> rollDice [
+{ #category : 'as yet unclassified' }
+Die >> maxThrow [
 
-	^(1 to: aNumberOfSides ) atRandom.
+	^ aNumberOfSides
 ]
 
-{ #category : 'as yet unclassified' }
-Die >> sides [
-	^aNumberOfSides.
+{ #category : 'accessing' }
+Die >> throw [
+
+	^ aNumberOfSides atRandom
 ]

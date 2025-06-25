@@ -1,12 +1,15 @@
 Class {
 	#name : 'Ship',
 	#superclass : 'Object',
-
 	#instVars : [
 		'name',
 		'fuel',
 		'fuelCapacity',
-		'lostTurns'
+		'lostTurns',
+		'diceAdjustment',
+		'cards',
+		'requiredRoll',
+		'ally'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
@@ -19,45 +22,64 @@ Ship class >> withName: aName and: aFuelAmount [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> applyPenaltyIn: board [
+Ship >> allyWith: aSpaceship [
 
-	board moveShipToStart: self.
-	self refuel.
-	lostTurns := 2
-]
-
-{ #category : 'accessing' }
-Ship >> attemptMoveBy: steps in: board [
-
-	| cost |
-	cost := steps abs.
-	fuel < cost ifTrue: [ ^ self applyPenaltyIn: board ].
-	self consumeFuel: cost.
-	board moveShipDirectly: self steps: steps
+	ally := aSpaceship
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> canPlay [
+Ship >> applyPenaltyIn: aBoard [
 
-	^ lostTurns = 0
+	self refuel.
+	self loseTurn.
+	self loseTurn.
+	aBoard moveShipToStart: self
 ]
 
 { #category : 'accessing' }
-Ship >> consumeFuel: steps [ 
-	fuel := fuel - steps abs.
+Ship >> cards [
+
+	^ cards
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> changeDiceAdjustmentBy: anAmount [
+
+	diceAdjustment := diceAdjustment + anAmount
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> changeFuelCapacityBy: anAmount [ 
+
+	fuelCapacity := fuelCapacity + anAmount.
+	fuel := fuelCapacity min: fuel
 
 ]
 
-{ #category : 'accessing' }
-Ship >> fuel [
+{ #category : 'as yet unclassified' }
+Ship >> changeRequiredRollTo: aRequiredRoll [
 
-	^ fuel
+	requiredRoll := aRequiredRoll
 ]
 
 { #category : 'accessing' }
-Ship >> fuelCapacity [
+Ship >> consumeFuel: anAmount [
 
-	^ fuelCapacity
+	| cost |
+	cost := anAmount abs.
+	fuel := fuel - cost
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> findCardOfClass: aCardClass [
+
+	^ cards detect: [ :c | c class = aCardClass ] ifNone: [ nil ]
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> giveCard: aCard [ 
+
+	cards add: aCard
 ]
 
 { #category : 'as yet unclassified' }
@@ -66,13 +88,32 @@ Ship >> initializeWith: aName and: aFuelAmount [
 	name := aName.
 	fuel := aFuelAmount.
 	fuelCapacity := aFuelAmount.
-	lostTurns := 0
+	lostTurns := 0.
+	cards := OrderedCollection new.
+	diceAdjustment := 0.
+	requiredRoll := 0.
+	ally := NullShip new.
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> loseTurn [
+
+	lostTurns := lostTurns + 1
 ]
 
 { #category : 'as yet unclassified' }
 Ship >> lostATurn [
 
-	lostTurns := lostTurns - 1
+	lostTurns := (lostTurns - 1) max: 0
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> move: anAmount in: aBoard [
+
+	self useAllyFuelIfNecessary: anAmount in: aBoard.
+	fuel < anAmount abs ifTrue: [ ^ self applyPenaltyIn: aBoard ].
+	self consumeFuel: anAmount.
+	aBoard moveShip: self by: anAmount
 ]
 
 { #category : 'accessing' }
@@ -82,8 +123,52 @@ Ship >> name [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> refuel [
+Ship >> playTurnIn: aBoard withDiceResult: aDiceResult [
 
-	fuel := fuelCapacity 
+	| anAdjustedDiceResult |
+	lostTurns > 0 ifTrue: [ ^ self lostATurn ].
+	aDiceResult < requiredRoll ifTrue: [ ^ self ].
+	requiredRoll := 0.
+	anAdjustedDiceResult := aDiceResult + diceAdjustment.
+	self move: anAdjustedDiceResult in: aBoard
 ]
 
+{ #category : 'as yet unclassified' }
+Ship >> refuel [
+
+	fuel := fuelCapacity
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> takeFuel: anAmountOfFuel [ 
+
+	anAmountOfFuel > fuel ifTrue: [ ^ 0 ].
+
+	fuel := fuel - anAmountOfFuel.
+
+	^ anAmountOfFuel
+
+
+
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> useAllyFuelIfNecessary: amountOfSteps in: aBoard [
+
+	| allyFuel |
+	fuel <= amountOfSteps abs ifFalse: [ ^ self ].
+
+	allyFuel := ally takeFuel: amountOfSteps - fuel + 1.
+
+	fuel := fuel + allyFuel.
+
+	fuel <= amountOfSteps abs ifTrue: [ ally applyPenaltyIn: aBoard ]
+]
+
+{ #category : 'as yet unclassified' }
+Ship >> useCard: aCard [
+
+	cards remove: aCard ifAbsent: [
+		Error signal:
+			self name , ' does not have a ' , aCard class name , ' card' ]
+]

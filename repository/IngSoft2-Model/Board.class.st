@@ -2,71 +2,126 @@ Class {
 	#name : 'Board',
 	#superclass : 'Object',
 	#instVars : [
-
 		'map',
-		'laps'
-
+		'ships',
+		'lapsToWin',
+		'lengthInParsecs',
+		'lapsPerShip',
+		'possibleCards',
+		'lastCellLanded'
 	],
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'instance creation' }
+Board class >> validateIsPositive: aLengthInParsecs and: aLapCount andAlsoStart: aStart andEnd: anEnd areInBoundsOf: aBoardSize [
 
-Board class >> withCells: someCells [
+	aLapCount <= 0 ifTrue: [
+		Error signal: 'The lap count must be positive' ].
 
-	^ self new
-		  initializeWith: someCells 
+	aLengthInParsecs <= 0 ifTrue: [
+		Error signal: 'Length in parsecs must be positive' ].
+
+	aBoardSize <= 0 ifTrue: [
+		Error signal: 'Board size must be positive' ].
+
+	(aStart between: 1 and: aBoardSize) ifFalse: [
+		Error signal: 'Wormhole start position is out of bounds' ].
+
+	(anEnd between: 1 and: aBoardSize) ifFalse: [
+		Error signal: 'Wormhole end position is out of bounds' ]
 ]
 
 { #category : 'instance creation' }
-Board class >> withCells: someCells andShips: someShips [
-    ^ self new initializeWith: someCells andShips: someShips
+Board class >> withShips: someShips boardSize: aBoardSize lengthInParsecs: aLengthInParsecs lapsToWin: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation cellGenerator: aCellGenerator cards: someCards [
 
+	self
+		validateIsPositive:aLengthInParsecs
+		and: aLapCount
+		andAlsoStart: aWormholeStartLocation
+		andEnd: aWormholeEndLocation
+		areInBoundsOf: aBoardSize.
+
+	^ self new
+		  initializeWith: someShips
+		  lengthInParsecs: aLengthInParsecs
+		  laps: aLapCount
+		  wormholeStart: aWormholeStartLocation
+		  wormholeEnd: aWormholeEndLocation
+		  CellGenerator: aCellGenerator
+		  andCards: someCards
+]
+
+{ #category : 'removing' }
+Board >> anyShipCompletedAllLaps [
+
+	^ lapsPerShip anySatisfy: [ :lapsByEachShip |
+		  lapsByEachShip >= lapsToWin ]
 ]
 
 { #category : 'as yet unclassified' }
 Board >> applyEffectTo: aShip [
 
 	| cell |
-	cell := self cellContaining: aShip.
-	cell applyEffectTo: aShip in: self
+	cell := self whereIs: aShip.
+	cell applyEffectTo: aShip in: self.
+	lastCellLanded := cell
 ]
 
 { #category : 'as yet unclassified' }
+Board >> applyLastCardEffectTo: aShip [
 
-Board >> cellAt: aPosition [
-
-	^ map at: aPosition
-]
-
-{ #category : 'as yet unclassified' }
-Board >> cellContaining: aShip [
-
-	^ map detect: [ :each | each includes: aShip ]
+	lastCellLanded applyEffectTo: aShip in: self
 ]
 
 { #category : 'initialization' }
 Board >> incrementLapsFor: aShip [
-    laps at: aShip put: (self lapsCompletedOf: aShip) + 1
+
+	lapsPerShip at: aShip put: (self lapsCompletedOf: aShip) + 1
 ]
 
 { #category : 'as yet unclassified' }
 Board >> indexOfCellContaining: aShip [
-	^ map indexOf: (self cellContaining: aShip).
+
+	^ map indexOf: (self whereIs: aShip)
 ]
 
 { #category : 'initialization' }
-Board >> initializeWith: someCells [
+Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation CellGenerator: aCellGenerator andCards: someCards [
 
-	map := someCells
+	ships := someShips.
+	lastCellLanded := RegularCell initialize.
+	lapsToWin := aLapCount.
+	lengthInParsecs := aLengthInParsecs.
+	lapsPerShip := Dictionary
+		               newFromKeys: ships
+		               andValues: (someShips collect: [ :_ | 0 ]).
+	possibleCards := someCards.
+	map := aCellGenerator generate.
+	WormholeCell
+		newPairIn: map
+		at: aWormholeStartLocation
+		and: aWormholeEndLocation.
+	self placeAllShipsAtStart: ships
 ]
 
 { #category : 'initialization' }
-Board >> initializeWith: someCells andShips: someShips [
+Board >> initializeWith: someShips lengthInParsecs: aLengthInParsecs laps: aLapCount wormholeStart: aWormholeStartLocation wormholeEnd: aWormholeEndLocation andCellGenerator: aCellGenerator [
 
-	map := someCells.
-	laps := Dictionary newFromKeys: someShips andValues: (someShips collect: [ :_ | 0 ]).
+	ships := someShips.
+	lastCellLanded := RegularCell initialize.
+	lapsToWin := aLapCount.
+	lengthInParsecs := aLengthInParsecs.
+	lapsPerShip := Dictionary
+		               newFromKeys: ships
+		               andValues: (someShips collect: [ :_ | 0 ]).
+	map := aCellGenerator generate.
+	WormholeCell
+		newPairIn: map
+		at: aWormholeStartLocation
+		and: aWormholeEndLocation.
+	self placeAllShipsAtStart: ships
 ]
 
 { #category : 'removing' }
@@ -79,37 +134,35 @@ Board >> insertShip: aShip at: newIndex [
 
 { #category : 'initialization' }
 Board >> lapsCompletedOf: aShip [
-    ^ laps at: aShip ifAbsent: [ 0 ]
+
+	^ lapsPerShip at: aShip ifAbsent: [ 0 ]
 ]
 
-{ #category : 'as yet unclassified' }
-Board >> lastCell [
-	^ map last.
+{ #category : 'initialization' }
+Board >> mapSize [
+
+	^ map size
 ]
 
 { #category : 'as yet unclassified' }
 Board >> moveAllToStart [
-    self ships do: [:ship | self moveShipToStart: ship ].
+
+	self ships do: [ :ship | self moveShipToStart: ship ]
 ]
 
 { #category : 'as yet unclassified' }
-Board >> moveShip: aShip steps: steps [
+Board >> moveShip: aShip by: anAmount [
 
-	aShip attemptMoveBy: steps in: self
-]
-
-{ #category : 'as yet unclassified' }
-Board >> moveShipDirectly: aShip steps: steps [
-
-	| previousIndex newIndex boardSize |
+	| previousIndex newIndex boardSize cellsToMove |
+	cellsToMove := anAmount toCellsOf: self.
 	previousIndex := self indexOfCellContaining: aShip.
-	boardSize := self size.
-	newIndex := previousIndex + steps - 1 \\ self size + 1.
+	boardSize := map size.
+	newIndex := previousIndex + cellsToMove - 1 \\ boardSize + 1.
 
 	self remove: aShip at: previousIndex.
 	self insertShip: aShip at: newIndex.
 
-	previousIndex + steps - 1 // boardSize
+	previousIndex + cellsToMove - 1 // boardSize
 	> (previousIndex - 1 // boardSize) ifTrue: [
 		self incrementLapsFor: aShip ]
 ]
@@ -117,11 +170,14 @@ Board >> moveShipDirectly: aShip steps: steps [
 { #category : 'as yet unclassified' }
 Board >> moveShipToStart: aShip [
 
-	| index |
-	index := self indexOfCellContaining: aShip.
-	(map at: index) leaves: aShip.
+	(self whereIs: aShip) leaves: aShip.
 	(map at: 1) enters: aShip
+]
 
+{ #category : 'initialization' }
+Board >> parsecsPerCell [
+
+	^ map size // lengthInParsecs
 ]
 
 { #category : 'as yet unclassified' }
@@ -130,6 +186,11 @@ Board >> placeAllShipsAtStart: someShips [
 	(map at: 1) entersAll: someShips
 ]
 
+{ #category : 'as yet unclassified' }
+Board >> possibleCards [
+
+	^ possibleCards
+]
 
 { #category : 'removing' }
 Board >> remove: aShip at: someIndex [
@@ -139,13 +200,23 @@ Board >> remove: aShip at: someIndex [
 	oldCell leaves: aShip
 ]
 
+{ #category : 'removing' }
+Board >> shipThatCompletedAllLaps [
+
+	^ ships
+		  detect: [ :ship | (self lapsCompletedOf: ship) >= lapsToWin ]
+		  ifNone: [ Error signal: 'There is no winner yet' ]
+]
+
 { #category : 'initialization' }
 Board >> ships [
-    ^ laps keys
+
+	^ ships
 ]
 
 { #category : 'as yet unclassified' }
-Board >> size [
-	^ map size.
-]
+Board >> whereIs: aShip [
 
+	^ map detect: [ :each | each includes: aShip ]
+		ifNone: [ self error: 'Ship not found on board' ].
+]

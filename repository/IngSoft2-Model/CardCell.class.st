@@ -1,12 +1,12 @@
 Class {
-	#name : 'BlackHoleCell',
+	#name : 'CardCell',
 	#superclass : 'Cell',
 	#category : 'IngSoft2-Model',
 	#package : 'IngSoft2-Model'
 }
 
 { #category : 'as yet unclassified' }
-BlackHoleCell >> applyEffectTo: aShip in: aBoard [
+CardCell >> applyEffectTo: aShip in: aBoard [
 
-	aShip move: -4 in: aBoard
+	aShip giveCard: aBoard possibleCards atRandom
 ]
