@@ -71,12 +71,6 @@ Ship >> consumeFuel: anAmount [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> diceAdjustment [
-
-	^ diceAdjustment
-]
-
-{ #category : 'as yet unclassified' }
 Ship >> findCardOfClass: aCardClass [
 
 	^ cards detect: [ :c | c class = aCardClass ] ifNone: [ nil ]
@@ -115,9 +109,9 @@ Ship >> lostATurn [
 
 { #category : 'as yet unclassified' }
 Ship >> move: anAmount in: aBoard [
-	
-	self useAllyFuelIfNecessary: anAmount in: aBoard. 
-	fuel < anAmount abs ifTrue: [ ^self applyPenaltyIn: aBoard ].
+
+	self useAllyFuelIfNecessary: anAmount in: aBoard.
+	fuel < anAmount abs ifTrue: [ ^ self applyPenaltyIn: aBoard ].
 	self consumeFuel: anAmount.
 	aBoard moveShip: self by: anAmount
 ]
@@ -142,19 +136,13 @@ Ship >> playTurnIn: aBoard withDiceResult: aDiceResult [
 { #category : 'as yet unclassified' }
 Ship >> refuel [
 
-	fuel := fuelCapacity 
+	fuel := fuelCapacity
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> removeCard: aCard [ 
+Ship >> removeCard: aCard [
+
 	cards remove: aCard ifAbsent: [ Error signal: 'Card not found' ]
-
-]
-
-{ #category : 'as yet unclassified' }
-Ship >> resetTotalThrowModifier [
-
-	diceAdjustment := diceAdjustment - 1
 ]
 
 { #category : 'as yet unclassified' }
@@ -171,7 +159,7 @@ Ship >> takeFuel: anAmountOfFuel [
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> useAllyFuelIfNecessary: amountOfSteps in: aBoard [ 
+Ship >> useAllyFuelIfNecessary: amountOfSteps in: aBoard [
 
 	| allyFuel |
 	fuel <= amountOfSteps abs ifFalse: [ ^ self ].
@@ -180,17 +168,13 @@ Ship >> useAllyFuelIfNecessary: amountOfSteps in: aBoard [
 
 	fuel := fuel + allyFuel.
 
-	fuel <= amountOfSteps abs ifTrue: [
-		ally applyPenaltyIn: aBoard ]
-
-
+	fuel <= amountOfSteps abs ifTrue: [ ally applyPenaltyIn: aBoard ]
 ]
 
 { #category : 'as yet unclassified' }
-Ship >> useCard: aCard [ 
+Ship >> useCard: aCard [
 
-	cards
-		remove: aCard
-		ifAbsent: [
-		Error signal: self name , ' does not have a ' , aCard class name, ' card' ]
+	cards remove: aCard ifAbsent: [
+		Error signal:
+			self name , ' does not have a ' , aCard class name , ' card' ]
 ]
