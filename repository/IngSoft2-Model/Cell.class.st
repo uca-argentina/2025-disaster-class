@@ -8,6 +8,11 @@ Class {
 	#package : 'IngSoft2-Model'
 }
 
+{ #category : 'accessing' }
+Cell >> applyEffectTo: aShip in: aBoard [
+
+	self subclassResponsibility 
+]
 
 { #category : 'as yet unclassified' }
 Cell >> enters: aShip [
@@ -41,7 +46,6 @@ Cell >> includesAll: aCollectionOfShips [
 ]
 
 { #category : 'initialization' }
-
 Cell >> initialize [
 
 	shipContainer := OrderedCollection new.

@@ -10,17 +10,18 @@ Class {
 
 { #category : 'as yet unclassified' }
 MoonWalkCell class >> withSteps: n [
-    ^ self new initializeWithSteps: n
+
+	^ self new initializeWithSteps: n
 ]
 
 { #category : 'as yet unclassified' }
 MoonWalkCell >> applyEffectTo: aShip in: aBoard [
-    | allOtherShips |
-    
-    allOtherShips := aBoard ships reject: [ :each | each = aShip ].
 
-    allOtherShips do: [ :ship |
-        ship attemptMoveBy: stepsBack negated in: aBoard ].
+	| allOtherShips |
+	allOtherShips := aBoard ships reject: [ :each | each = aShip ].
+
+	allOtherShips do: [ :ship |
+		ship move: stepsBack negated in: aBoard ]
 ]
 
 { #category : 'as yet unclassified' }

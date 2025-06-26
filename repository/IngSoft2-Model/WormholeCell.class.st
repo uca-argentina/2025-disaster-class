@@ -9,7 +9,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-
 WormholeCell class >> newPairIn: aBoard at: firstPosition and: secondPosition [ 
 	| aWormhole anotherWormhole |
 	aWormhole := self new.
@@ -28,7 +27,7 @@ WormholeCell >> applyEffectTo: aShip in: aBoard [
 
 	| currentCell |
 
-	currentCell := aBoard cellContaining: aShip.
+	currentCell := aBoard whereIs: aShip.
 
 	currentCell leaves: aShip.
 	linkedCell enters: aShip
